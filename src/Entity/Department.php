@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\TestTableRepository;
+use App\Repository\DepartmentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=TestTableRepository::class)
+ * @ORM\Entity(repositoryClass=DepartmentRepository::class)
  */
-class TestTable
+class Department
 {
     /**
      * @ORM\Id()
@@ -23,9 +23,10 @@ class TestTable
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=College::class, inversedBy="departments")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $description;
+    private $college;
 
     public function getId(): ?int
     {
@@ -44,14 +45,14 @@ class TestTable
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getCollege(): ?College
     {
-        return $this->description;
+        return $this->college;
     }
 
-    public function setDescription(string $description): self
+    public function setCollege(?College $college): self
     {
-        $this->description = $description;
+        $this->college = $college;
 
         return $this;
     }

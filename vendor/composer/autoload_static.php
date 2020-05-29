@@ -116,6 +116,9 @@ class ComposerStaticInitd652681ed0217e271653c79f975818cc
         ),
         'M' => 
         array (
+            'MsgPhp\\User\\' => 12,
+            'MsgPhp\\UserBundle\\' => 18,
+            'MsgPhp\\Domain\\' => 14,
             'Monolog\\' => 8,
         ),
         'E' => 
@@ -456,6 +459,18 @@ class ComposerStaticInitd652681ed0217e271653c79f975818cc
         'PackageVersions\\' => 
         array (
             0 => __DIR__ . '/..' . '/ocramius/package-versions/src/PackageVersions',
+        ),
+        'MsgPhp\\User\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/msgphp/user',
+        ),
+        'MsgPhp\\UserBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/msgphp/user-bundle',
+        ),
+        'MsgPhp\\Domain\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/msgphp/domain',
         ),
         'Monolog\\' => 
         array (

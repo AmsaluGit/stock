@@ -12,7 +12,7 @@ namespace PackageVersions;
  */
 final class Versions
 {
-    public const ROOT_PACKAGE_NAME = 'symfony/website-skeleton';
+    public const ROOT_PACKAGE_NAME = '__root__';
     /**
      * Array of all available composer packages.
      * Dont read this array from your calling code, but use the \PackageVersions\Versions::getVersion() method instead.
@@ -39,6 +39,9 @@ final class Versions
   'egulias/email-validator' => '2.1.17@ade6887fd9bd74177769645ab5c474824f8a418a',
   'jdorn/sql-formatter' => 'v1.2.17@64990d96e0959dff8e059dfcdc1af130728d92bc',
   'monolog/monolog' => '2.0.2@c861fcba2ca29404dc9e617eedd9eff4616986b8',
+  'msgphp/domain' => 'v0.15.1@d247ef7786b55479863ad35915562fe6fd9661b1',
+  'msgphp/user' => 'v0.15.1@f551d098907d089d81e7c8c6d94aba90f04aca6a',
+  'msgphp/user-bundle' => 'v0.15.1@1c996574fe116f49c86f18a8881278740835f296',
   'ocramius/package-versions' => '1.5.1@1d32342b8c1eb27353c8887c366147b4c2da673c',
   'ocramius/proxy-manager' => '2.2.3@4d154742e31c35137d5374c998e8f86b54db2e2f',
   'phpdocumentor/reflection-common' => '2.1.0@6568f4687e5b41b054365f9ae03fcb1ed5f2069b',
@@ -126,14 +129,14 @@ final class Versions
   'symfony/profiler-pack' => 'v1.0.4@99c4370632c2a59bb0444852f92140074ef02209',
   'symfony/test-pack' => 'v1.0.6@ff87e800a67d06c423389f77b8209bc9dc469def',
   'symfony/web-profiler-bundle' => 'v5.0.8@67fc2302ba7ca3d917decea6d3accdbd055398d1',
-  'paragonie/random_compat' => '2.*@',
-  'symfony/polyfill-ctype' => '*@',
-  'symfony/polyfill-iconv' => '*@',
-  'symfony/polyfill-php72' => '*@',
-  'symfony/polyfill-php71' => '*@',
-  'symfony/polyfill-php70' => '*@',
-  'symfony/polyfill-php56' => '*@',
-  'symfony/website-skeleton' => 'v5.0.99@',
+  'paragonie/random_compat' => '2.*@af3c472142d3518418a6a3cacd929ff06d6fa537',
+  'symfony/polyfill-ctype' => '*@af3c472142d3518418a6a3cacd929ff06d6fa537',
+  'symfony/polyfill-iconv' => '*@af3c472142d3518418a6a3cacd929ff06d6fa537',
+  'symfony/polyfill-php72' => '*@af3c472142d3518418a6a3cacd929ff06d6fa537',
+  'symfony/polyfill-php71' => '*@af3c472142d3518418a6a3cacd929ff06d6fa537',
+  'symfony/polyfill-php70' => '*@af3c472142d3518418a6a3cacd929ff06d6fa537',
+  'symfony/polyfill-php56' => '*@af3c472142d3518418a6a3cacd929ff06d6fa537',
+  '__root__' => 'dev-master@af3c472142d3518418a6a3cacd929ff06d6fa537',
 );
 
     private function __construct()
