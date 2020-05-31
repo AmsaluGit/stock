@@ -8,6 +8,7 @@ class ComposerStaticInitd652681ed0217e271653c79f975818cc
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '92c8763cd6170fce6fcfe7e26b4e8c10' => __DIR__ . '/..' . '/symfony/phpunit-bridge/bootstrap.php',
@@ -39,6 +40,7 @@ class ComposerStaticInitd652681ed0217e271653c79f975818cc
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Php73\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
@@ -121,12 +123,18 @@ class ComposerStaticInitd652681ed0217e271653c79f975818cc
             'MsgPhp\\Domain\\' => 14,
             'Monolog\\' => 8,
         ),
+        'K' => 
+        array (
+            'Knp\\Component\\' => 14,
+            'Knp\\Bundle\\PaginatorBundle\\' => 27,
+        ),
         'E' => 
         array (
             'Egulias\\EmailValidator\\' => 23,
         ),
         'D' => 
         array (
+            'Doctrine\\SqlFormatter\\' => 22,
             'Doctrine\\Persistence\\' => 21,
             'Doctrine\\ORM\\' => 13,
             'Doctrine\\Migrations\\' => 20,
@@ -175,6 +183,10 @@ class ComposerStaticInitd652681ed0217e271653c79f975818cc
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
+        'Symfony\\Polyfill\\Php80\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
         'Symfony\\Polyfill\\Php73\\' => 
         array (
@@ -476,9 +488,21 @@ class ComposerStaticInitd652681ed0217e271653c79f975818cc
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'Knp\\Component\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component',
+        ),
+        'Knp\\Bundle\\PaginatorBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src',
+        ),
         'Egulias\\EmailValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator',
+        ),
+        'Doctrine\\SqlFormatter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/sql-formatter/src',
         ),
         'Doctrine\\Persistence\\' => 
         array (
@@ -566,7 +590,8 @@ class ComposerStaticInitd652681ed0217e271653c79f975818cc
         'Locale' => __DIR__ . '/..' . '/symfony/intl/Resources/stubs/Locale.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'NumberFormatter' => __DIR__ . '/..' . '/symfony/intl/Resources/stubs/NumberFormatter.php',
-        'SqlFormatter' => __DIR__ . '/..' . '/jdorn/sql-formatter/lib/SqlFormatter.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

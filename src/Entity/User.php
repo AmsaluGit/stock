@@ -46,6 +46,31 @@ class User implements UserInterface
      */
     private $orders;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Department::class, inversedBy="users")
+     */
+    private $department;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=UserType::class, inversedBy="users")
+     */
+    private $userType;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $middleName;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $lastName;
+
     public function __construct()
     {
         $this->transfers = new ArrayCollection();
@@ -186,4 +211,66 @@ class User implements UserInterface
 
         return $this;
     }
+
+    
+    public function getDepartment(): ?Department
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?Department $department): self
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    public function getUserType(): ?UserType
+    {
+        return $this->userType;
+    }
+
+    public function setUserType(?UserType $userType): self
+    {
+        $this->userType = $userType;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getMiddleName(): ?string
+    {
+        return $this->middleName;
+    }
+
+    public function setMiddleName(?string $middleName): self
+    {
+        $this->middleName = $middleName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
 }

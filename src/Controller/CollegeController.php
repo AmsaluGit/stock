@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/college")
@@ -16,67 +17,80 @@ use Symfony\Component\Routing\Annotation\Route;
 class CollegeController extends AbstractController
 {
     /**
-     * @Route("/", name="college_index", methods={"GET"})
+     * @Route("/", name="college_index", methods={"GET","POST"})
      */
-    public function index(CollegeRepository $collegeRepository): Response
-    {
-        return $this->render('college/index.html.twig', [
-            'colleges' => $collegeRepository->findAll(),
-        ]);
-    }
 
-    /**
-     * @Route("/new", name="college_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
+
+    public function index(Request $request, CollegeRepository $collegeRepository, PaginatorInterface $paginator): Response
     {
+
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $college=$collegeRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(CollegeType::class, $college);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+              //  $college->setUpdatedAt(new \DateTime());
+            
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('college_index');
+            }
+            $queryBuilder=$collegeRepository->findCollege($request->query->get('search'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                18
+            );
+            return $this->render('college/index.html.twig', [
+                'colleges' => $data,
+                'form' => $form->createView(),
+                'edit'=>$id
+            ]);    
+        }
         $college = new College();
         $form = $this->createForm(CollegeType::class, $college);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            /*$college->setIsActive(true);
+            $college->setCreatedAt(new \DateTime());
+            $college->setRegisteredBy($this->getUser());*/
             $entityManager->persist($college);
             $entityManager->flush();
 
             return $this->redirectToRoute('college_index');
         }
 
-        return $this->render('college/new.html.twig', [
-            'college' => $college,
+        $queryBuilder=$collegeRepository->findCollege($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            18
+        );
+        return $this->render('college/index.html.twig', [
+            'colleges' => $data,
             'form' => $form->createView(),
+            'edit'=>false
         ]);
-    }
+    }  
+
+
 
     /**
      * @Route("/{id}", name="college_show", methods={"GET"})
      */
     public function show(College $college): Response
     {
+        
         return $this->render('college/show.html.twig', [
             'college' => $college,
         ]);
     }
 
-    /**
-     * @Route("/{id}/edit", name="college_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, College $college): Response
-    {
-        $form = $this->createForm(CollegeType::class, $college);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('college_index');
-        }
-
-        return $this->render('college/edit.html.twig', [
-            'college' => $college,
-            'form' => $form->createView(),
-        ]);
-    }
+     
 
     /**
      * @Route("/{id}", name="college_delete", methods={"DELETE"})

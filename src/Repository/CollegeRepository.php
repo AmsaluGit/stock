@@ -19,6 +19,19 @@ class CollegeRepository extends ServiceEntityRepository
         parent::__construct($registry, College::class);
     }
 
+
+    public function findCollege($search=null)
+    {
+        $qb=$this->createQueryBuilder('c');
+        if($search)
+            $qb->andWhere("c.name  LIKE '%".$search."%'");
+
+            return 
+            $qb->orderBy('c.id', 'ASC')
+            ->getQuery()
+     
+        ;
+    }
     // /**
     //  * @return College[] Returns an array of College objects
     //  */
