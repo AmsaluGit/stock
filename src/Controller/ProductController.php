@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/product")
@@ -16,14 +17,63 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductController extends AbstractController
 {
     /**
-     * @Route("/", name="product_index", methods={"GET"})
+     * @Route("/", name="product_index", methods={"GET","POST"})
      */
-    public function index(ProductRepository $productRepository): Response
+    public function index(Request $request, ProductRepository $productRepository, PaginatorInterface $paginator): Response
     {
+        $rowsPerPage=5;
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $product=$productRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(ProductType::class, $product);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+              //  $product->setUpdatedAt(new \DateTime());
+            
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('product_index');
+            }
+            $queryBuilder=$productRepository->findProduct($request->query->get('search'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                $rowsPerPage
+            );
+            return $this->render('product/index.html.twig', [
+                'products' => $data,
+                'form' => $form->createView(),
+                'edit'=>$id
+            ]);    
+        }
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            /*$product->setIsActive(true);
+            $product->setCreatedAt(new \DateTime());
+            $product->setRegisteredBy($this->getUser());*/
+            $entityManager->persist($product);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('product_index');
+        }
+
+        $queryBuilder=$productRepository->findProduct($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            $rowsPerPage
+        );
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'products' => $data,
+            'form' => $form->createView(),
+            'edit'=>false
         ]);
-    }
+    }  
 
     /**
      * @Route("/new", name="product_new", methods={"GET","POST"})

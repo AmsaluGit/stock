@@ -21,7 +21,7 @@ class DepartmentController extends AbstractController
      */
     public function index(Request $request, DepartmentRepository $departmentRepository, PaginatorInterface $paginator): Response
     {
-
+ 
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $department=$departmentRepository->findOneBy(['id'=>$id]);
