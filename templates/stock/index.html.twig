@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Departement index
+{% block title %} Stock index
 {% endblock %}
 {% block maintitle %}
 
-	Manage products
+	Manage stocks
 {% endblock %}
 {% block breadcrumb %}
 	<li class="breadcrumb-item active">Stock
 	</li>
-	<li class="breadcrumb-item active">product</li>
+	<li class="breadcrumb-item active">stock</li>
 {% endblock %}
 {% block body %}
 	<div class="row">
@@ -39,7 +39,7 @@
 								{% if edit  %}
 									{% set button_label = 'Update' %}
 								{% endif %}
-								{{ include('product/_form.html.twig') }}
+								{{ include('stock/_form.html.twig') }}
 
 
 							</div>
@@ -50,7 +50,7 @@
 					<div class="col-md-12">
 						<div class="card card ">
 							<div class="card-header">
-								<h3 class="card-title">Product List</h3>
+								<h3 class="card-title">Items List</h3>
 								<div class="card-tools">
 
 									<form class="form-inline ml-3">
@@ -71,67 +71,48 @@
 								<table class="table table-hover">
 									<thead class="thead-light">
 										<tr>
-				<th>#</th>
-                <th>Name</th>
-                <th>Brand</th>
-                <th>Product Type</th>
-                {# <th>Model</th>
-                <th>Serial</th> #}
-                <th>Price</th>
-                
-             
-            
-                <th>Category</th>
-              
-                
-                
-                <th>actions</th>
+											<th>#</th>
+											<th>Product</th>
+											<th>quantity</th>
+											<th>store</th>
+											<th>date</th>
+											
+											<th>actions</th>
 										</tr>
 									</thead>
 									<tbody>
 										{% set i = 1 %}
-										{% for product in products %}
+										{% for stock in stocks %}
 											<tr>
 												<td>
 													{{ i }}
 													{% set i = i+1 %}
 												</td>
-                                                <td>{{ product.name }}</td>
-                                                <td>{{ product.brand }}</td>
-                                                <td>{{ product.productType }}</td>
-												{# <td>{{ product.model }}</td>
-												<td>{{ product.serial }}</td> #}
-												<td>{{ product.price }}</td>
-												 
-												 
-												 
-												<td>{{ product.category }}</td>
-												
-												
-												
-
-
+												<td>{{ stock.product }}</td>
+												<td>{{ stock.quantity }}</td>
+												<td>{{ stock.store }}</td>
+												<td>{{ stock.date | date('Y-m-d') }}</td>
 												<td>
 
 													<form class="d-inline" method="post">
 
 
-														<input type="hidden" name="edit" value="{{product.id}}">
+														<input type="hidden" name="edit" value="{{stock.id}}">
 														<button class="btn btn-info btn-sm" title="Edit">
 															<i class="fa fa-edit"></i>
 														</button>
 													</form>
-													<form class="d-inline" method="post" action="{{ path('product_delete', {'id': product.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+													<form class="d-inline" method="post" action="{{ path('stock_delete', {'id': stock.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
 
 														<input type="hidden" name="_method" value="DELETE">
 														<input
-														type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+														type="hidden" name="_token" value="{{ csrf_token('delete' ~ stock.id) }}">
 														{#  <button type="button" data-type="confirm" class="btn btn-danger js-sweetalert" title="Delete">#}
 														<button class="btn btn-danger btn-sm" title="Delete">
 															<i class="fa fa-trash"></i>
 														</button>
 													</form>
-													<a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-info btn-sm" title="Show">
+													<a href="{{ path('stock_show', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
 														<i class="fa fa-eye"></i>
 													</a>
 
@@ -145,7 +126,7 @@
 										{% endfor %}
 									</tbody>
 								</table>
-								<div class="float-right">{{ knp_pagination_render(products) }}</div>
+								<div class="float-right">{{ knp_pagination_render(stocks) }}</div>
 
 
 							</div>

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Stock{% endblock %}
+
+{% block body %}
+    <h1>Stock</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ stock.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ stock.quantity }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('stock_index') }}" class="btn btn-primary">back to list</a>
+{% endblock %}

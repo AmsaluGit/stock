@@ -12,8 +12,16 @@
                 <td>{{ order.id }}</td>
             </tr>
             <tr>
-                <th>GrossAmount</th>
-                <td>{{ order.grossAmount }}</td>
+                <th>Quantity</th>
+                <td>{{ order.quantity }}</td>
+            </tr>
+            <tr>
+                <th>RequestedDate</th>
+                <td>{{ order.requestedDate ? order.requestedDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>RecievedDate</th>
+                <td>{{ order.recievedDate ? order.recievedDate|date('Y-m-d') : '' }}</td>
             </tr>
         </tbody>
     </table>

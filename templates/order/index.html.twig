@@ -9,7 +9,9 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>GrossAmount</th>
+                <th>Quantity</th>
+                <th>RequestedDate</th>
+                <th>RecievedDate</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -17,7 +19,9 @@
         {% for order in orders %}
             <tr>
                 <td>{{ order.id }}</td>
-                <td>{{ order.grossAmount }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.requestedDate ? order.requestedDate|date('Y-m-d') : '' }}</td>
+                <td>{{ order.recievedDate ? order.recievedDate|date('Y-m-d') : '' }}</td>
                 <td>
                     <a href="{{ path('order_show', {'id': order.id}) }}">show</a>
                     <a href="{{ path('order_edit', {'id': order.id}) }}">edit</a>
@@ -25,7 +29,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

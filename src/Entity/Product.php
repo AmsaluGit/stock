@@ -25,16 +25,6 @@ class Product
     private $name;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $price;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $quantity;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
@@ -49,26 +39,7 @@ class Product
      */
     private $category;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Store::class, inversedBy="products")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $store;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $model;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $serial;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isavailable;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductType::class, inversedBy="products")
@@ -76,13 +47,20 @@ class Product
     private $productType;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=Stock::class, mappedBy="product")
      */
-    private $orderItems;
+    private $stocks;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $price;
+
+   
 
     public function __construct()
     {
-        $this->orderItems = new ArrayCollection();
+        $this->stocks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,30 +76,6 @@ class Product
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(?float $price): self
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(?int $quantity): self
-    {
-        $this->quantity = $quantity;
 
         return $this;
     }
@@ -162,53 +116,6 @@ class Product
         return $this;
     }
 
-    public function getStore(): ?Store
-    {
-        return $this->store;
-    }
-
-    public function setStore(?Store $store): self
-    {
-        $this->store = $store;
-
-        return $this;
-    }
-
-    public function getModel(): ?string
-    {
-        return $this->model;
-    }
-
-    public function setModel(string $model): self
-    {
-        $this->model = $model;
-
-        return $this;
-    }
-
-    public function getSerial(): ?string
-    {
-        return $this->serial;
-    }
-
-    public function setSerial(string $serial): self
-    {
-        $this->serial = $serial;
-
-        return $this;
-    }
-
-    public function getIsavailable(): ?bool
-    {
-        return $this->isavailable;
-    }
-
-    public function setIsavailable(bool $isavailable): self
-    {
-        $this->isavailable = $isavailable;
-
-        return $this;
-    }
 
     public function getProductType(): ?ProductType
     {
@@ -223,33 +130,52 @@ class Product
     }
 
     /**
-     * @return Collection|OrderItem[]
+     * @return Collection|Stock[]
      */
-    public function getOrderItems(): Collection
+    public function getStocks(): Collection
     {
-        return $this->orderItems;
+        return $this->stocks;
     }
 
-    public function addOrderItem(OrderItem $orderItem): self
+    public function addStock(Stock $stock): self
     {
-        if (!$this->orderItems->contains($orderItem)) {
-            $this->orderItems[] = $orderItem;
-            $orderItem->setProduct($this);
+        if (!$this->stocks->contains($stock)) {
+            $this->stocks[] = $stock;
+            $stock->setProduct($this);
         }
 
         return $this;
     }
 
-    public function removeOrderItem(OrderItem $orderItem): self
+    public function removeStock(Stock $stock): self
     {
-        if ($this->orderItems->contains($orderItem)) {
-            $this->orderItems->removeElement($orderItem);
+        if ($this->stocks->contains($stock)) {
+            $this->stocks->removeElement($stock);
             // set the owning side to null (unless already changed)
-            if ($orderItem->getProduct() === $this) {
-                $orderItem->setProduct(null);
+            if ($stock->getProduct() === $this) {
+                $stock->setProduct(null);
             }
         }
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+  
 }

@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,98 +19,91 @@ class Order
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="orders")
      */
-    private $customer;
+    private $product;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $quantity;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $requestedDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $recievedDate;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
      */
-    private $user;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $grossAmount;
-
-    /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="orderId")
-     */
-    private $orderItems;
-
-    public function __construct()
-    {
-        $this->orderItems = new ArrayCollection();
-    }
+    private $receiver;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCustomer(): ?User
+    public function getProduct(): ?Product
     {
-        return $this->customer;
+        return $this->product;
     }
 
-    public function setCustomer(?User $customer): self
+    public function setProduct(?Product $product): self
     {
-        $this->customer = $customer;
+        $this->product = $product;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getQuantity(): ?int
     {
-        return $this->user;
+        return $this->quantity;
     }
 
-    public function setUser(?User $user): self
+    public function setQuantity(int $quantity): self
     {
-        $this->user = $user;
+        $this->quantity = $quantity;
 
         return $this;
     }
 
-    public function getGrossAmount(): ?float
+    public function getRequestedDate(): ?\DateTimeInterface
     {
-        return $this->grossAmount;
+        return $this->requestedDate;
     }
 
-    public function setGrossAmount(float $grossAmount): self
+    public function setRequestedDate(\DateTimeInterface $requestedDate): self
     {
-        $this->grossAmount = $grossAmount;
+        $this->requestedDate = $requestedDate;
 
         return $this;
     }
 
-    /**
-     * @return Collection|OrderItem[]
-     */
-    public function getOrderItems(): Collection
+    public function getRecievedDate(): ?\DateTimeInterface
     {
-        return $this->orderItems;
+        return $this->recievedDate;
     }
 
-    public function addOrderItem(OrderItem $orderItem): self
+    public function setRecievedDate(?\DateTimeInterface $recievedDate): self
     {
-        if (!$this->orderItems->contains($orderItem)) {
-            $this->orderItems[] = $orderItem;
-            $orderItem->setOrderId($this);
-        }
+        $this->recievedDate = $recievedDate;
 
         return $this;
     }
 
-    public function removeOrderItem(OrderItem $orderItem): self
+    public function getReceiver(): ?User
     {
-        if ($this->orderItems->contains($orderItem)) {
-            $this->orderItems->removeElement($orderItem);
-            // set the owning side to null (unless already changed)
-            if ($orderItem->getOrderId() === $this) {
-                $orderItem->setOrderId(null);
-            }
-        }
+        return $this->receiver;
+    }
+
+    public function setReceiver(?User $receiver): self
+    {
+        $this->receiver = $receiver;
 
         return $this;
     }

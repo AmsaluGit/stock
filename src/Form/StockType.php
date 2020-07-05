@@ -2,29 +2,27 @@
 
 namespace App\Form;
 
-use App\Entity\OrderItem;
+use App\Entity\Stock;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class OrderItemType extends AbstractType
+class StockType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('quantity')
-            ->add('price')
-            ->add('recievedDate')
-            ->add('returnDate')
-            ->add('orderId')
+           // ->add('date')
             ->add('product')
+            ->add('store')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => OrderItem::class,
+            'data_class' => Stock::class,
         ]);
     }
 }

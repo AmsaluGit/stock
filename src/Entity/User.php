@@ -41,11 +41,7 @@ class User implements UserInterface
      */
     private $transfers;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="customer")
-     */
-    private $orders;
-
+ 
     /**
      * @ORM\ManyToOne(targetEntity=Department::class, inversedBy="users")
      */
@@ -70,6 +66,11 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $lastName;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="receiver")
+     */
+    private $orders;
 
     public function __construct()
     {
@@ -181,37 +182,7 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Order[]
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): self
-    {
-        if ($this->orders->contains($order)) {
-            $this->orders->removeElement($order);
-            // set the owning side to null (unless already changed)
-            if ($order->getCustomer() === $this) {
-                $order->setCustomer(null);
-            }
-        }
-
-        return $this;
-    }
-
+   
     
     public function getDepartment(): ?Department
     {
@@ -271,6 +242,42 @@ class User implements UserInterface
         $this->lastName = $lastName;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->contains($order)) {
+            $this->orders->removeElement($order);
+            // set the owning side to null (unless already changed)
+            if ($order->getReceiver() === $this) {
+                $order->setReceiver(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->firstName." ".$this->middleName." ".$this->lastName;
     }
 
 }

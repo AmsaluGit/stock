@@ -39,9 +39,15 @@ class Store
      */
     private $products;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Stock::class, mappedBy="store")
+     */
+    private $stocks;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->stocks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -119,4 +125,36 @@ class Store
     {
         return $this->name;
     }
+
+    /**
+     * @return Collection|Stock[]
+     */
+    public function getStocks(): Collection
+    {
+        return $this->stocks;
+    }
+
+    public function addStock(Stock $stock): self
+    {
+        if (!$this->stocks->contains($stock)) {
+            $this->stocks[] = $stock;
+            $stock->setStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStock(Stock $stock): self
+    {
+        if ($this->stocks->contains($stock)) {
+            $this->stocks->removeElement($stock);
+            // set the owning side to null (unless already changed)
+            if ($stock->getStore() === $this) {
+                $stock->setStore(null);
+            }
+        }
+
+        return $this;
+    }
+    
 }
