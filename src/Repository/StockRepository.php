@@ -21,6 +21,25 @@ class StockRepository extends ServiceEntityRepository
 
     public function findStock($search=null)
     {
+        $qb=$this->createQueryBuilder('s');
+       
+        if($search)
+        {
+            $qb->innerJoin("s.product","p");
+            $qb->andWhere("p.name  LIKE '%".$search."%'");
+        }
+            
+
+         return           
+        
+         $qb->orderBy('s.date', 'asc')
+          
+               ->getQuery()
+               ->getResult();
+    }
+
+    public function findStockInOut($search=null)
+    {
         $qb=$this->createQueryBuilder('s')
         ->innerJoin("s.product","p")
         ->innerJoin("p.unitOfMeasure","uom");

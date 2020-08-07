@@ -93,7 +93,9 @@
 												<td>{{ stock.store }}</td>
 												<td>{{ stock.date | date('Y-m-d') }}</td>
 												<td>
-
+<a href="{{ path('stock_show', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
+														<i class="fa fa-eye"></i>
+													</a>
 													<form class="d-inline" method="post">
 
 
@@ -112,9 +114,7 @@
 															<i class="fa fa-trash"></i>
 														</button>
 													</form>
-													<a href="{{ path('stock_show', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
-														<i class="fa fa-eye"></i>
-													</a>
+													
 
 												</td>
 

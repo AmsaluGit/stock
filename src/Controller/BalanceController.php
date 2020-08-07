@@ -36,7 +36,7 @@ class BalanceController extends AbstractController
             return $this->redirectToRoute('balance');
         }*/
 
-        $queryBuilder=$stockRepository->findStock($request->query->get('search'));
+        $queryBuilder=$stockRepository->findStockInOut($request->query->get('search'));
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page',1),
