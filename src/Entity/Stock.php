@@ -37,6 +37,8 @@ class Stock
      */
     private $date;
 
+ 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,4 +91,6 @@ class Stock
 
         return $this;
     }
+
+
 }

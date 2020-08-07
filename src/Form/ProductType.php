@@ -18,6 +18,7 @@ class ProductType extends AbstractType
             ->add('brand')
             ->add('category')
             ->add('productType')
+            ->add('unitOfMeasure')
         ;
     }
 

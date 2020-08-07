@@ -56,6 +56,11 @@ class Product
      */
     private $price;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=UnitOfMeasure::class)
+     */
+    private $unitOfMeasure;
+
    
 
     public function __construct()
@@ -173,6 +178,18 @@ class Product
     public function setPrice(float $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getUnitOfMeasure(): ?UnitOfMeasure
+    {
+        return $this->unitOfMeasure;
+    }
+
+    public function setUnitOfMeasure(?UnitOfMeasure $unitOfMeasure): self
+    {
+        $this->unitOfMeasure = $unitOfMeasure;
 
         return $this;
     }

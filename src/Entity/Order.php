@@ -43,6 +43,16 @@ class Order
      */
     private $receiver;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $approval1;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $approval2;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +114,30 @@ class Order
     public function setReceiver(?User $receiver): self
     {
         $this->receiver = $receiver;
+
+        return $this;
+    }
+
+    public function getApproval1(): ?bool
+    {
+        return $this->approval1;
+    }
+
+    public function setApproval1(?bool $approval1): self
+    {
+        $this->approval1 = $approval1;
+
+        return $this;
+    }
+
+    public function getApproval2(): ?bool
+    {
+        return $this->approval2;
+    }
+
+    public function setApproval2(?bool $approval2): self
+    {
+        $this->approval2 = $approval2;
 
         return $this;
     }

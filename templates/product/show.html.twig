@@ -16,10 +16,10 @@
                 <th>Price</th>
                 <td>{{ product.price }}</td>
             </tr>
-            <tr>
+            {# <tr>
                 <th>Quantity</th>
                 <td>{{ product.quantity }}</td>
-            </tr>
+            </tr> #}
             <tr>
                 <th>Product Type</th>
                 <td>{{ product.productType }}</td>
@@ -28,30 +28,18 @@
                 <th>Description</th>
                 <td>{{ product.description }}</td>
             </tr>
-            <tr>
-                <th>Model</th>
-                <td>{{ product.model }}</td>
-            </tr>
-            <tr>
-                <th>Serial</th>
-                <td>{{ product.serial }}</td>
-            </tr>
-            <tr>
-                <th>Isavailable</th>
-                <td>{{ product.isavailable ? 'Yes' : 'No' }}</td>
-            </tr>
+       
               <tr>
                 <th>Category</th>
                 <td>{{ product.category }}</td>
             </tr>
-            <tr>
-                <th>Store</th>
-                <td>{{ product.store }}</td>
-            </tr>
-          
+                
         </tbody>
     </table>
 
     <a href="{{ path('product_index') }}" class="btn btn-primary">back to list</a>
+     	<a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-success" title="Request">
+														<i class="">Request</i>
+													</a> 
 
 {% endblock %}

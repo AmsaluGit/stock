@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/categories")
- */
+ */ 
 class CategoriesController extends AbstractController
 {
     /**

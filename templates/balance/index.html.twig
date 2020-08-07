@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Stock index
+{% endblock %}
+{% block maintitle %}
+
+	Manage Requests
+{% endblock %}
+{% block breadcrumb %}
+	<li class="breadcrumb-item active">Stock
+	</li>
+	<li class="breadcrumb-item active">stock</li>
+{% endblock %}
+{% block body %}
+	<div class="row">
+		<div class="card col-md">
+
+			<div class="card-body">
+				<div class="row">
+				
+                
+                	{# <div class="col-md-12">
+						<div class="card card-info {{'collapsed-card'}}">
+							 
+							 
+							<div class="card-body">
+							 
+								{{ include('stock/_form.html.twig') }}
+
+
+							</div>
+						 
+						</div>
+					</div> #}
+
+					<div class="col-md-12">
+						<div class="card card ">
+							<div class="card-header">
+								{# <h3 class="card-title">Items List</h3> #}
+								<div class="card-tools">
+
+									<form class="form-inline ml-3">
+										<div class="input-group ">
+											<input class="form-control" autocomplete="off" name="search" type="search" placeholder="Search" aria-label="Search">
+											<div class="input-group-append">
+												<button class=" input-group-text btn btn-navbar " type="submit">
+													<i class="fas fa-search"></i>
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="card-body">
+
+
+								<table class="table table-hover">
+									<thead class="thead-light">
+										<tr>
+											<th>#</th>
+											<th>Product</th>
+											<th>quantity</th>
+											<th>UOM</th>
+											<th>actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% set i = 1 %}
+										{% for stock in stocks %}
+											<tr>
+												<td>
+													{{ i }}
+													{% set i = i+1 %}
+												</td>
+												<td>{{ stock.product }}</td>
+												<td>{{ stock.quantity }}</td>
+												 <td>{{ stock.unit }}</td> 
+												{# <td>{{ stock.date | date('Y-m-d') }}</td> #}
+												<td>
+
+													
+													<a href="{{ path('product_show', {'id': stock.pid}) }}" class="btn btn-info btn-sm" title="Show">
+														<i class="">More</i>
+													</a>
+
+                                                   
+
+												</td>
+
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="5">no records found</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+								<div class="float-right">{{ knp_pagination_render(stocks) }}</div>
+
+
+							</div>
+						</div>
+					</div>
+					<!-- /.card-body -->
+				</div>
+			</div>
+
+		</div>
+		<!-- /.card-body -->
+	</div>
+
+{% endblock %}
