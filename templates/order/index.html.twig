@@ -8,20 +8,29 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Product</th>
+                <th>Requester</th>
                 <th>Quantity</th>
-                <th>RequestedDate</th>
-                <th>RecievedDate</th>
-                <th>actions</th>
+                <th>Model</th>
+                <th>Serial</th>
+                <th>Req.Date</th>
+                <th>Approver 1</th>
+                <th>Approver 2</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody>
         {% for order in orders %}
             <tr>
-                <td>{{ order.id }}</td>
+                <td>{{ order.product }}</td>
+                <td>{{ order.receiver }}</td>
                 <td>{{ order.quantity }}</td>
+                <td>{{ order.model }}</td>
+                <td>{{ order.serial }}</td>
                 <td>{{ order.requestedDate ? order.requestedDate|date('Y-m-d') : '' }}</td>
-                <td>{{ order.recievedDate ? order.recievedDate|date('Y-m-d') : '' }}</td>
+                <td>{{ order.approval1 }}</td>
+                <td>{{ order.approval2 }}</td>
+                {# <td>{{ order.recievedDate ? order.recievedDate|date('Y-m-d') : '' }}</td> #}
                 <td>
                     <a href="{{ path('order_show', {'id': order.id}) }}">show</a>
                     <a href="{{ path('order_edit', {'id': order.id}) }}">edit</a>

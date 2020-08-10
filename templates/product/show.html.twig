@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>Product</h1>
-
+ <form action="{{ path('request', {'id': product.id}) }}" method="POST">
     <table class="table">
         <tbody>
   
@@ -29,17 +29,30 @@
                 <td>{{ product.description }}</td>
             </tr>
        
-              <tr>
+             <tr>
                 <th>Category</th>
                 <td>{{ product.category }}</td>
             </tr>
+           
+                <tr>
+                    <th>Quantity</th>
+                    <td><input type="number" name = "quantity" placeholder="Insert quantity here" required/></td>
+                </tr>
+                <tr>
+                    <th>Remark</th>
+                    <td ><textarea type="text" name = "remark" placeholder="Write any remarks here." style="widht:440px"></textarea></td>
+                </tr>
+            
                 
         </tbody>
+   
     </table>
 
-    <a href="{{ path('product_index') }}" class="btn btn-primary">back to list</a>
-     	<a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-success" title="Request">
-														<i class="">Request</i>
-													</a> 
+         <a href="{{ path('product_index') }}" class="btn btn-primary">back to list</a>
+
+     	<button type="submit" class="btn btn-success" title="Request"><i class="">Request</i></button> 
+        </form>
+
+                                                   
 
 {% endblock %}

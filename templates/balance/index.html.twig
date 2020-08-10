@@ -59,7 +59,8 @@
 										<tr>
 											<th>#</th>
 											<th>Product</th>
-											<th>quantity</th>
+											<th>Available</th>
+											<th>Requested</th>
 											<th>UOM</th>
 											<th>actions</th>
 										</tr>
@@ -74,6 +75,8 @@
 												</td>
 												<td>{{ stock.product }}</td>
 												<td>{{ stock.quantity }}</td>
+												<td>{{ 2*i}}</td>
+												{# <td>{{ stock.oquantity }}</td> #}
 												 <td>{{ stock.unit }}</td> 
 												{# <td>{{ stock.date | date('Y-m-d') }}</td> #}
 												<td>

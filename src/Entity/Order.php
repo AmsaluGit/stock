@@ -44,14 +44,29 @@ class Order
     private $receiver;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $model;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $serial;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $approval1;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $approval2;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $remark;
 
     public function getId(): ?int
     {
@@ -118,26 +133,64 @@ class Order
         return $this;
     }
 
-    public function getApproval1(): ?bool
+   
+
+    public function getModel(): ?string
+    {
+        return $this->model;
+    }
+
+    public function setModel(?string $model): self
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    public function getSerial(): ?string
+    {
+        return $this->serial;
+    }
+
+    public function setSerial(?string $serial): self
+    {
+        $this->serial = $serial;
+
+        return $this;
+    }
+
+    public function getApproval1(): ?User
     {
         return $this->approval1;
     }
 
-    public function setApproval1(?bool $approval1): self
+    public function setApproval1(?User $approval1): self
     {
         $this->approval1 = $approval1;
 
         return $this;
     }
 
-    public function getApproval2(): ?bool
+    public function getApproval2(): ?User
     {
         return $this->approval2;
     }
 
-    public function setApproval2(?bool $approval2): self
+    public function setApproval2(?User $approval2): self
     {
         $this->approval2 = $approval2;
+
+        return $this;
+    }
+
+    public function getRemark(): ?string
+    {
+        return $this->remark;
+    }
+
+    public function setRemark(?string $remark): self
+    {
+        $this->remark = $remark;
 
         return $this;
     }

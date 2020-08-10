@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Order;
+use App\Entity\Product;
 use App\Form\OrderType;
 use App\Repository\OrderRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +26,33 @@ class OrderController extends AbstractController
             'orders' => $orderRepository->findAll(),
         ]);
     }
+
+    /**
+     * @Route("/{id}", name="request", methods={"GET","POST"})
+     */
+    public function requestOrder(Request $request, Product $product): Response
+    {
+        /*return $this->render('order/index.html.twig', [
+            'orders' => $orderRepository->findAll(),
+        ]);*/
+       
+    $quantity = $request->request->get('quantity');
+    $remark = $request->request->get('remark');
+ 
+        $order = new Order();
+        $order->setProduct($product);
+        $order->setReceiver($this->getUser());
+        $order->setRequestedDate(new DateTime('now'));
+        $order->setQuantity($quantity);
+        if($remark) $order->setRemark($remark);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($order);
+        $entityManager->flush();
+        return $this->redirectToRoute("balance");
+        
+    } 
+
 
     /**
      * @Route("/new", name="order_new", methods={"GET","POST"})
@@ -46,7 +75,7 @@ class OrderController extends AbstractController
             'order' => $order,
             'form' => $form->createView(),
         ]);
-    }
+    } 
 
     /**
      * @Route("/{id}", name="order_show", methods={"GET"})

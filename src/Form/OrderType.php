@@ -16,7 +16,7 @@ class OrderType extends AbstractType
             ->add('requestedDate')
             ->add('recievedDate')
             ->add('product')
-            //->add('receiver')
+            ->add('receiver')
         ;
     }
 
