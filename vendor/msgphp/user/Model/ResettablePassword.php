@@ -1,0 +1,71 @@
+<?php
+
+declare(strict_types=1);
+
+namespace MsgPhp\User\Model;
+
+use MsgPhp\User\Event\Domain\CancelPasswordRequest;
+use MsgPhp\User\Event\Domain\FinishPasswordRequest;
+use MsgPhp\User\Event\Domain\RequestPassword;
+
+/**
+ * @author Roland Franssen <franssen.roland@gmail.com>
+ */
+trait ResettablePassword
+{
+    /** @var null|string */
+    private $passwordResetToken;
+    /** @var null|\DateTimeInterface */
+    private $passwordRequestedAt;
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function getPasswordRequestedAt(): ?\DateTimeInterface
+    {
+        return $this->passwordRequestedAt;
+    }
+
+    public function requestPassword(?string $token = null): void
+    {
+        $this->passwordResetToken = $token ?? bin2hex(random_bytes(32));
+        $this->passwordRequestedAt = new \DateTimeImmutable();
+    }
+
+    public function abortPasswordRequest(): void
+    {
+        $this->passwordResetToken = null;
+        $this->passwordRequestedAt = null;
+    }
+
+    private function onRequestPasswordEvent(RequestPassword $event): bool
+    {
+        $this->requestPassword($event->token);
+
+        return true;
+    }
+
+    private function onCancelPasswordRequestEvent(CancelPasswordRequest $event): bool
+    {
+        if (null === $this->passwordRequestedAt) {
+            return false;
+        }
+
+        $this->abortPasswordRequest();
+
+        return true;
+    }
+
+    private function onFinishPasswordRequestEvent(FinishPasswordRequest $event): bool
+    {
+        if (null === $this->passwordRequestedAt) {
+            return false;
+        }
+
+        $this->abortPasswordRequest();
+
+        return true;
+    }
+}
