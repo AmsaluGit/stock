@@ -14,6 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class StockRepository extends ServiceEntityRepository
 {
+    //this is constructor
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Stock::class);
