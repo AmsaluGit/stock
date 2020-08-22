@@ -22,7 +22,7 @@ class BalanceController extends AbstractController
      */
     public function index(Request $request, StockRepository $stockRepository, PaginatorInterface $paginator): Response
     {
-        $pageSize=100;
+        $pageSize=5;
 
         $stock = new Stock();
         $form = $this->createForm(StockType::class, $stock);
