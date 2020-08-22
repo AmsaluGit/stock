@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderRepository;
+use App\Repository\OrdersRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
- * @ORM\Table(name="`order`")
+ * @ORM\Table(name="`orders`")
  */
-class Order
+class Orders
 {
     /**
      * @ORM\Id()
@@ -67,6 +67,11 @@ class Order
      * @ORM\Column(type="text", nullable=true)
      */
     private $remark;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true, options={"default":"0"})
+     */
+    private $delivered;
 
     public function getId(): ?int
     {
@@ -191,6 +196,18 @@ class Order
     public function setRemark(?string $remark): self
     {
         $this->remark = $remark;
+
+        return $this;
+    }
+
+    public function getDelivered(): ?int
+    {
+        return $this->delivered;
+    }
+
+    public function setDelivered(int $delivered): self
+    {
+        $this->delivered = $delivered;
 
         return $this;
     }

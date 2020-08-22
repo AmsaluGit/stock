@@ -2,12 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Order;
+use App\Entity\Orders;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class OrderType extends AbstractType
+class OrdersType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

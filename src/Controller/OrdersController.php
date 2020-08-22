@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Order;
+use App\Entity\Orders;
 use App\Entity\Product;
-use App\Form\OrderType;
-use App\Repository\OrderRepository;
+use App\Form\OrdersType;
+use App\Repository\OrdersRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,12 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/order")
  */
-class OrderController extends AbstractController
+class OrdersController extends AbstractController
 {
     /**
      * @Route("/", name="order_index", methods={"GET"})
      */
-    public function index(OrderRepository $orderRepository): Response
+    public function index(OrdersRepository $orderRepository): Response
     {
         return $this->render('order/index.html.twig', [
             'orders' => $orderRepository->findAll(),
@@ -36,10 +36,10 @@ class OrderController extends AbstractController
             'orders' => $orderRepository->findAll(),
         ]);*/
        
-    $quantity = $request->request->get('quantity');
-    $remark = $request->request->get('remark');
+        $quantity = $request->request->get('quantity');
+        $remark = $request->request->get('remark');
  
-        $order = new Order();
+        $order = new Orders();
         $order->setProduct($product);
         $order->setReceiver($this->getUser());
         $order->setRequestedDate(new DateTime('now'));
@@ -80,7 +80,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}", name="order_show", methods={"GET"})
      */
-    public function show(Order $order): Response
+    public function show(Orders $order): Response
     {
         return $this->render('order/show.html.twig', [
             'order' => $order,
@@ -90,9 +90,9 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}/edit", name="order_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Order $order): Response
+    public function edit(Request $request, Orders $order): Response
     {
-        $form = $this->createForm(OrderType::class, $order);
+        $form = $this->createForm(OrdersType::class, $order);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -104,13 +104,13 @@ class OrderController extends AbstractController
         return $this->render('order/edit.html.twig', [
             'order' => $order,
             'form' => $form->createView(),
-        ]);
+        ]); 
     }
 
     /**
      * @Route("/{id}", name="order_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, Order $order): Response
+    public function delete(Request $request, Orders $order): Response
     {
         if ($this->isCsrfTokenValid('delete'.$order->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
