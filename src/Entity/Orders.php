@@ -6,7 +6,7 @@ use App\Repository\OrdersRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=OrderRepository::class)
+ * @ORM\Entity(repositoryClass=OrdersRepository::class)
  * @ORM\Table(name="`orders`")
  */
 class Orders
@@ -72,6 +72,16 @@ class Orders
      * @ORM\Column(type="smallint", nullable=true, options={"default":"0"})
      */
     private $delivered;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true, options={"default":"0"})
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default":"0"})
+     */
+    private $allowedQuantity;
 
     public function getId(): ?int
     {
@@ -208,6 +218,30 @@ class Orders
     public function setDelivered(int $delivered): self
     {
         $this->delivered = $delivered;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getAllowedQuantity(): ?int
+    {
+        return $this->allowedQuantity;
+    }
+
+    public function setAllowedQuantity(?int $allowedQuantity): self
+    {
+        $this->allowedQuantity = $allowedQuantity;
 
         return $this;
     }

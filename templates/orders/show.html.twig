@@ -1,34 +1,120 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Order{% endblock %}
+{% block title %}
+	Request details
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Order</h1>
+	{# <h1>Order</h1> #}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ order.id }}</td>
-            </tr>
-            <tr>
-                <th>Quantity</th>
-                <td>{{ order.quantity }}</td>
-            </tr>
-            <tr>
-                <th>RequestedDate</th>
-                <td>{{ order.requestedDate ? order.requestedDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>RecievedDate</th>
-                <td>{{ order.recievedDate ? order.recievedDate|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('order_index') }}">back to list</a>
+	<div class="col-md-12">
+		<div class="card card-info">
+			<div class="card-header ">
+				<h3 class="card-title ">Request details</h3>
+				<div class="card-tools">
 
-    <a href="{{ path('order_edit', {'id': order.id}) }}">edit</a>
+					<form class="form-inline ml-3">
+						<div class="input-group ">
+							<input class="form-control" autocomplete="off" name="search" type="search" placeholder="Search" aria-label="Search">
+							<div class="input-group-append">
+								<button class=" input-group-text btn btn-navbar " type="submit">
+									<i class="fas fa-search"></i>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="card-body">
 
-    {{ include('order/_delete_form.html.twig') }}
+
+				<table class="table">
+					<tbody>
+						{% set coloring = "badge-info" %}
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">Product Type</span>
+							</th>
+							<td>{{ order.product.productType }}</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">Category</span>
+							</th>
+							<td>{{ order.product.category }}</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">Product</span>
+							</th>
+							<td>{{ order.product }}</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">Model</span>
+							</th>
+							<td>{{ order.product.brand }}</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">Requested quantity</span>
+							</th>
+							<td>{{ order.quantity }}</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">RequestedDate</span>
+							</th>
+							<td>{{ order.requestedDate ? order.requestedDate|date('M d, Y') : '' }}</td>
+						</tr>
+
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">Requested By</span>
+							</th>
+							<td>{{ order.receiver }}</td>
+						</tr>
+
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">Department</span>
+							</th>
+							<td>{{ order.receiver.department }}</td>
+						</tr>
+
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">Request Purpose</span>
+							</th>
+							<td>{{ order.remark }}</td>
+						</tr>
+					
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+<table class="table table-condensed"  style="width:40%">
+<thead>
+<tr><th><a href="{{ path('order_index') }}" class="btn btn-primary">Back</a></th>
+
+<th  style="margin:0px"><form action ="{{ path('order_approve', {'id': order.id}) }}" method="POST"> <input type="submit" value="Approve" name="approve" class="btn btn-success"></input></form></th>
+
+
+<th  style="margin:0px"><form action ="{{ path('order_approve', {'id': order.id}) }}" method="POST"> <input type="submit" value="Reject" name="reject" class="btn btn-warning"></input></form></th>
+
+<th>{{ include('orders/_delete_form.html.twig') }}</th></tr>
+</thead>
+</table>
+
+
 {% endblock %}

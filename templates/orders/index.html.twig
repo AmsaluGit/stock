@@ -1,13 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Order index{% endblock %}
+{% block title %} Order index
+{% endblock %}
+{% block maintitle %}
 
+	Manage requests
+{% endblock %}
+{% block breadcrumb %}
+	<li class="breadcrumb-item active">Stock
+	</li>
+	<li class="breadcrumb-item active">Requests</li>
+{% endblock %}
 {% block body %}
-    <h1>Order index</h1>
+	<div class="row">
+		<div class="card col-md">
 
-    <table class="table">
-        <thead>
+			<div class="card-body ">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card" style="background-color: #17a2b8; color:white">
+
+                            <div class="card-header">
+								<h3 class="card-title">
+								
+									Item Requests list
+									 
+								</h3>
+
+							</div>
+							<!-- /.card-body -->
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<div class="card card ">
+							<div class="card-header">
+								{# <h3 class="card-title">Requests List</h3> #}
+								<div class="card-tools">
+
+									<form class="form-inline ml-3">
+										<div class="input-group ">
+											<input class="form-control" autocomplete="off" name="search" type="search" placeholder="Search" aria-label="Search">
+											<div class="input-group-append">
+												<button class=" input-group-text btn btn-navbar " type="submit">
+													<i class="fas fa-search"></i>
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="card-body card-info">
+
+
+								<table class="table table-hover">
+									<thead class="thead-light">
+									
             <tr>
+                <th>No.</th>
                 <th>Product</th>
                 <th>Requester</th>
                 <th>Quantity</th>
@@ -18,31 +68,80 @@
                 <th>Approver 2</th>
                 <th>Details</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for order in orders %}
-            <tr>
-                <td>{{ order.product }}</td>
+        
+									</thead>
+									<tbody>
+										{% set i = 1 %}
+										  {% for order in orders %}
+											<tr>
+												<td>
+													{{ i }}
+													{% set i = i+1 %}
+												</td>
+											       <td>{{ order.product }}</td>
                 <td>{{ order.receiver }}</td>
                 <td>{{ order.quantity }}</td>
-                <td>{{ order.model }}</td>
+                <td>{{ order.product.brand }}</td>
                 <td>{{ order.serial }}</td>
                 <td>{{ order.requestedDate ? order.requestedDate|date('Y-m-d') : '' }}</td>
-                <td>{{ order.approval1 }}</td>
-                <td>{{ order.approval2 }}</td>
-                {# <td>{{ order.recievedDate ? order.recievedDate|date('Y-m-d') : '' }}</td> #}
                 <td>
-                    <a href="{{ path('order_show', {'id': order.id}) }}">show</a>
-                    <a href="{{ path('order_edit', {'id': order.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+				
+				{% if order.status == 1 %}
+				<i class="fa fa-check" style="color:green"></i> 
+				{% elseif order.status == 10 %}
+				<i class="fa fa-times" style="color:red"></i> 	
+				{% elseif order.approval1 %}
+				<i class="fa fa-check" style="color:green"></i> 
+				{% else %}
+						<i class="fa fa-spinner" style="color:primary"></i> 	
+				{% endif %}
+				&nbsp; 
+				{{ order.approval1 }}
+				</td>
 
-    <a href="{{ path('order_new') }}">Create new</a>
+
+              <td>
+				
+				{% if order.status == 2 %}
+				<i class="fa fa-check" style="color:green"></i> 
+				{% elseif order.status == 20 %}
+				<i class="fa fa-times" style="color:red"></i> 	
+				{% elseif order.approval2 %}
+				<i class="fa fa-check" style="color:green"></i> 
+				{% else %}
+					<i class="fa fa-spinner" style="color:primary"></i> 	
+				{% endif %}
+				&nbsp; 
+				{{ order.approval2 }}
+				</td>
+
+						<td>							
+					<a href="{{ path('order_show', {'id': order.id}) }}" class="btn btn-info btn-sm" title="Show">
+														<i class="fa fa-eye"></i>
+													</a>
+
+												</td>
+
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="5">no records found</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+								{# <div class="float-right">{{ knp_pagination_render(order) }}</div> #}
+
+
+							</div>
+						</div>
+					</div>
+					<!-- /.card-body -->
+				</div>
+			</div>
+
+		</div>
+		<!-- /.card-body -->
+	</div>
+
 {% endblock %}

@@ -17,13 +17,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OrdersController extends AbstractController
 {
-    /**
+    /** 
      * @Route("/", name="order_index", methods={"GET"})
      */
     public function index(OrdersRepository $orderRepository): Response
     {
-        return $this->render('order/index.html.twig', [
-            'orders' => $orderRepository->findAll(),
+        return $this->render('orders/index.html.twig', [
+           // 'orders' => $orderRepository->findAll(),
+            'orders' => $orderRepository->findBy([],["id"=>"DESC"]),
         ]);
     }
 
@@ -43,7 +44,7 @@ class OrdersController extends AbstractController
         $order->setProduct($product);
         $order->setReceiver($this->getUser());
         $order->setRequestedDate(new DateTime('now'));
-        $order->setQuantity($quantity);
+        if($quantity) $order->setQuantity($quantity);
         if($remark) $order->setRemark($remark);
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -71,22 +72,91 @@ class OrdersController extends AbstractController
             return $this->redirectToRoute('order_index');
         }
 
-        return $this->render('order/new.html.twig', [
+        return $this->render('orders/new.html.twig', [
             'order' => $order,
             'form' => $form->createView(),
         ]);
     } 
 
     /**
-     * @Route("/{id}", name="order_show", methods={"GET"})
+     * @Route("/item/{id}", name="order_show", methods={"GET"})
      */
     public function show(Orders $order): Response
     {
-        return $this->render('order/show.html.twig', [
+        
+        return $this->render('orders/show.html.twig', [
             'order' => $order,
         ]);
     }
+    public function doApprovalOrReject(Orders $order, $approve, $reject, $approver)
+    {
+        $em = $this->getDoctrine()->getManager();
 
+        if($approve)
+        {
+            
+            switch ($approver) 
+            {
+                case '1':
+                $order->setApproval1($this->getUser());
+                $order->setStatus(1);
+                    break;
+                case '2':
+                $order->setApproval2($this->getUser());
+                $order->setStatus(2);
+                    break;
+                case '3':
+                $order->setApproval3($this->getUser());
+                $order->setStatus(3);
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+        else if($reject)
+        {
+           
+            switch ($approver) 
+            {
+                case '1':
+                $order->setApproval1($this->getUser());
+                $order->setStatus(10);
+                    break;
+                case '2':
+                $order->setApproval2($this->getUser());
+                $order->setStatus(20);
+                    break;
+                case '3':
+                $order->setApproval3($this->getUser());
+                $order->setStatus(30);
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+        else
+        {
+            dd("Neither approved nor Rejected");
+        }
+       
+            $em->flush();
+
+    }
+    /**
+     * @Route("/{id}/approve", name="order_approve", methods={"GET","POST"})
+     */
+    public function ApproveOrReject(Request $request, Orders $order): Response
+    {
+        $approve = $request->request->get('approve');
+        $reject = $request->request->get('reject');
+       
+        $approver = 1;
+        self::doApprovalOrReject($order, $approve, $reject, $approver);
+    
+        return $this->redirectToRoute('order_index');
+    }
     /**
      * @Route("/{id}/edit", name="order_edit", methods={"GET","POST"})
      */
@@ -101,7 +171,7 @@ class OrdersController extends AbstractController
             return $this->redirectToRoute('order_index');
         }
 
-        return $this->render('order/edit.html.twig', [
+        return $this->render('orders/edit.html.twig', [
             'order' => $order,
             'form' => $form->createView(),
         ]); 
