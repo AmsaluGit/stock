@@ -83,6 +83,11 @@ class Orders
      */
     private $allowedQuantity;
 
+    /**
+     * @ORM\Column(type="smallint", nullable=true, options={"default":"0"})
+     */
+    private $closed;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -242,6 +247,18 @@ class Orders
     public function setAllowedQuantity(?int $allowedQuantity): self
     {
         $this->allowedQuantity = $allowedQuantity;
+
+        return $this;
+    }
+
+    public function getClosed(): ?int
+    {
+        return $this->closed;
+    }
+
+    public function setClosed(?int $closed): self
+    {
+        $this->closed = $closed;
 
         return $this;
     }

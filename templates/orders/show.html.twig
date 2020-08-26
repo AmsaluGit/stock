@@ -105,14 +105,23 @@
 
 <table class="table table-condensed"  style="width:40%">
 <thead>
-<tr><th><a href="{{ path('order_index') }}" class="btn btn-primary">Back</a></th>
+<tr>
+
+
+<th><a href="{{ path('order_index') }}" class="btn btn-primary">Back</a></th>
 
 <th  style="margin:0px"><form action ="{{ path('order_approve', {'id': order.id}) }}" method="POST"> <input type="submit" value="Approve" name="approve" class="btn btn-success"></input></form></th>
 
 
 <th  style="margin:0px"><form action ="{{ path('order_approve', {'id': order.id}) }}" method="POST"> <input type="submit" value="Reject" name="reject" class="btn btn-warning"></input></form></th>
 
-<th>{{ include('orders/_delete_form.html.twig') }}</th></tr>
+<th>{{ include('orders/_delete_form.html.twig') }}</th>
+
+{% if order.closed %}
+<th  style="margin:0px"><form action ="{{ path('order_approve', {'id': order.id}) }}" method="POST"> <input type="submit" value="Download" name="dowload" class="btn btn-info"></input></form></th>
+{% endif %}
+
+</tr>
 </thead>
 </table>
 
