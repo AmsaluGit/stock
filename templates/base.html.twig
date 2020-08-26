@@ -22,6 +22,8 @@
 		<link rel="stylesheet" href="{{asset('assets/plugins/daterangepicker/daterangepicker.css')}}">
 		<link
 		rel="stylesheet" href="{{asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+
+    <link href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet">
 		{#
 				    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> #}
 		<link href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet"> {% block stylesheets %}{% endblock %}
@@ -288,9 +290,9 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ path('home') }} " class="nav-link">
+                <a href="{{ path('user_group_index') }} " class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Groups</p>
+                  <p>User Groups</p>
                 </a>
               </li>
             </ul>

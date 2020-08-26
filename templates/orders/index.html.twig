@@ -66,6 +66,7 @@
                 <th>Req.Date</th>
                 <th>Approver 1</th>
                 <th>Approver 2</th>
+                <th>Approver 3</th>
                 <th>Details</th>
             </tr>
         
@@ -84,8 +85,9 @@
                 <td>{{ order.product.brand }}</td>
                 <td>{{ order.serial }}</td>
                 <td>{{ order.requestedDate ? order.requestedDate|date('Y-m-d') : '' }}</td>
-                <td>
+                
 				
+				<td>
 				{% if order.status == 1 %}
 				<i class="fa fa-check" style="color:green"></i> 
 				{% elseif order.status == 10 %}
@@ -113,6 +115,24 @@
 				{% endif %}
 				&nbsp; 
 				{{ order.approval2 }}
+				</td>
+
+
+
+
+              <td>
+				
+				{% if order.status == 3 %}
+				<i class="fa fa-check" style="color:green"></i> 
+				{% elseif order.status == 30 %}
+				<i class="fa fa-times" style="color:red"></i> 	
+				{% elseif order.approval3 %}
+				<i class="fa fa-check" style="color:green"></i> 
+				{% else %}
+					<i class="fa fa-spinner" style="color:primary"></i> 	
+				{% endif %}
+				&nbsp; 
+				{{ order.approval3 }}
 				</td>
 
 						<td>							

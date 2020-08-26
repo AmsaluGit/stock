@@ -102,12 +102,16 @@ class OrdersController extends AbstractController
                 $order->setStatus(1);
                     break;
                 case '2':
+                //if($isLastApprover && $order->getStatus()==1) $order->setClosed(1);
                 $order->setApproval2($this->getUser());
                 $order->setStatus(2);
+                
                     break;
                 case '3':
                 $order->setApproval3($this->getUser());
                 $order->setStatus(3);
+                $order->setClosed(1);
+                
                     break;
                 default:
                     # code...
@@ -130,9 +134,10 @@ class OrdersController extends AbstractController
                 case '3':
                 $order->setApproval3($this->getUser());
                 $order->setStatus(30);
+                $order->setClosed(0);
                     break;
                 default:
-                    # code...
+                dd("CASE DEFAULT....");
                     break;
             }
         }
@@ -152,7 +157,7 @@ class OrdersController extends AbstractController
         $approve = $request->request->get('approve');
         $reject = $request->request->get('reject');
        
-        $approver = 1;
+        $approver = 3;
         self::doApprovalOrReject($order, $approve, $reject, $approver);
     
         return $this->redirectToRoute('order_index');

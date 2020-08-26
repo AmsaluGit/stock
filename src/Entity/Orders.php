@@ -88,6 +88,13 @@ class Orders
      */
     private $closed;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $approval3;
+
+   
+
     public function getId(): ?int
     {
         return $this->id;
@@ -262,4 +269,18 @@ class Orders
 
         return $this;
     }
+
+    public function getApproval3(): ?User
+    {
+        return $this->approval3;
+    }
+
+    public function setApproval3(?User $approval3): self
+    {
+        $this->approval3 = $approval3;
+
+        return $this;
+    }
+
+
 }
