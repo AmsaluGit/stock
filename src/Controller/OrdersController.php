@@ -28,6 +28,17 @@ class OrdersController extends AbstractController
         ]);
     }
 
+    /** 
+     * @Route("/model22/{id}", name="model22", methods={"GET","POST"})
+     */
+    public function model22(Orders $order): Response
+    {
+        return $this->render('orders/model22.html.twig', [
+           // 'orders' => $orderRepository->findAll(),
+            'order' => $order
+        ]);
+    }
+
     /**
      * @Route("/{id}", name="request", methods={"GET","POST"})
      */

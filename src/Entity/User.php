@@ -103,12 +103,18 @@ class User implements UserInterface
      */
     private $role;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Requests::class, mappedBy="requester")
+     */
+    private $requests;
+
 
 
     public function __construct()
     {
         $this->transfers = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->requests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -381,6 +387,37 @@ class User implements UserInterface
     public function setRole(?string $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Requests[]
+     */
+    public function getRequests(): Collection
+    {
+        return $this->requests;
+    }
+
+    public function addRequest(Requests $request): self
+    {
+        if (!$this->requests->contains($request)) {
+            $this->requests[] = $request;
+            $request->setRequester($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRequest(Requests $request): self
+    {
+        if ($this->requests->contains($request)) {
+            $this->requests->removeElement($request);
+            // set the owning side to null (unless already changed)
+            if ($request->getRequester() === $this) {
+                $request->setRequester(null);
+            }
+        }
 
         return $this;
     }

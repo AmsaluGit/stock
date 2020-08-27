@@ -93,6 +93,11 @@ class Orders
      */
     private $approval3;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Requests::class, inversedBy="orders")
+     */
+    private $request;
+
    
 
     public function getId(): ?int
@@ -278,6 +283,18 @@ class Orders
     public function setApproval3(?User $approval3): self
     {
         $this->approval3 = $approval3;
+
+        return $this;
+    }
+
+    public function getRequest(): ?Requests
+    {
+        return $this->request;
+    }
+
+    public function setRequest(?Requests $request): self
+    {
+        $this->request = $request;
 
         return $this;
     }
