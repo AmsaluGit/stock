@@ -98,6 +98,11 @@ class Orders
      */
     private $request;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $unitprice;
+
    
 
     public function getId(): ?int
@@ -295,6 +300,18 @@ class Orders
     public function setRequest(?Requests $request): self
     {
         $this->request = $request;
+
+        return $this;
+    }
+
+    public function getUnitprice(): ?int
+    {
+        return $this->unitprice;
+    }
+
+    public function setUnitprice(?int $unitprice): self
+    {
+        $this->unitprice = $unitprice;
 
         return $this;
     }

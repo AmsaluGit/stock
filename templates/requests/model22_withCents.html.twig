@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	
+		<link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}">
+	<style>
+		.header2{
+			padding-left: 40px;
+		}
+
+		.logo{
+			margin: 10px;
+			height:100px;
+			width: 100px;
+		  }
+
+		  .bt-0{
+			border-top: 0px;  
+		  }
+		  
+		  th{
+			  text-align: center;
+		  }
+
+		  td{
+			  padding: 10px;
+		  }
+		  .bm-0{
+			border-bottom: 0px;
+			padding-top: 10px;
+		  }
+		  .container{
+			  /*background: #ccc;*/
+		  }
+	</style>
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-6"> 
+				 
+					<img class="logo" src="{{asset('assets/images/logo.png')}}"><br>
+					<p>የኢትዮጵያ ፌደራላዊ ዲሞክራሲያዊ ሪፐብሊክ</p>
+					<p> THE FEDERAL DEMOCRATIC REPUBLIC<br> OF ETHIOPIA</p>
+					<P>ገንዘብ ሚኒስቴር</P>
+					<p>MINISTRY OF FINANCE</p>
+				 
+				<p>______________________________ Department</p>
+			</div>
+			<div class="col-sm-6 header2">
+				
+				ሴሪ ሀ/17<br>
+				Serial A/17<br>
+				1. ገንዘብ በወጪ መዝገብ የተጻፈበት ተራ ቁጥር ____________<br>
+				   item No. in expenditure history<br>
+				2. እቃ ገቢ መዝገብ የገባበት ንምራ ___________________<br>
+				   No of entry in the register of incoming goods<br>
+				3. እቃው የተሰጠው መደብ ________________________<br>
+				   Classification of stock<br>
+				4. እቃው የተቀመጠበት መጋዘን ቁጥር __________________<br>
+				   Store No.<br>
+				5. የመደርደሪያው ቁጥር ___________________________<br>
+				   Shelf No.<br>
+				6. በእቃው ወጪ መዝገብ የተጻፈበት ቁጥር _______________<br>
+				   No of entry in the register of out coming goods
+			</div>
+		</div><br><br>
+
+		<center>
+			<div class="row">
+			 
+				<div class="col-sm-8">
+					<b> ወይም የንብረት ወጪ ደረሰኝ
+						<p><u>RECEIPT FOR ARTICLES OF PROPTERTY ISSUED</u></p>
+					</b>
+				</div>
+				<div class="col-sm-4">
+					N<sup><u>o</u></sup> ________________
+				</div>
+				
+				<div class="col-md-12">
+					ለ {{ requests.requester }} ቀን  {{ requests.requestedDate | date('y-m-d') }}  ዓ.ም በቁጥር ______________ በተጻፈው ትእዛዝ መሰረት ቀጥሎ <br>
+					በዝርዝር የተጻፉትን እቃዎች ለ {{ requests.reason }} አገልግሎት በትክክል ቆጥሬ መረከቤን በፊርማዬ አረጋግጣለሁ።<br> 
+
+
+					
+					<table width="80%" border="1">
+						<thead>
+							<tr>
+								<th class="bm-0">
+									ሴሪ <br>
+									Serial No.
+								</th>
+								<th class="bm-0">
+									የእቃው ወይም የንብረቱ ዓይነት ዝርዝር<br>
+									Detailed description of Articles or Property
+								</th>
+								<th class="bm-0">
+									ሞዴል<br>
+									Model 
+								</th>
+								<th class="bm-0">
+									ሴሪ<br>
+									Serial
+								</th>
+								<th colspan="2">
+									ተከታታይ
+								</th>
+								<th class="bm-0">ብዛት<br>Quantity</th>
+								<th colspan="2">የአንዱ ዋጋ<br>Unit Price</th>
+								<th colspan="2">የዋጋው ድምር<br>Total Price</th>
+								<th class="bm-0">ምርመራ<br>Remarks</th>
+							</tr>
+							<tr>
+								<th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th>ከ</th><th>እስከ</th>
+								<th class="bt-0"></th><th>ብር<br>Birr</th><th>ሳ<br>cent</th><th>ብር<br>Birr</th><th>ሳ<br>cent</th><th class="bt-0"></th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for order in requests.orders %}
+							
+						
+							<tr>
+								<td>{{loop.index}}</td>
+								<td>{{order.product.name}}</td>
+								<td>{{order.model}}</td>
+								<td>{{order.serial}}</td>
+								<td>KE</td>
+								<td>ESKE</td>
+								<td>{{order.quantity}}</td>
+								<td>{{order.unitprice}}</td>
+								<td>0</td>
+								<td>{{order.unitprice * order.quantity +6 }}</td>
+								<td>0</td>
+								<td>remarks</td>
+								
+								
+								 
+							</tr>
+							{% endfor %}
+							<tr>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+							</tr>
+							<tr>
+								<td colspan="4" style="margin-left:200px ">ድምር</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+				 
+			</div>
+			 </center>
+			<div class="row">
+				<div class="col-md-6"><br>
+					______ ቀን  _________ ዓ.ም<br><br>
+					<p>የግምጃ ቤቱ ፊርማ ________<br>Store-keeper's Signature</p>
+				</div>
+				<div class="col-md-6">
+					<div class="float-right">
+						<br><br><br>
+						የተቀባዩ ፊርማ ________<br>
+						Receipent's Signature
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<table>
+					<tr>
+						<td> ማመልከቻ : </td>
+						<td> ይህ ካርኔ 3 ኮፒ ሆኖ በካርቦን ይሰራል። ከነዚህም ሁለቱ ተጎራጅ ሆነው 1ኛው በክፍሉ መስሪያ ቤት ሂሳብ ቤት አማካይነት ለገንዘብ ሚኒስቴር ጠቅላይ 
+							ሂሳብ ቤት ለእቃ መቆጣጠሪያ ክፍል  ይተላለፋል ። 2 ተኛው ለእቃ ወጪ መዝገብ ማስተካከያ ሰነድ እንዲሆነው ለክፍሉ ሂሳብ ቤት
+							ይሰጣል። 3 ተኛው ኮፒ ሳይጎረድ እንዳለ ሆኖ የእቃ ግምጃ ቤት እቃውን በትእዛዝ ያወጣውን መሆኑን ለመርማሪ ለማስረዳት እንዲችል ከማዘዣው ጋር 
+							በሙጫ አያይዞ እንዲኖር ይደረጋል።
+						</td>
+					</tr>
+					<tr>
+						<td> ማስጠንቀቂያ ፡ </td>
+						<td>መደባቸው አንድ አይነት ለሆኑና ተቀባያቸው አንድ ሰው ብቻ ለሆነ ልዩ ልዩ እቃዎች አንድ ቅጠል ይበቃል።  መደባቸው ሲለያይ ግን በራሳቸው 
+							አንዳንድ ደረሰኝ ሊጻፍላቸው ይችላል። ይኸውም በየመደቡ እየለዩ ለማኖር እንዲመች ነው። በዋጋው ድምር መጻፍያ አምድ ውስጥ የተመለከተው
+							በውርስ ወይም በሌላ ምክንያት የተገኘ እቃ ወይም ንብረት የሆነ እንደሆነ ዋጋው በኤክስፖርት ተገምቶ ግምቱ በዋጋው አምድ ውስጥ ይገባል።
+						</td>
+					</tr>
+				</table>				
+			</div>
+		</div>
+	</div>
+
+
+
+	<input type="button" value="Print" name="" id ="print" class="float-right mr-5 btn btn-primary" onclick="Actions()"/>
+</body>
+
+
+</script>
+</html>

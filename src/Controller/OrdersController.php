@@ -7,10 +7,12 @@ use App\Entity\Product;
 use App\Form\OrdersType;
 use App\Repository\OrdersRepository;
 use DateTime;
+use Proxies\__CG__\App\Entity\Requests;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @Route("/order")
@@ -28,16 +30,37 @@ class OrdersController extends AbstractController
         ]);
     }
 
-    /** 
-     * @Route("/model22/{id}", name="model22", methods={"GET","POST"})
+
+    /**
+     * @Route("/{id}", name="addtocart", methods={"GET","POST"})
      */
-    public function model22(Orders $order): Response
+    public function addToCart(Request $request, Product $product): Response
     {
-        return $this->render('orders/model22.html.twig', [
-           // 'orders' => $orderRepository->findAll(),
-            'order' => $order
-        ]);
+        /*return $this->render('order/index.html.twig', [
+            'orders' => $orderRepository->findAll(),
+        ]);*/
+        $em = $this->getDoctrine()->getManager();
+       
+        $quantity = $request->request->get('quantity');
+        // $request->getSession()->invalidate();
+        
+        $mycart = $request->getSession()->get($this->getUser()->getId(),null);
+  
+        if($mycart)
+        {
+            $mycart[$product->getId()]=$quantity;
+            $request->getSession()->set($this->getUser()->getId(),$mycart);
+        }
+        else //new
+        {
+            $request->getSession()->set($this->getUser()->getId(), array($product->getId()=>$quantity));
+        }
+         dd($mycart);
+
+        return $this->redirectToRoute("balance");
     }
+
+
 
     /**
      * @Route("/{id}", name="request", methods={"GET","POST"})
@@ -47,16 +70,29 @@ class OrdersController extends AbstractController
         /*return $this->render('order/index.html.twig', [
             'orders' => $orderRepository->findAll(),
         ]);*/
+        $em = $this->getDoctrine()->getManager();
        
         $quantity = $request->request->get('quantity');
-        $remark = $request->request->get('remark');
+        //$remark = $request->request->get('remark');
+
+        //manage parent(Requests table)
+        $requests = $em->getRepository(Request::class)->getIfNewRequestsExist($this->getUser());
+        if(!$requests)
+        {
+            $requests = new Requests();
+        }
+
+        $requests->setRequester($this->getUser());
+        // $requests->set
+
+        //manage children(Orders table)
  
         $order = new Orders();
         $order->setProduct($product);
         $order->setReceiver($this->getUser());
         $order->setRequestedDate(new DateTime('now'));
         if($quantity) $order->setQuantity($quantity);
-        if($remark) $order->setRemark($remark);
+        //if($remark) $order->setRemark($remark);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($order);
@@ -99,80 +135,80 @@ class OrdersController extends AbstractController
             'order' => $order,
         ]);
     }
-    public function doApprovalOrReject(Orders $order, $approve, $reject, $approver)
-    {
-        $em = $this->getDoctrine()->getManager();
+    // public function doApprovalOrReject(Orders $order, $approve, $reject, $approver)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
 
-        if($approve)
-        {
+    //     if($approve)
+    //     {
             
-            switch ($approver) 
-            {
-                case '1':
-                $order->setApproval1($this->getUser());
-                $order->setStatus(1);
-                    break;
-                case '2':
-                //if($isLastApprover && $order->getStatus()==1) $order->setClosed(1);
-                $order->setApproval2($this->getUser());
-                $order->setStatus(2);
+    //         switch ($approver) 
+    //         {
+    //             case '1':
+    //             $order->setApproval1($this->getUser());
+    //             $order->setStatus(1);
+    //                 break;
+    //             case '2':
+    //             //if($isLastApprover && $order->getStatus()==1) $order->setClosed(1);
+    //             $order->setApproval2($this->getUser());
+    //             $order->setStatus(2);
                 
-                    break;
-                case '3':
-                $order->setApproval3($this->getUser());
-                $order->setStatus(3);
-                $order->setClosed(1);
+    //                 break;
+    //             case '3':
+    //             $order->setApproval3($this->getUser());
+    //             $order->setStatus(3);
+    //             $order->setClosed(1);
                 
-                    break;
-                default:
-                    # code...
-                    break;
-            }
-        }
-        else if($reject)
-        {
+    //                 break;
+    //             default:
+    //                 # code...
+    //                 break;
+    //         }
+    //     }
+    //     else if($reject)
+    //     {
            
-            switch ($approver) 
-            {
-                case '1':
-                $order->setApproval1($this->getUser());
-                $order->setStatus(10);
-                    break;
-                case '2':
-                $order->setApproval2($this->getUser());
-                $order->setStatus(20);
-                    break;
-                case '3':
-                $order->setApproval3($this->getUser());
-                $order->setStatus(30);
-                $order->setClosed(0);
-                    break;
-                default:
-                dd("CASE DEFAULT....");
-                    break;
-            }
-        }
-        else
-        {
-            dd("Neither approved nor Rejected");
-        }
+    //         switch ($approver) 
+    //         {
+    //             case '1':
+    //             $order->setApproval1($this->getUser());
+    //             $order->setStatus(10);
+    //                 break;
+    //             case '2':
+    //             $order->setApproval2($this->getUser());
+    //             $order->setStatus(20);
+    //                 break;
+    //             case '3':
+    //             $order->setApproval3($this->getUser());
+    //             $order->setStatus(30);
+    //             $order->setClosed(0);
+    //                 break;
+    //             default:
+    //             dd("CASE DEFAULT....");
+    //                 break;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         dd("Neither approved nor Rejected");
+    //     }
        
-            $em->flush();
+    //         $em->flush();
 
-    }
-    /**
-     * @Route("/{id}/approve", name="order_approve", methods={"GET","POST"})
-     */
-    public function ApproveOrReject(Request $request, Orders $order): Response
-    {
-        $approve = $request->request->get('approve');
-        $reject = $request->request->get('reject');
+    // }
+    // /**
+    //  * @Route("/{id}/approve", name="order_approve", methods={"GET","POST"})
+    //  */
+    // public function ApproveOrReject(Request $request, Orders $order): Response
+    // {
+    //     $approve = $request->request->get('approve');
+    //     $reject = $request->request->get('reject');
        
-        $approver = 3;
-        self::doApprovalOrReject($order, $approve, $reject, $approver);
+    //     $approver = 3;
+    //     self::doApprovalOrReject($order, $approve, $reject, $approver);
     
-        return $this->redirectToRoute('order_index');
-    }
+    //     return $this->redirectToRoute('order_index');
+    // }
     /**
      * @Route("/{id}/edit", name="order_edit", methods={"GET","POST"})
      */

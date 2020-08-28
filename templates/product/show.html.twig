@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>Product</h1>
- <form action="{{ path('request', {'id': product.id}) }}" method="POST">
+    <form action="{{ path('addtocart', {'id': product.id}) }}" method="POST">
     <table class="table">
         <tbody>
   
@@ -38,19 +38,20 @@
                     <th>Quantity</th>
                     <td><input type="number" name = "quantity" placeholder="Insert quantity here" required/></td>
                 </tr>
-                <tr>
+              
+                {# <tr>
                     <th>Request Purpose</th>
-                    <td ><textarea type="text" name = "remark" placeholder="Write any remarks here." style="widht:440px" required></textarea></td>
+                    <td ><textarea type="text" name = "remark" placeholder="Write any remarks here." style="widht:440px" ></textarea></td>
                 </tr>
-            
+             #}
                 
         </tbody>
    
     </table>
-
+   
          <a href="{{ path('product_index') }}" class="btn btn-primary">back to list</a>
 
-     	<button type="submit" class="btn btn-success" title="Request"><i class="">Request</i></button> 
+     	<button type="submit" class="btn btn-success" title="Request"><i class="fa fa-cart-arrow-down">Add to cart</i></button> 
         </form>
 
                                                    

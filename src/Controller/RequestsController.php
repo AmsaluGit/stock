@@ -91,4 +91,90 @@ class RequestsController extends AbstractController
 
         return $this->redirectToRoute('requests_index');
     }
+
+     public function doApprovalOrReject(Requests $requests, $approve, $reject, $approver)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if($approve)
+        {
+            
+            switch ($approver) 
+            {
+                case '1':
+                $requests->setApproval1($this->getUser());
+                $requests->setStatus(1);
+                    break;
+                case '2':
+                //if($isLastApprover && $order->getStatus()==1) $order->setClosed(1);
+                $requests->setApproval2($this->getUser());
+                $requests->setStatus(2);
+                
+                    break;
+                case '3':
+                $requests->setApproval3($this->getUser());
+                $requests->setStatus(3);
+                $requests->setClosed(1);
+                
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+        else if($reject)
+        {
+           
+            switch ($approver) 
+            {
+                case '1':
+                $requests->setApproval1($this->getUser());
+                $requests->setStatus(10);
+                    break;
+                case '2':
+                $requests->setApproval2($this->getUser());
+                $requests->setStatus(20);
+                    break;
+                case '3':
+                $requests->setApproval3($this->getUser());
+                $requests->setStatus(30);
+                $requests->setClosed(0);
+                    break;
+                default:
+                dd("CASE DEFAULT....");
+                    break;
+            }
+        }
+        else
+        {
+            dd("Neither approved nor Rejected");
+        }
+       
+            $em->flush();
+
+    }
+    /**
+     * @Route("/{id}/approve", name="requests_approve", methods={"GET","POST"})
+     */
+    public function ApproveOrReject(Request $request, Requests $requests): Response
+    {
+        $approve = $request->request->get('approve');
+        $reject = $request->request->get('reject');
+       
+        $approver = 3;
+        self::doApprovalOrReject($requests, $approve, $reject, $approver);
+    
+        return $this->redirectToRoute('requests_index');
+    }
+
+    /** 
+     * @Route("/model22/{id}", name="model22", methods={"GET","POST"})
+     */
+    public function model22(Requests $requests): Response
+    {
+        return $this->render('requests/model22.html.twig', [
+           // 'orders' => $orderRepository->findAll(),
+            'requests' => $requests
+        ]);
+    }
 }

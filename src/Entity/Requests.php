@@ -54,6 +54,26 @@ class Requests
      */
     private $status;
 
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $closed;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $reason;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $receivedDate;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $delivered;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -163,6 +183,54 @@ class Requests
     public function setStatus(?int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getClosed(): ?int
+    {
+        return $this->closed;
+    }
+
+    public function setClosed(?int $closed): self
+    {
+        $this->closed = $closed;
+
+        return $this;
+    }
+
+    public function getReason(): ?string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(?string $reason): self
+    {
+        $this->reason = $reason;
+
+        return $this;
+    }
+
+    public function getReceivedDate(): ?\DateTimeInterface
+    {
+        return $this->receivedDate;
+    }
+
+    public function setReceivedDate(?\DateTimeInterface $receivedDate): self
+    {
+        $this->receivedDate = $receivedDate;
+
+        return $this;
+    }
+
+    public function getDelivered(): ?int
+    {
+        return $this->delivered;
+    }
+
+    public function setDelivered(?int $delivered): self
+    {
+        $this->delivered = $delivered;
 
         return $this;
     }

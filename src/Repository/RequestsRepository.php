@@ -22,19 +22,25 @@ class RequestsRepository extends ServiceEntityRepository
     // /**
     //  * @return Requests[] Returns an array of Requests objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function getIfNewRequestsExist($userId)
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('r.requester = :req')
+            ->setParameter('req', $userId)
+            ->andWhere('r.approval1 is NULL and r.approval2 is NULL and approval3 is NULL')
+            ->andWhere('r.status is NULL or r.status =:zero')
+            ->setParameter('zero', 0)
+            ->andWhere('r.closed is NULL or r.status =:zero2')
+            ->setParameter('zero2', 0)
+            ->orderBy('r.id', 'DESC')
+            // ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
+            // ->getResult()
         ;
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Requests

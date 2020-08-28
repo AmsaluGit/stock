@@ -37,7 +37,7 @@
 </head>
 
 <body>
-
+{% set total =0  %}
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-6"> 
@@ -48,7 +48,7 @@
 					<P>ገንዘብ ሚኒስቴር</P>
 					<p>MINISTRY OF FINANCE</p>
 				 
-				<p>______________________________ Department</p>
+				<p> {{requests.requester.department}} Department</p>
 			</div>
 			<div class="col-sm-6 header2">
 				
@@ -72,22 +72,24 @@
 		<center>
 			<div class="row">
 			 
-				<div class="col-sm-8">
+				<div class="col-sm-9">
+				 
 					<b> ወይም የንብረት ወጪ ደረሰኝ
 						<p><u>RECEIPT FOR ARTICLES OF PROPTERTY ISSUED</u></p>
 					</b>
+					 
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-3">
 					N<sup><u>o</u></sup> ________________
 				</div>
 				
 				<div class="col-md-12">
-					ለ {{ order.receiver }} ቀን  {{ order.requestedDate | date('y-m-d') }}  ዓ.ም በቁጥር ______________ በተጻፈው ትእዛዝ መሰረት ቀጥሎ <br>
-					በዝርዝር የተጻፉትን እቃዎች ለ {{ order.remark }} አገልግሎት በትክክል ቆጥሬ መረከቤን በፊርማዬ አረጋግጣለሁ።<br> 
+					ለ {{ requests.requester }} ቀን  {{ requests.requestedDate | date('y-m-d') }}  ዓ.ም በቁጥር ______________ በተጻፈው ትእዛዝ መሰረት ቀጥሎ <br>
+					በዝርዝር የተጻፉትን እቃዎች ለ {{ requests.reason }} አገልግሎት በትክክል ቆጥሬ መረከቤን በፊርማዬ አረጋግጣለሁ።<br> 
 
 
 					
-					<table width="80%" border="1">
+					<table width="90%" border="1">
 						<thead>
 							<tr>
 								<th class="bm-0">
@@ -110,67 +112,42 @@
 									ተከታታይ
 								</th>
 								<th class="bm-0">ብዛት<br>Quantity</th>
-								<th colspan="2">የአንዱ ዋጋ<br>Unit Price</th>
-								<th colspan="2">የዋጋው ድምር<br>Total Price</th>
+								<th colspan="1">የአንዱ ዋጋ<br>Unit Price</th>
+								<th colspan="1">የዋጋው ድምር<br>Total Price</th>
 								<th class="bm-0">ምርመራ<br>Remarks</th>
+								
 							</tr>
 							<tr>
-								<th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th>ከ</th><th>እስከ</th>
-								<th class="bt-0"></th><th>ብር<br>Birr</th><th>ሳ<br>cent</th><th>ብር<br>Birr</th><th>ሳ<br>cent</th><th class="bt-0"></th>
+			<th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th>ከ</th><th>እስከ</th>
+			<th class="bt-0"></th><th>ብር<br>Birr</th>
+			<th>ብር<br>Birr</th>
+			
+			<th class="bt-0"></th>
 							</tr>
 						</thead>
 						<tbody>
+						{% for order in requests.orders %}
+							
+						
 							<tr>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
+								<td>{{loop.index}}</td>
+								<td>{{order.product.name}}</td>
+								<td>{{order.model}}</td>
+								<td>{{order.serial}}</td>
+								<td>KE</td>
+								<td>ESKE</td>
+								<td>{{order.quantity}}</td>
+								<td>{{order.unitprice}}</td>
+								<td>{{ order.unitprice * order.quantity }}</td>
+								<td>This is very amazing remarks,</td>
+								{% set total = total +  order.unitprice * order.quantity  %}
+								
+								 
 							</tr>
+							{% endfor %}
 							<tr>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-							</tr>
-							<tr>
-								<td colspan="4" style="margin-left:200px ">ድምር</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td colspan="8" style="margin-left:200px "><strong>ድምር</strong></td>
+								<td><strong>{{total}}</strong></td>
 								<td></td>
 							</tr>
 						</tbody>
@@ -220,6 +197,10 @@
 	<input type="button" value="Print" name="" id ="print" class="float-right mr-5 btn btn-primary" onclick="Actions()"/>
 </body>
 
-
+<script>
+function Actions()
+{
+	window.print();
+}
 </script>
 </html>
