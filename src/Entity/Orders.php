@@ -28,22 +28,7 @@ class Orders
      */
     private $quantity;
 
-    /**
-     * @ORM\Column(type="date")
-     */
-    private $requestedDate;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $recievedDate;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
-     */
-    private $receiver;
-
-    /**
+      /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $model;
@@ -52,21 +37,6 @@ class Orders
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $serial;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    private $approval1;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    private $approval2;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $remark;
 
     /**
      * @ORM\Column(type="smallint", nullable=true, options={"default":"0"})
@@ -83,15 +53,6 @@ class Orders
      */
     private $allowedQuantity;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=true, options={"default":"0"})
-     */
-    private $closed;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    private $approval3;
 
     /**
      * @ORM\ManyToOne(targetEntity=Requests::class, inversedBy="orders")
@@ -103,23 +64,9 @@ class Orders
      */
     private $unitprice;
 
-   
-
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getProduct(): ?Product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?Product $product): self
-    {
-        $this->product = $product;
-
-        return $this;
     }
 
     public function getQuantity(): ?int
@@ -133,44 +80,6 @@ class Orders
 
         return $this;
     }
-
-    public function getRequestedDate(): ?\DateTimeInterface
-    {
-        return $this->requestedDate;
-    }
-
-    public function setRequestedDate(\DateTimeInterface $requestedDate): self
-    {
-        $this->requestedDate = $requestedDate;
-
-        return $this;
-    }
-
-    public function getRecievedDate(): ?\DateTimeInterface
-    {
-        return $this->recievedDate;
-    }
-
-    public function setRecievedDate(?\DateTimeInterface $recievedDate): self
-    {
-        $this->recievedDate = $recievedDate;
-
-        return $this;
-    }
-
-    public function getReceiver(): ?User
-    {
-        return $this->receiver;
-    }
-
-    public function setReceiver(?User $receiver): self
-    {
-        $this->receiver = $receiver;
-
-        return $this;
-    }
-
-   
 
     public function getModel(): ?string
     {
@@ -196,48 +105,12 @@ class Orders
         return $this;
     }
 
-    public function getApproval1(): ?User
-    {
-        return $this->approval1;
-    }
-
-    public function setApproval1(?User $approval1): self
-    {
-        $this->approval1 = $approval1;
-
-        return $this;
-    }
-
-    public function getApproval2(): ?User
-    {
-        return $this->approval2;
-    }
-
-    public function setApproval2(?User $approval2): self
-    {
-        $this->approval2 = $approval2;
-
-        return $this;
-    }
-
-    public function getRemark(): ?string
-    {
-        return $this->remark;
-    }
-
-    public function setRemark(?string $remark): self
-    {
-        $this->remark = $remark;
-
-        return $this;
-    }
-
     public function getDelivered(): ?int
     {
         return $this->delivered;
     }
 
-    public function setDelivered(int $delivered): self
+    public function setDelivered(?int $delivered): self
     {
         $this->delivered = $delivered;
 
@@ -249,7 +122,7 @@ class Orders
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(?int $status): self
     {
         $this->status = $status;
 
@@ -268,26 +141,26 @@ class Orders
         return $this;
     }
 
-    public function getClosed(): ?int
+    public function getUnitprice(): ?int
     {
-        return $this->closed;
+        return $this->unitprice;
     }
 
-    public function setClosed(?int $closed): self
+    public function setUnitprice(?int $unitprice): self
     {
-        $this->closed = $closed;
+        $this->unitprice = $unitprice;
 
         return $this;
     }
 
-    public function getApproval3(): ?User
+    public function getProduct(): ?Product
     {
-        return $this->approval3;
+        return $this->product;
     }
 
-    public function setApproval3(?User $approval3): self
+    public function setProduct(?Product $product): self
     {
-        $this->approval3 = $approval3;
+        $this->product = $product;
 
         return $this;
     }
@@ -304,17 +177,7 @@ class Orders
         return $this;
     }
 
-    public function getUnitprice(): ?int
-    {
-        return $this->unitprice;
-    }
-
-    public function setUnitprice(?int $unitprice): self
-    {
-        $this->unitprice = $unitprice;
-
-        return $this;
-    }
+   
 
 
 }

@@ -34,16 +34,57 @@
 			</div>
 			<div class="card-body">
  
+
+ 			<table class="table">
+					<tbody>
+						{% set coloring0 = "badge-success" %}
+                					 
+						<tr>
+							<th>
+								<span class="badge {{coloring0}}">RequestedDate</span>
+							</th>
+							<td>{{ requests.requestedDate ? requests.requestedDate|date('M d, Y') : '' }}</td>
+						</tr>
+
+						<tr>
+							<th>
+								<span class="badge {{coloring0}}">Requested By</span>
+							</th>
+							<td>{{ requests.requester }}</td>
+						</tr>
+
+						<tr>
+							<th>
+								<span class="badge {{coloring0}}">Department</span>
+							</th>
+							<td>{{ requests.requester.department }}</td>
+						</tr>
+
+						<tr>
+							<th>
+								<span class="badge {{coloring0}}">Request Purpose</span>
+							</th>
+							<td>{{ requests.reason }}</td>
+						</tr>
+					
+					</tbody>
+				</table>
+
+<hr>
 {% for order  in requests.orders %}
     
 				<table class="table">
 					<tbody>
 						{% set coloring = "badge-info" %}
                         <tr style="background-color:#e9ecef">
+							{# <th> #}
+								{# <span class="badge {{coloring}}">Product</span> #}
+							{# </th> #}
+								<td ><strong style="float:left">{{ order.product | upper }}</strong></td>
 							<th>
 								{# <span class="badge {{coloring}}">Product</span> #}
 							</th>
-							<td ><strong>{{ order.product | upper }}</strong></td>
+						
 						</tr>
 						<tr>
 							<th>
@@ -70,33 +111,7 @@
 							</th>
 							<td>{{ order.quantity }}</td>
 						</tr>
-						<tr>
-							<th>
-								<span class="badge {{coloring}}">RequestedDate</span>
-							</th>
-							<td>{{ order.requestedDate ? order.requestedDate|date('M d, Y') : '' }}</td>
-						</tr>
-
-						<tr>
-							<th>
-								<span class="badge {{coloring}}">Requested By</span>
-							</th>
-							<td>{{ order.receiver }}</td>
-						</tr>
-
-						<tr>
-							<th>
-								<span class="badge {{coloring}}">Department</span>
-							</th>
-							<td>{{ order.receiver.department }}</td>
-						</tr>
-
-						<tr>
-							<th>
-								<span class="badge {{coloring}}">Request Purpose</span>
-							</th>
-							<td>{{ order.remark }}</td>
-						</tr>
+					
 					
 					</tbody>
 				</table>

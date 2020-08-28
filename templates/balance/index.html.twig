@@ -36,7 +36,27 @@
 					<div class="col-md-12">
 						<div class="card card ">
 							<div class="card-header">
-								{# <h3 class="card-title">Items List</h3> #}
+					{% if  carts %}
+
+						<div class="container conatainer-fluid p-2 col-12" style="background-color:#17a2b8;">
+
+						{% for prod,quant in carts %}
+							<div class="row">
+							<div class="col-md-4"> <h4 class="card-title text-black">{{prod}}</h4> </div>
+							<div class="col-md-1 "> <h4 class="card-title">{{quant}}</h4> </div>
+							<div class="col-md-7"> <h3 class="card-title"></h3> </div>
+							</div>
+						{% endfor %} 
+
+						<form action="{{path('requestitems')}}" method="POST">
+					
+						<textarea  class=" p-2" name="reason"  placeholder="write your reason here..." required style="width: 60%;"></textarea>
+						<br>
+							<input type="submit" name="req"  class="btn btn-warning" value="Request"/>
+						</form>
+						</div>
+						<br>
+					{% endif %}
 								<div class="card-tools">
 
 									<form class="form-inline ml-3">

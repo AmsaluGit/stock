@@ -27,6 +27,7 @@ class BalanceController extends AbstractController
         $stock = new Stock();
         $form = $this->createForm(StockType::class, $stock);
         $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
 
         /*if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -62,10 +63,23 @@ class BalanceController extends AbstractController
             $request->query->getInt('page',1),
             $pageSize
         );
+
+        $produ_on_cart = $request->getSession()->get($this->getUser()->getId());
+
+        $temp = null;
+        if($produ_on_cart)
+        {
+            $p = $em->getRepository(Product::class);
+            foreach ($produ_on_cart as $key => $value) 
+            {
+                $temp[$p->find($key)->getName()]=$value;
+            }
+        }
     
         return $this->render('balance/index.html.twig', [
             'stocks' => $data,
             'form' => $form->createView(),
+            'carts' => $temp,
         ]);
     } 
 

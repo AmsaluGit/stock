@@ -32,7 +32,7 @@ class OrdersController extends AbstractController
 
 
     /**
-     * @Route("/{id}", name="addtocart", methods={"GET","POST"})
+     * @Route("/addtocart/{id}", name="addtocart", methods={"GET","POST"})
      */
     public function addToCart(Request $request, Product $product): Response
     {
@@ -55,7 +55,7 @@ class OrdersController extends AbstractController
         {
             $request->getSession()->set($this->getUser()->getId(), array($product->getId()=>$quantity));
         }
-         dd($mycart);
+        // dd($mycart);
 
         return $this->redirectToRoute("balance");
     }
@@ -63,40 +63,48 @@ class OrdersController extends AbstractController
 
 
     /**
-     * @Route("/{id}", name="request", methods={"GET","POST"})
+     * @Route("/requestitems", name="requestitems", methods={"GET","POST"})
      */
-    public function requestOrder(Request $request, Product $product): Response
+    public function requestOrder(Request $request): Response
     {
         /*return $this->render('order/index.html.twig', [
             'orders' => $orderRepository->findAll(),
         ]);*/
         $em = $this->getDoctrine()->getManager();
        
-        $quantity = $request->request->get('quantity');
-        //$remark = $request->request->get('remark');
+        $reason = $request->request->get('reason');
+        
 
         //manage parent(Requests table)
-        $requests = $em->getRepository(Request::class)->getIfNewRequestsExist($this->getUser());
+        $requests = $em->getRepository(Requests::class)->getIfNewRequestsExist($this->getUser());
         if(!$requests)
         {
             $requests = new Requests();
         }
 
+        $requests->setReason($reason);
         $requests->setRequester($this->getUser());
-        // $requests->set
+        $requests->setRequestedDate(new DateTime('now'));
+        $requests->setStatus(0);
+        $em->persist($requests);
+
+        $requests->setRequester($this->getUser());
 
         //manage children(Orders table)
- 
-        $order = new Orders();
-        $order->setProduct($product);
-        $order->setReceiver($this->getUser());
-        $order->setRequestedDate(new DateTime('now'));
-        if($quantity) $order->setQuantity($quantity);
-        //if($remark) $order->setRemark($remark);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($order);
-        $entityManager->flush();
+        $products = $request->getSession()->get($this->getUser()->getId());
+        foreach ($products as $key => $value) {
+            $prod = $em->getRepository(Product::class)->find($key);
+            $order = new Orders();
+            $order->setProduct($prod);
+            $order->setQuantity($value);
+            $order->setModel($prod->getBrand()->getName());
+            $order->setUnitprice($prod->getprice());
+            $order->setRequest($requests);
+            $em->persist($order);
+        }
+       
+        $em->flush();
+        $request->getSession()->set($this->getUser()->getId(),array());
         return $this->redirectToRoute("balance");
         
     } 

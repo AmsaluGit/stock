@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Requests;
+use App\Entity\Requests; 
 use App\Form\RequestsType;
 use App\Repository\RequestsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
