@@ -42,8 +42,8 @@ class OrdersController extends AbstractController
         $em = $this->getDoctrine()->getManager();
        
         $quantity = $request->request->get('quantity');
-        // $request->getSession()->invalidate();
-        
+        // $id = $request->request->get('id');
+        $request->getSession()->invalidate();
         $mycart = $request->getSession()->get($this->getUser()->getId(),null);
   
         if($mycart)

@@ -36,7 +36,10 @@
            
                 <tr>
                     <th>Quantity</th>
-                    <td><input type="number" name = "quantity" placeholder="Insert quantity here" required/></td>
+                    <td>
+                        <input type="number" name = "quantity" placeholder="Insert quantity here" required/>
+                        <input type="hidden" name = "id" value="{{ product.id }}"/>
+                    </td>
                 </tr>
               
                 {# <tr>

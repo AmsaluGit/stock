@@ -47,6 +47,7 @@ class ProductController extends AbstractController
                 'edit'=>$id
             ]);    
         }
+
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
@@ -62,12 +63,13 @@ class ProductController extends AbstractController
             return $this->redirectToRoute('product_index');
         }
 
-        $queryBuilder=$productRepository->findProduct($request->query->get('search'));
-        $data=$paginator->paginate(
+        $queryBuilder = $productRepository->findProduct($request->query->get('search'));
+        $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page',1),
             $rowsPerPage
         );
+
         return $this->render('product/index.html.twig', [
             'products' => $data,
             'form' => $form->createView(),
@@ -83,7 +85,7 @@ class ProductController extends AbstractController
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-
+        echo $request->request->get("add");
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($product);
@@ -92,7 +94,7 @@ class ProductController extends AbstractController
             return $this->redirectToRoute('product_index');
         }
 
-        return $this->render('product/new.html.twig', [
+        return $this->render('product/create.html.twig', [
             'product' => $product,
             'form' => $form->createView(),
         ]);

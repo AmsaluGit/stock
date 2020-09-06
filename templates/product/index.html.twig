@@ -18,34 +18,9 @@
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-12">
-						<div class="card card-info {{edit?'':'collapsed-card'}}">
-							<div class="card-header">
-								<h3 class="card-title">
-									{% if edit  %}Edit
-									{% else %}
-										Add New
-									{% endif %}
-								</h3>
-
-								<div class="card-tools">
-									<button type="button" class="btn btn-tool" data-card-widget="collapse">
-										<i class="fas {{edit?'fa-minus':'fa-plus'}}"></i>
-									</button>
-								</div>
-								<!-- /.card-tools -->
-							</div>
-							<!-- /.card-header -->
-							<div class="card-body">
-								{% if edit  %}
-									{% set button_label = 'Update' %}
-								{% endif %}
-								{{ include('product/_form.html.twig') }}
-
-
-							</div>
-							<!-- /.card-body -->
+							<a href="/product/new" style="float:right" class="btn btn-primary">Add New Product</a>
 						</div>
-					</div>
+					</div><br>
 
 					<div class="col-md-12">
 						<div class="card card ">
@@ -68,24 +43,18 @@
 							<div class="card-body">
 
 
-								<table class="table table-hover">
-									<thead class="thead-light">
-										<tr>
-				<th>#</th>
-                <th>Name</th>
-                <th>Brand</th>
-                <th>Product Type</th>
-                {# <th>Model</th>
-                <th>Serial</th> #}
-                <th>Price</th>
-                
-             
-            
-                <th>Category</th>
-              
-                
-                
-                <th>actions</th>
+							<table class="table table-hover">
+								<thead class="thead-light">
+									<tr>
+										<th>#</th>
+						                <th>Name</th>
+						                <th>Brand</th>
+						                <th>Product Type</th>
+						                {# <th>Model</th>
+						                <th>Serial</th> #}
+						                <th>Price</th>
+						                <th>Category</th>
+						                <th>actions</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -106,17 +75,12 @@
 												 
 												 
 												<td>{{ product.category }}</td>
-												
-												
-												
-
-
 												<td>
-	<a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-info btn-sm" title="Show">
+													<a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-info btn-sm" title="Show">
 														<i class="fa fa-eye"></i>
 													</a>
 
-													<form class="d-inline" method="post">
+													<form class="d-inline" method="post" action="/product/{{product.id}}/edit">
 
 
 														<input type="hidden" name="edit" value="{{product.id}}">

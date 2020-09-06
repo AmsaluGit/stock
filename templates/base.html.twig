@@ -27,7 +27,10 @@
     <link href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet">
 		{#
 				    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> #}
-		<link href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet"> {% block stylesheets %}{% endblock %}
+		<link href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet">
+        <!-- jQuery -->
+    <script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+     {% block stylesheets %}{% endblock %}
 		</head>
 
 		<body class="hold-transition sidebar-mini">
@@ -404,9 +407,6 @@
 				<!-- /.control-sidebar -->
 			</div>
 			<!-- ./wrapper -->
-
-			<!-- jQuery -->
-			<script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
 			<!-- Bootstrap 4 -->
 			<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 			<!-- jquery-validation -->

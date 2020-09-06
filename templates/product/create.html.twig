@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Departement index
+{% endblock %}
+{% block maintitle %}
+{% endblock %}
+{% block breadcrumb %}
+	<li class="breadcrumb-item active">Stock
+	</li>
+	<li class="breadcrumb-item active">product</li>
+{% endblock %}
+{% block body %}
+	<div class="row">
+		<div class="col-md-12">
+		<div class="card card-info">
+		<div class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<center><h4 style="margin-top: 20px;">Add New Product</h4></center>
+
+				<div class="card-body">
+					{{ include('product/_form.html.twig') }}
+					<input type='hidden' value='add_more' name='add'> 
+					<button class="btn btn-info" id="add">{{ button_label|default('Save') }}</button>
+					<button class="btn btn-success" id="add_more">{{ button_label|default('Add and More') }}</button>
+					<button class="btn  btn-warning " style="margin-right:20px;" type="reset">Reset</button>
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+    
+<script type="text/javascript">
+  $("#add_more").on("click",function(e){
+     e.preventDefault();
+     $("input[name='add']").val("add_more");
+     $("form").submit();
+  });
+
+  $("#add").on("click",function(e){
+     e.preventDefault();
+     $("input[name='add']").val("add");
+     $("form").submit();
+  });
+</script>
+{% endblock %}
