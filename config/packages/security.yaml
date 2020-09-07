@@ -42,6 +42,6 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/forgotPassword, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/opd/display, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { path: ^/*, roles: ROLE_USER }
+        - { path: ^/*, roles: ROLE_USER }
 
       

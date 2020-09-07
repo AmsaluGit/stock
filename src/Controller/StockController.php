@@ -147,4 +147,24 @@ class StockController extends AbstractController
 
         return $this->redirectToRoute('stock_index');
     }
+     /**
+     * @Route("/print", name="stock_print", methods={"post"})
+     */
+    public function print(Request $request): Response
+    {
+        $item = array();
+        $temp_data = explode(",", $request->request->get("checked_list"));
+        $count = sizeof($temp_data);
+
+        for($i = 0; $i < $count; $i++){
+            $item[] = $temp_data[$i];
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $data = $entityManager->getRepository(Stock::class)->findBy(array('id'=>$item));
+        // var_dump($request->request->get("checked_list"));
+        return $this->render("stock/print.html.twig",[
+            'stocks' => $data
+        ]);
+    }
 }

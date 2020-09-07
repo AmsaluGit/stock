@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Stock index
+{% block title %} Departement index
 {% endblock %}
 {% block maintitle %}
 
-	Manage stocks
+	Manage products
 {% endblock %}
 {% block breadcrumb %}
 	<li class="breadcrumb-item active">Stock
 	</li>
-	<li class="breadcrumb-item active">stock</li>
+	<li class="breadcrumb-item active">product</li>
 {% endblock %}
 {% block body %}
 	<div class="row">
@@ -18,39 +18,14 @@
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-12">
-						<div class="card card-info {{edit?'':'collapsed-card'}}">
-							<div class="card-header">
-								<h3 class="card-title">
-									{% if edit  %}Edit
-									{% else %}
-										Add New
-									{% endif %}
-								</h3>
-
-								<div class="card-tools">
-									<button type="button" class="btn btn-tool" data-card-widget="collapse">
-										<i class="fas {{edit?'fa-minus':'fa-plus'}}"></i>
-									</button>
-								</div>
-								<!-- /.card-tools -->
-							</div>
-							<!-- /.card-header -->
-							<div class="card-body">
-								{% if edit  %}
-									{% set button_label = 'Update' %}
-								{% endif %}
-								{{ include('stock/_form.html.twig') }}
-
-
-							</div>
-							<!-- /.card-body -->
+							<a href="/product/new" style="float:right" class="btn btn-primary">Add New Product</a>
 						</div>
-					</div>
+					</div><br>
 
 					<div class="col-md-12">
 						<div class="card card ">
 							<div class="card-header">
-								<h3 class="card-title">Items List</h3>
+								<h3 class="card-title">Product List</h3>
 								<div class="card-tools">
 
 									<form class="form-inline ml-3">
@@ -68,60 +43,67 @@
 							<div class="card-body">
 
 
-								<table class="table table-hover">
-									<thead class="thead-light">
-										<tr>
-											<th>#</th>
-											<th>#</th>
-											<th>Product</th>
-											<th>quantity</th>
-											<th>store</th>
-											<th>date</th>
-											
-											<th>actions</th>
+							<table class="table table-hover">
+								<thead class="thead-light">
+									<tr>
+
+						                <th>#</th>
+										<th>#</th>
+						                <th>Name</th>
+						                <th>Brand</th>
+						                <th>Product Type</th>
+						                {# <th>Model</th>
+						                <th>Serial</th> #}
+						                <th>Price</th>
+						                <th>Category</th>
+						                <th>actions</th>
 										</tr>
 									</thead>
 									<tbody>
 										{% set i = 1 %}
 										<script type="text/javascript">$allItems = [];</script>
-										{% for stock in stocks %}
+										{% for product in products %}
 											<tr>
-												<script type="text/javascript">$allItems.push({{stock.id}});</script>
-												<td><input type="checkbox" value="{{ stock.id }}"></td>
+												<script type="text/javascript">$allItems.push({{product.id}});</script>
+												<td><input type="checkbox" value="{{ product.id }}"></td>
 												<td>
 													{{ i }}
 													{% set i = i+1 %}
 												</td>
-												<td>{{ stock.product }}</td>
-												<td>{{ stock.quantity }}</td>
-												<td>{{ stock.store }}</td>
-												<td>{{ stock.date | date('Y-m-d') }}</td>
+                                                <td>{{ product.name }}</td>
+                                                <td>{{ product.brand }}</td>
+                                                <td>{{ product.productType }}</td>
+												{# <td>{{ product.model }}</td>
+												<td>{{ product.serial }}</td> #}
+												<td>{{ product.price }}</td>
+												 
+												 
+												 
+												<td>{{ product.category }}</td>
 												<td>
-<a href="{{ path('stock_show', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
+													<a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-info btn-sm" title="Show">
 														<i class="fa fa-eye"></i>
 													</a>
-													<form class="d-inline" method="post">
+
+													<form class="d-inline" method="post" action="/product/{{product.id}}/edit">
 
 
-														<input type="hidden" name="edit" value="{{stock.id}}">
+														<input type="hidden" name="edit" value="{{product.id}}">
 														<button class="btn btn-info btn-sm" title="Edit">
 															<i class="fa fa-edit"></i>
 														</button>
 													</form>
-													<form class="d-inline" method="post" action="{{ path('stock_delete', {'id': stock.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+													<form class="d-inline" method="post" action="{{ path('product_delete', {'id': product.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
 
 														<input type="hidden" name="_method" value="DELETE">
 														<input
-														type="hidden" name="_token" value="{{ csrf_token('delete' ~ stock.id) }}">
+														type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
 														{#  <button type="button" data-type="confirm" class="btn btn-danger js-sweetalert" title="Delete">#}
 														<button class="btn btn-danger btn-sm" title="Delete">
 															<i class="fa fa-trash"></i>
 														</button>
 													</form>
-													
-
 												</td>
-
 											</tr>
 										{% else %}
 											<tr>
@@ -130,25 +112,24 @@
 										{% endfor %}
 									</tbody>
 								</table>
-								<div class="float-right">{{ knp_pagination_render(stocks) }}</div>
-
+								{#<div class="float-right">{{ knp_pagination_render(products) }}</div>#}<br>
+								<button id="submit" class="btn btn-primary" style="display:none">Print</button>
 
 							</div>
 						</div>
 					</div>
 					<!-- /.card-body -->
-					<br>
-					<button id="submit" class="btn btn-primary" style="display:none">Print</button>
 				</div>
 			</div>
 
 		</div>
 		<!-- /.card-body -->
 	</div>
-
-<form id="secondForm" action="{{path('stock_print')}}" method="post">
+<form id="secondForm" action="{{path('product_print')}}" method="post">
 	<input type="hidden" name="checked_list" id="selected_list">
 </form>
+
+	
 {% endblock %}
 {% block javascripts %}
 	<script type="text/javascript">		
