@@ -22,13 +22,13 @@ class OrdersController extends AbstractController
     /** 
      * @Route("/", name="order_index", methods={"GET"})
      */
-    public function index(OrdersRepository $orderRepository): Response
-    {
-        return $this->render('orders/index.html.twig', [
-           // 'orders' => $orderRepository->findAll(),
-            'orders' => $orderRepository->findBy([],["id"=>"DESC"]),
-        ]);
-    }
+    // public function index(OrdersRepository $orderRepository): Response
+    // {
+    //     return $this->render('orders/index.html.twig', [
+    //        // 'orders' => $orderRepository->findAll(),
+    //         'orders' => $orderRepository->findBy([],["id"=>"DESC"]),
+    //     ]);
+    // }
 
 
     /**
@@ -113,7 +113,7 @@ class OrdersController extends AbstractController
     /**
      * @Route("/new", name="order_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    /*public function new(Request $request): Response
     {
         $order = new Order();
         $form = $this->createForm(OrderType::class, $order);
@@ -131,96 +131,23 @@ class OrdersController extends AbstractController
             'order' => $order,
             'form' => $form->createView(),
         ]);
-    } 
+    } */
 
     /**
      * @Route("/item/{id}", name="order_show", methods={"GET"})
      */
-    public function show(Orders $order): Response
+    /*public function show(Orders $order): Response
     {
         
         return $this->render('orders/show.html.twig', [
             'order' => $order,
         ]);
-    }
-    // public function doApprovalOrReject(Orders $order, $approve, $reject, $approver)
-    // {
-    //     $em = $this->getDoctrine()->getManager();
-
-    //     if($approve)
-    //     {
-            
-    //         switch ($approver) 
-    //         {
-    //             case '1':
-    //             $order->setApproval1($this->getUser());
-    //             $order->setStatus(1);
-    //                 break;
-    //             case '2':
-    //             //if($isLastApprover && $order->getStatus()==1) $order->setClosed(1);
-    //             $order->setApproval2($this->getUser());
-    //             $order->setStatus(2);
-                
-    //                 break;
-    //             case '3':
-    //             $order->setApproval3($this->getUser());
-    //             $order->setStatus(3);
-    //             $order->setClosed(1);
-                
-    //                 break;
-    //             default:
-    //                 # code...
-    //                 break;
-    //         }
-    //     }
-    //     else if($reject)
-    //     {
-           
-    //         switch ($approver) 
-    //         {
-    //             case '1':
-    //             $order->setApproval1($this->getUser());
-    //             $order->setStatus(10);
-    //                 break;
-    //             case '2':
-    //             $order->setApproval2($this->getUser());
-    //             $order->setStatus(20);
-    //                 break;
-    //             case '3':
-    //             $order->setApproval3($this->getUser());
-    //             $order->setStatus(30);
-    //             $order->setClosed(0);
-    //                 break;
-    //             default:
-    //             dd("CASE DEFAULT....");
-    //                 break;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         dd("Neither approved nor Rejected");
-    //     }
-       
-    //         $em->flush();
-
-    // }
-    // /**
-    //  * @Route("/{id}/approve", name="order_approve", methods={"GET","POST"})
-    //  */
-    // public function ApproveOrReject(Request $request, Orders $order): Response
-    // {
-    //     $approve = $request->request->get('approve');
-    //     $reject = $request->request->get('reject');
-       
-    //     $approver = 3;
-    //     self::doApprovalOrReject($order, $approve, $reject, $approver);
+    }*/
     
-    //     return $this->redirectToRoute('order_index');
-    // }
     /**
      * @Route("/{id}/edit", name="order_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Orders $order): Response
+    /*public function edit(Request $request, Orders $order): Response
     {
         $form = $this->createForm(OrdersType::class, $order);
         $form->handleRequest($request);
@@ -235,12 +162,12 @@ class OrdersController extends AbstractController
             'order' => $order,
             'form' => $form->createView(),
         ]); 
-    }
+    }*/
 
     /**
      * @Route("/{id}", name="order_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, Orders $order): Response
+    /*public function delete(Request $request, Orders $order): Response
     {
         if ($this->isCsrfTokenValid('delete'.$order->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -249,5 +176,5 @@ class OrdersController extends AbstractController
         }
 
         return $this->redirectToRoute('order_index');
-    }
+    }*/
 }
