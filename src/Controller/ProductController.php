@@ -11,12 +11,86 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/product")
  */
 class ProductController extends AbstractController
 {
+    /**
+     * @Route("/index2", name="product_index2", methods={"GET","POST"})
+     */
+    public function index2()
+    {
+        return $this->render("product/index2.html.twig");
+    }
+
+    /**
+     * @Route("/listProduct", name="list_product", methods={"GET","POST"})
+     */
+     public function listDatatablesAction(Request $request, ProductRepository $productRepository)
+    {
+        // Set up required variables
+        $this->entityManager = $this->getDoctrine()->getManager();
+        $this->repository = $productRepository;
+        
+        // Get the parameters from DataTable Ajax Call
+        if ($request->getMethod() == 'POST')
+        {
+            $draw = intval($request->request->get('draw'));
+            $start = $request->request->get('start');
+            $length = $request->request->get('length');
+            $search = $request->request->get('search');
+            $orders = $request->request->get('order');
+            $columns = $request->request->get('columns');
+        }
+        else // If the request is not a POST one, die hard
+            die;
+
+        // Get results from the Repository
+        $results = $this->repository->getRequiredDTData($start, $length, $orders, $search, $columns);
+    
+        // Returned objects are of type Town
+        $objects = $results["results"];
+
+        // Get total number of objects
+        $total_objects_count = $this->repository->count(1);
+
+        // Get total number of results
+        $selected_objects_count = count($objects);
+        
+        // Get total number of filtered data
+        $filtered_objects_count = $results["countResult"];
+        
+        $Response = array();
+        $temp = array();
+        foreach($objects as $key => $value)
+        {
+            $temp["name"] = $value->getName();
+            $temp["description"] = $value->getDescription();
+            $temp["price"] = $value->getPrice();
+            $temp["bname"] = $value->getBrand()->getName();
+            $temp["cname"] = $value->getCategory()->getName();
+            $Response[] = $temp;
+
+            unset($temp);
+            $temp = array();
+        }
+        // Construct response
+        $response = '{
+            "draw": '.$draw.',
+            "recordsTotal": '.$total_objects_count.',
+            "recordsFiltered": '.$filtered_objects_count.',
+            "data":'.json_encode($Response).'  }';
+    
+        // Send all this stuff back to DataTables
+        $returnResponse = new JsonResponse();
+        $returnResponse->setJson($response);
+    
+        return $returnResponse;
+    }
+
     /**
      * @Route("/", name="product_index", methods={"GET","POST"})
      */
