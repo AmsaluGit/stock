@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}">
+	<style>
+		.header2{
+			padding-left: 40px;
+		}
+
+		.logo{
+			margin: 10px;
+			height:100px;
+			width: 100px;
+		  }
+
+		  .bt-0{
+			border-top: 0px;  
+		  }
+		  
+		  th{
+			  text-align: center;
+		  }
+
+		  td{
+			  padding: 10px;
+		  }
+		  .bm-0{
+			border-bottom: 0px;
+			padding-top: 10px;
+		  }
+		  .container{
+			  background: #ccc;
+		  }
+	</style>
+</head>
+<body onload="">
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-6">
+				<center>
+                    <p style="float: left">ሞዴል 19<br>Model 19</p>
+					<img class="logo" src="IMG_20200826_193957.jpg"><br>
+					<p>የኢትዮጵያ ፌደራላዊ ዲሞክራሲያዊ ሪፐብሊክ</p>
+					<p> THE FEDERAL DEMOCRATIC REPUBLIC<br> OF ETHIOPIA</p>
+					<P>ገንዘብ ሚኒስቴር</P>
+					<p>MINISTRY OF FINANCE AND <br>ECONOMIC COOPERATION </p>
+				</center>
+				<p>የ _______________________________________________________<br> Department</p>
+			</div>
+			<div class="col-sm-6 header2">
+               <div class="row">
+                   <div class="col-md-6"> 
+                        ሴሪ ሀ/12<br>
+                        Serial A/12<br> 
+                   </div>
+                   <div class="col-md-6">
+                        N<sup><u>o</u></sup> ________________
+                   </div>
+               </div><br><br><br>
+				1. ዋጋው በገንዘብ በወጪ መዝገብ የተጻፈበት ተራ ቁጥር ____________<br>
+				   item No. in expenditure history<br>
+				2. እቃ ገቢ መዝገብ የገባበት ንምራ ___________________<br>
+				   No of entry in the register of incoming goods<br>
+				3. እቃው የተሰጠው መደብ ________________________<br>
+				   Classification of stock<br>
+				4. እቃው የተቀመጠበት መጋዘን ቁጥር __________________<br>
+				   Store No.<br>
+				5. የመደርደሪያው ቁጥር ___________________________<br>
+				   Shelf No.<br>
+			</div>
+		</div><br><br>
+			<div class="row">
+				<div class="col-md-12">
+					<center><b>የእቃ ወይም የንብረት ገቢ ደረሰኝ
+						<p><u>RECEIPT FOR ARTICLES OF PROPTERTY RECEIVED</u></p>
+					</b></center>
+				</div>
+				<div class="col-md-12">
+                    ስም __________________________________________ከዚህ በታች በዝርዝር የተመለከተውን _______ ቀን 20 ________ ዓ.ም ከ _________________________________ <br>
+                    ተቀበያለሁ። 
+					<table width="100%" border="1">
+						<thead>
+							<tr>
+								<th class="bm-0">
+									ሴሪ <br>
+									Serial No.
+								</th>
+								<th class="bm-0">
+									የእቃው ወይም የንብረቱ ዓይነት ዝርዝር<br>
+									Detailed description of Articles or Property
+								</th>
+								<th class="bm-0">
+									ሞዴል<br>
+									Model 
+								</th>
+								<th class="bm-0">
+									ሴሪ<br>
+									Serial
+								</th>
+								<th colspan="2">
+									ተከታታይ
+								</th>
+								<th class="bm-0">ብዛት<br>Quantity</th>
+								<th class="bm-0">የአንዱ ዋጋ<br>Unit Price</th>
+								<th class="bm-0">የዋጋው ድምር<br>Total Price</th>
+							</tr>
+							<tr>
+								<th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th>ከ</th><th>እስከ</th>
+								<th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for product in products %}
+										
+							<tr>
+								<td></td>
+								<td>{{product.name}}</td>
+								<td>19</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>{{product.price}}</td>
+								<td>{{product.price * 2}}</td>
+							</tr>	
+							{% endfor %}						
+							<tr>
+								<td colspan="4" style="text-align: right">ድምር</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6"><br>
+                    <p>የግምጃ ቤቱ ፊርማ <br>
+                    Store-keeper's Signature<br><br>
+                    ________________________</p>
+				</div>
+				<div class="col-md-6">
+					<div class="float-right"><br>
+						የተቀባዩ ፊርማ <br>
+						Receipent's Signature<br><br>_________________________
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<table>
+					<tr>
+						<td> ማመልከቻ : </td>
+						<td> ይህ ካርኔ 3 ኮፒ ሆኖ በካርቦን ይሰራል። ከነዚህም ሁለቱ ተጎራጅ ሆነው 1ኛው በክፍሉ መስሪያ ቤት ሂሳብ ቤት አማካይነት ለገንዘብ ሚኒስቴር ጠቅላይ 
+							ሂሳብ ቤት ለእቃ መቆጣጠሪያ ክፍል  ይተላለፋል ። 2 ተኛው ለእቃ ወጪ መዝገብ ማስተካከያ ሰነድ እንዲሆነው ለክፍሉ ሂሳብ ቤት
+							ይሰጣል። 3 ተኛው ኮፒ ሳይጎረድ እንዳለ ሆኖ የእቃ ግምጃ ቤት እቃውን በትእዛዝ ያወጣውን መሆኑን ለመርማሪ ለማስረዳት እንዲችል ከማዘዣው ጋር 
+							በሙጫ አያይዞ እንዲኖር ይደረጋል።
+						</td>
+					</tr>
+					<tr>
+						<td> ማስጠንቀቂያ ፡ </td>
+						<td>መደባቸው አንድ አይነት ለሆኑና ተቀባያቸው አንድ ሰው ብቻ ለሆነ ልዩ ልዩ እቃዎች አንድ ቅጠል ይበቃል።  መደባቸው ሲለያይ ግን በራሳቸው 
+							አንዳንድ ደረሰኝ ሊጻፍላቸው ይችላል። ይኸውም በየመደቡ እየለዩ ለማኖር እንዲመች ነው። በዋጋው ድምር መጻፍያ አምድ ውስጥ የተመለከተው
+							በውርስ ወይም በሌላ ምክንያት የተገኘ እቃ ወይም ንብረት የሆነ እንደሆነ ዋጋው በኤክስፖርት ተገምቶ ግምቱ በዋጋው አምድ ውስጥ ይገባል።
+						</td>
+					</tr>
+				</table>				
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+window.onload(function(){
+	window.print();
+});
+</script>
+</html>
