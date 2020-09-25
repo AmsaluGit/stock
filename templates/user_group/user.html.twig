@@ -4,13 +4,13 @@
 {% endblock %}
 {% block stylesheets %}
 
-	<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
+	{# <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}"> #}
+	<link rel="stylesheet" href="{{asset('assets/plugins/multi-select/jquery.lwMultiSelect.css')}}"/>
 {% endblock %}
 {% block body %}
 
-
+<form action="{{path('user_group_permission1')}}" method="post">
 	<div class="card ">
-
 		<div class="card-header">
 			<h3 class="card-title">
 				{{ user_group.name }}
@@ -18,69 +18,83 @@
 
 			<div class="card-tools">
 				<a href="{{ path('user_group_index') }}" class="btn btn-primary btn-sm">back</a>
-
 			</div>
 			<!-- /.card-tools -->
 		</div>
-					<form method="POST">
-
 		<!-- /.card-header -->
 		<div class="card-body">
-
-
 			<div class="row">
+				<h5>Users in a group</h5>
 				<div class="col-12">
-
-						<div class="form-group">
-							<label>User List</label>
-							<label class="float-right">User in the Group</label>
-							<input hidden value="{{ user_group.id}}" name="usergroupuser">
-							<select class="duallistbox" multiple="multiple" name="user[]">
-								{% for user in user_group.users %}
-									<option selected value="{{user.id}}" >{{ user.userInfo.firstName }}
-										{{ user.userInfo.middleName }}
-										{{ user.userInfo.LastName }}
-										-
-										{{ user.userInfo.id }}</option>
-								{% endfor %}
-								{% for user in users %}
-									<option value="{{user.id}}">{{ user.userInfo.firstName }}
-										{{ user.userInfo.middleName }}
-										{{ user.userInfo.LastName }}
-										-
-										{{ user.userInfo.id }}</option>
-								{% endfor %}
-
-
-							</select>
-						</div>
-						<!-- /.form-group -->
-					
-				</div>
-				<!-- /.col -->
+					<select class="users_list" multiple name="user[]" style="display:none">
+						{% for user in users %}
+							<option value="{{user.id}}" >{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+						{% endfor %}
+					</select>
+				</div><br><br>
 			</div>
-			<!-- /.row -->
+		</div>
+		<input type="hidden" value="{{user_group.id}}"/>
+
+		<div class="card-body">
+			<div class="row">
+				<h5>Permissions for group</h5>
+				<div class="col-12">
+					<select class="permission_list" multiple="multiple" name="permission[]" style="display:none">
+						{% for permission in permission %}
+							<option value="{{permission.id}}" > {{ permission.name }} </option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
 		</div>
 		<!-- /.card-body -->
 		<div class="card-footer float-right">
 			<div class="float-right">
 				<a href="{{path('user_group_index')}}" class="btn btn-primary">Cancel</a>
-				<button class="btn btn-info  ">Save</button>
-
-
+				<button class="btn btn-info " type="submit">Save</button>
 			</div>
 		</div>
-		</form>
 	</div>
+</form>
 	<!-- /.card -->
 
 {% endblock %}
 {% block javascripts %}
+<script type="text/javascript" charset="utf-8">
+	var users = {
+		user_id : [],
+		users_name: [],
+	};
 
-	<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+	var users_temp = {
+		temp_name: [],
+		temp_id: [],
+	};
+</script>
+<script src="{{asset('assets/plugins/multi-select/jquery.lwMultiSelect.js')}}"></script>
+<script src="{{asset('assets/plugins/multi-select/jquery.lwMultiSelectWithoutSearch.js')}}"></script>
 	<script>
-		$(function () {
-$('.duallistbox').bootstrapDualListbox();
-})
+	$('.users_list').lwMultiSelect();
+	$('.permission_list').lwMultiSelectWithoutSearch();
+    $("#user_search").on("keyup",function(){
+      $count = users_temp.temp_name.length;
+      for(i = 0; i < $count; i++)
+      {
+      	if(users_temp.temp_name[i].includes($(this).val())){
+      		// var first = jQuery.attr('class').split(" ")[0];
+      		if($(".lwms-available:first li[data-value="+users_temp.temp_id[i]+"]").hasClass("choosen")){}
+      		else
+	      	 	$(".lwms-available:first li[data-value="+users_temp.temp_id[i]+"]").removeClass("lwms-selected");
+      	 }
+      	else
+      	{
+      	   if($(".lwms-available:first li[data-value="+users_temp.temp_id[i]+"]").hasClass("choosen")){}
+      	   else
+      	   	   $(".lwms-available:first li[data-value="+users_temp.temp_id[i]+"]").addClass("lwms-selected");
+      	}
+      }
+  });
+
 	</script>
 {% endblock %}
