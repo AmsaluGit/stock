@@ -58,6 +58,7 @@ class PermissionController extends AbstractController
 
             return $this->redirectToRoute('permission_index');
         }
+        
         $queryBuilder=$permissionRepository->findPermission($request->query->get('search'));
         $data=$paginator->paginate(
             $queryBuilder,

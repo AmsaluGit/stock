@@ -59,7 +59,7 @@ class UserGroupController extends AbstractController
             $form->handleRequest($request);
     
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->denyAccessUnlessGranted('ad_usr_grp');
+                // $this->denyAccessUnlessGranted('ad_usr_grp');
 
                 $entityManager = $this->getDoctrine()->getManager();
                 $userGroup->setIsActive(true);
@@ -85,12 +85,12 @@ class UserGroupController extends AbstractController
        
     }
       /**
-     * @Route("/{id}/users", name="user_group_users", methods={"POST"})
+     * @Route("/{id}/users", name="user_group_users", methods={"POST","get"})
      */
-    public function user(UserGroup $userGroup,Request $request,UserRepository $userRepository){
+    public function user(UserGroup $userGroup,Request $request,UserRepository $userRepository, PermissionRepository $permissionRepository){
         //$this->denyAccessUnlessGranted('ad_usr_t_grp');
 
-       if($request->request->get('usergroupuser')){
+       if($request->request->get('save')){
            $users=$userRepository->findAll();
               foreach ($users as $user) {
             $userGroup->removeUser($user);
@@ -103,11 +103,14 @@ class UserGroupController extends AbstractController
            $userGroup->setUpdatedBy($this->getUser());
            $this->getDoctrine()->getManager()->flush();
        }
-        return $this->render('user_group/user.html.twig', [
+        return $this->render('user_group/user.html.twig'
+          , [
             'user_group' => $userGroup,
-            'users' => $userRepository->findForUserGroup($userGroup->getUsers()),
+            'permission' => $permissionRepository->findAll(),
+            'users' => $userRepository->findAll(),
            
-        ]);
+        ]
+      );
  
 
 }
@@ -172,5 +175,11 @@ class UserGroupController extends AbstractController
         return $this->redirectToRoute('user_group_index');
     }
 
-    
+     /**
+     * @Route("/saveP", name="user_group_permission1", methods={"POST","GET"})
+     */
+    public function save(Request $request):Response
+    {
+      var_dump($request->request);
+    }
 }
