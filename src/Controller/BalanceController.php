@@ -2,16 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Stock;
 use App\Entity\Product;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Form\StockType;
+use App\Repository\StockRepository;
+use App\Repository\CategoriesRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\CategoriesRepository;
-use App\Repository\StockRepository;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Entity\Stock;
-use App\Form\StockType;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 class BalanceController extends AbstractController
@@ -42,40 +42,52 @@ class BalanceController extends AbstractController
         $container =null;
         $products = $this->getDoctrine()->getManager()->getRepository(Product::class)->findAll();
         foreach ($products as $key => $product) {
-            $avail = self::getRequestedQuantity($product->getId());
+            $avail = $this->getRequestedQuantity($product->getId());
             // if($product->getId() == 4) dd($avail);
            if(!($avail['stock'] || $avail['requested'])) continue;
             $container[]= array("unit"=>$product->getUnitOfMeasure()->getName(), "productId"=>$product->getId(),"productName"=>$product->getName(),"avail"=>$avail); 
         }
-        // dd($container);
+        //  dd($container);
        /* $conn = $this->getDoctrine()->getConnection();
         $stock_request  = "select id from product";
         $stock_result = $conn->query($stock_request)->fetchAll();
 
 
-        dd(self::getRequestedQuantity(1));
+        
 */
+// dd($this->getRequestedQuantity($product->getId()));
+/*if($container)
+{*/
+    $queryBuilder=$stockRepository->findStockInOut($request->query->get('search'));
+    $data=$paginator->paginate(
+        // $queryBuilder,
+        $container,
+        $request->query->getInt('page',1),
+        $pageSize
+    );
 
-        $queryBuilder=$stockRepository->findStockInOut($request->query->get('search'));
-        $data=$paginator->paginate(
-            // $queryBuilder,
-            $container,
-            $request->query->getInt('page',1),
-            $pageSize
-        );
-
-        $produ_on_cart = $request->getSession()->get($this->getUser()->getId());
-
-        $temp = null;
-        if($produ_on_cart)
+    $produ_on_cart = $request->getSession()->get($this->getUser()->getId());
+// dd($produ_on_cart);
+    $temp = null;
+    if($produ_on_cart)
+    {
+        $p = $em->getRepository(Product::class);
+        foreach ($produ_on_cart as $key => $value) 
         {
-            $p = $em->getRepository(Product::class);
-            foreach ($produ_on_cart as $key => $value) 
-            {
-                $temp[$p->find($key)->getName()]=$value;
-            }
+            $temp[$p->find($key)->getName()]=$value;
         }
-    
+    }
+
+/*}
+else
+{*/
+    /*return $this->render('balance/index.html.twig', [
+        'stocks' => null,
+        'form' => $form->createView(),
+        'carts' => null
+    ]);*/
+//}
+        // dd($temp);
         return $this->render('balance/index.html.twig', [
             'stocks' => $data,
             'form' => $form->createView(),
@@ -91,7 +103,7 @@ class BalanceController extends AbstractController
 
         $order_request  = "select product_id, sum(quantity) as quantity from orders where product_id=$product";
         $order_result = $conn->query($order_request)->fetchAll();
-        //  dd($stock_result);
+        //   dd($stock_result);
 
          return array("stock"=>$stock_result[0]['quantity'],"requested"=>$order_result[0]['quantity'],);
     }
