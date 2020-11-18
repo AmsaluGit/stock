@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @Route("/product")
@@ -21,7 +22,7 @@ class ProductController extends AbstractController
      */
     public function index(Request $request, ProductRepository $productRepository, PaginatorInterface $paginator): Response
     {
-        $rowsPerPage=5;
+        $rowsPerPage=15;
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $product=$productRepository->findOneBy(['id'=>$id]);
@@ -85,19 +86,32 @@ class ProductController extends AbstractController
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-        echo $request->request->get("add");
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($product);
             $entityManager->flush();
-
-            return $this->redirectToRoute('product_index');
+            if($request->request->get("add") == "add")
+            {
+                // $request->getSession()->set("new_products",)
+                return $this->redirectToRoute('product_index');
+            }
+            else if($request->request->get("add") == "add_more")
+            {
+                $product = new Product();
+                $form = $this->createForm(ProductType::class, $product);
+                return $this->render('product/create.html.twig', [
+                    'product' => $product,
+                    'form' => $form->createView(),
+                ]);
+            }
         }
 
         return $this->render('product/create.html.twig', [
             'product' => $product,
             'form' => $form->createView(),
         ]);
+
     }
 
     /**
