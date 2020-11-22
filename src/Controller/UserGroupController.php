@@ -178,8 +178,8 @@ class UserGroupController extends AbstractController
      /**
      * @Route("/saveP", name="user_group_permission1", methods={"POST","GET"})
      */
-    public function save(Request $request):Response
+    public function SaveUserGroupPermission(Request $request)
     {
-      var_dump($request->request);
+      dd($request->request->all());
     }
 }

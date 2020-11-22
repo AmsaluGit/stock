@@ -108,6 +108,11 @@ class User implements UserInterface
      */
     private $requests;
 
+      /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\UserGroup", inversedBy="users")
+     */
+    private $userGroup;
+
 
 
     public function __construct()
@@ -421,5 +426,32 @@ class User implements UserInterface
 
         return $this;
     }
+
+     /**
+     * @return Collection|UserGroup[]
+     */
+    public function getUserGroup(): Collection
+    {
+        return $this->userGroup;
+    }
+
+    public function addUserGroup(UserGroup $userGroup): self
+    {
+        if (!$this->userGroup->contains($userGroup)) {
+            $this->userGroup[] = $userGroup;
+        }
+
+        return $this;
+    }
+
+    public function removeUserGroup(UserGroup $userGroup): self
+    {
+        if ($this->userGroup->contains($userGroup)) {
+            $this->userGroup->removeElement($userGroup);
+        }
+
+        return $this;
+    }
+
 
 }
