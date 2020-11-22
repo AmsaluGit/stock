@@ -8,7 +8,6 @@
 	<link rel="stylesheet" href="{{asset('assets/plugins/multi-select/jquery.lwMultiSelect.css')}}"/>
 {% endblock %}
 {% block body %}
-
 <form action="{{path('user_group_permission1')}}" method="post">
 	<div class="card ">
 		<div class="card-header">
@@ -28,7 +27,12 @@
 				<div class="col-12">
 					<select class="users_list" multiple name="user[]" style="display:none">
 						{% for user in users %}
-							<option value="{{user.id}}" >{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+							{% if(user.id in users_exist)%}
+								<option value="{{user.id}}" selected>{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+							{% else %}
+								<option value="{{user.id}}">{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+							{% endif %}
+							{# <option value="{{user.id}}" >{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option> #}
 						{% endfor %}
 					</select>
 				</div><br><br>
@@ -42,7 +46,11 @@
 				<div class="col-12">
 					<select class="permission_list" multiple="multiple" name="permission[]" style="display:none">
 						{% for permission in permission %}
-							<option value="{{permission.id}}" > {{ permission.name }} </option>
+							{% if(permission.id in perm_exist)%}
+								<option selected value="{{permission.id}}" > {{ permission.name }} </option>
+							{% else %}
+								<option value="{{permission.id}}" > {{ permission.name }} </option>
+							{% endif %}
 						{% endfor %}
 					</select>
 				</div>

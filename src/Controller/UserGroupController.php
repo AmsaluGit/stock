@@ -90,30 +90,48 @@ class UserGroupController extends AbstractController
     public function user(UserGroup $userGroup,Request $request,UserRepository $userRepository, PermissionRepository $permissionRepository){
         //$this->denyAccessUnlessGranted('ad_usr_t_grp');
 
-       if($request->request->get('save')){
-           $users=$userRepository->findAll();
-              foreach ($users as $user) {
+        if($request->request->get('save')){
+            $users=$userRepository->findAll();
+                foreach ($users as $user) {
             $userGroup->removeUser($user);
-           }
-           $users=$userRepository->findBy(['id'=>$request->request->get('user')]);
-           foreach ($users as $user) {
+            }
+            $users=$userRepository->findBy(['id'=>$request->request->get('user')]);
+            foreach ($users as $user) {
             $userGroup->addUser($user);
-           }
-           $userGroup->setUpdatedAt(new \DateTime());
-           $userGroup->setUpdatedBy($this->getUser());
-           $this->getDoctrine()->getManager()->flush();
-       }
-        return $this->render('user_group/user.html.twig'
-          , [
-            'user_group' => $userGroup,
-            'permission' => $permissionRepository->findAll(),
-            'users' => $userRepository->findAll(),
-           
-        ]
-      );
- 
+            }
+            $userGroup->setUpdatedAt(new \DateTime());
+            $userGroup->setUpdatedBy($this->getUser());
+            $this->getDoctrine()->getManager()->flush();
+        }
+    
+        $em = $this->getDoctrine()->getManager();
+    
+        $userG = $em->getRepository(UserGroup::class)
+                      ->findOneBy(array('id'=>$userGroup->getId()));
 
-}
+        $assignedUsers = $userG->getPermission()->toArray();
+        $assignedPermissions = $userG->getUsers()->toArray();
+
+        $assignedUsersId = array();
+        $assignedPermId = array();
+
+        foreach($assignedUsers as $user){
+            $assignedUsersId[] = $user->getId();    
+        }
+
+        foreach($assignedPermissions as $perm ){
+            $assignedPermId[] = $perm->getId();    
+        }
+
+        return $this->render('user_group/user.html.twig',
+             [
+                'user_group' => $userGroup,
+                'permission' => $permissionRepository->findAll(),
+                'users' => $userRepository->findAll(),
+                'users_exist' => $assignedUsersId,
+                'perm_exist' => $assignedPermId
+            ]);
+    }
       /**
      * @Route("/{id}/permission", name="user_group_permission", methods={"POST"})
      */
@@ -182,4 +200,5 @@ class UserGroupController extends AbstractController
     {
       dd($request->request->all());
     }
+
 }
