@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Orders;
 use App\Entity\Product;
+use App\Entity\Requests;
 use App\Form\OrdersType;
 use App\Repository\OrdersRepository;
 use DateTime;
-use Proxies\__CG__\App\Entity\Requests;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,11 +39,14 @@ class OrdersController extends AbstractController
         /*return $this->render('order/index.html.twig', [
             'orders' => $orderRepository->findAll(),
         ]);*/
+
+        
         $em = $this->getDoctrine()->getManager();
        
         $quantity = $request->request->get('quantity');
-        // $id = $request->request->get('id');
-        $request->getSession()->invalidate();
+       
+        // $id = $request->request->get('id'); 
+        // $request->getSession()->invalidate();
         $mycart = $request->getSession()->get($this->getUser()->getId(),null);
   
         if($mycart)
@@ -55,7 +58,7 @@ class OrdersController extends AbstractController
         {
             $request->getSession()->set($this->getUser()->getId(), array($product->getId()=>$quantity));
         }
-        // dd($mycart);
+        //    dd($mycart);
 
         return $this->redirectToRoute("balance");
     }
@@ -77,6 +80,7 @@ class OrdersController extends AbstractController
 
         //manage parent(Requests table)
         $requests = $em->getRepository(Requests::class)->getIfNewRequestsExist($this->getUser());
+        // $requests = $em->getRepository(Requests::class)->getIfNewRequestsExist(1);
         if(!$requests)
         {
             $requests = new Requests();

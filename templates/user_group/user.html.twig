@@ -22,7 +22,7 @@
 			<!-- /.card-tools -->
 		</div>
 		<!-- /.card-header -->
-		<div class="card-body">
+		<div class="card-body upper">
 			<div class="row">
 				<h5>Users in a group</h5>
 				<div class="col-12">
@@ -36,7 +36,7 @@
 		</div>
 		<input type="hidden" value="{{user_group.id}}"/>
 
-		<div class="card-body">
+		<div class="card-body lower">
 			<div class="row">
 				<h5>Permissions for group</h5>
 				<div class="col-12">
@@ -74,6 +74,8 @@
 </script>
 <script src="{{asset('assets/plugins/multi-select/jquery.lwMultiSelect.js')}}"></script>
 <script src="{{asset('assets/plugins/multi-select/jquery.lwMultiSelectWithoutSearch.js')}}"></script>
+
+
 	<script>
 	$('.users_list').lwMultiSelect();
 	$('.permission_list').lwMultiSelectWithoutSearch();
@@ -96,5 +98,19 @@
       }
   });
 
+  
+//alert('555');
+	
+
+
 	</script>
+
+	<script>
+	/*
+$(".upper .lwms-right ").append('<li class="lwms-selectli .choosen " data-value="15">endee1</li>');  
+
+$(".upper .lwms-right .lwms-list").append('<li class="lwms-selectli" data-value="15">endee1</li>');  
+
+	$(".lower .lwms-right .lwms-list").append('<li class="lwms-selectli" data-value="25">endee2</li>');  */
+</script>
 {% endblock %}
