@@ -104,13 +104,9 @@ class UserGroupController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
         }
     
-        $em = $this->getDoctrine()->getManager();
-    
-        $userG = $em->getRepository(UserGroup::class)
-                      ->findOneBy(array('id'=>$userGroup->getId()));
-
-        $assignedUsers = $userG->getUsers()->toArray();
-        $assignedPermissions = $userG->getPermission()->toArray();
+        // $em = $this->getDoctrine()->getManager();
+        $assignedUsers = $userGroup->getUsers()->toArray();
+        $assignedPermissions = $userGroup->getPermission()->toArray();
 
         $assignedUsersId = array();
         $assignedPermId = array();

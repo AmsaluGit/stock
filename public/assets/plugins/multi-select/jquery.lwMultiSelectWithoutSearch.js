@@ -85,7 +85,7 @@
     /* event: clicking on right container li */
     removeItem: function(that) {
       var $self = $(that);
-      index = users.user_id.indexOf($self.data('value').toString());
+      index = permission.perm_id.indexOf($self.data('value').toString());
       this.$availList.find('li[data-value="' + $self.data('value') + '"]').removeClass('lwms-selected'); //remove lwms-selected from available list
       this.$element.find('option[value="' + $self.data('value') + '"]').removeAttr('selected'); //remove selected on the source
       $self.remove(); //remove the current element from selected 
@@ -167,8 +167,6 @@
         $tmpThis, 
         tmpVal, 
         tmpText,
-        users_name = [],
-        users_id = [],
         permission_name = [],
         permission_id = [], 
         selectClass = '';
@@ -183,10 +181,10 @@
         $tmpThis = $(this);
         tmpVal = $tmpThis.prop('value');
         tmpText = $tmpThis.text();
-        users.user_id.push(tmpVal);
-        users.users_name.push(tmpText);
-        users_temp.temp_name.push(tmpText);
-        users_temp.temp_id.push(tmpVal);
+        permission.perm_id.push(tmpVal);
+        permission.perm_name.push(tmpText);
+        permission_temp.temp_name.push(tmpText);
+        permission_temp.temp_id.push(tmpVal);
         //if option is preselected then append to selected and add lwms-selected to the available side        
         if ($tmpThis.is(':selected')) {
           tmpSelectHtml += '<li class="lwms-selectli" data-value="' + tmpVal + '">' + tmpText + '</li>';

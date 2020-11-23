@@ -79,16 +79,25 @@
 		temp_name: [],
 		temp_id: [],
 	};
+
+	var permission = {
+		perm_id : [],
+		perm_name: [],
+	};
+
+	var permission_temp = {
+		temp_name: [],
+		temp_id: [],
+	};
 </script>
 <script src="{{asset('assets/plugins/multi-select/jquery.lwMultiSelect.js')}}"></script>
 <script src="{{asset('assets/plugins/multi-select/jquery.lwMultiSelectWithoutSearch.js')}}"></script>
-
-
-	<script>
+<script>
 	$('.users_list').lwMultiSelect();
 	$('.permission_list').lwMultiSelectWithoutSearch();
     $("#user_search").on("keyup",function(){
       $count = users_temp.temp_name.length;
+	  console.log($count);
       for(i = 0; i < $count; i++)
       {
       	if(users_temp.temp_name[i].includes($(this).val())){
@@ -104,21 +113,6 @@
       	   	   $(".lwms-available:first li[data-value="+users_temp.temp_id[i]+"]").addClass("lwms-selected");
       	}
       }
-  });
-
-  
-//alert('555');
-	
-
-
+    });
 	</script>
-
-	<script>
-	/*
-$(".upper .lwms-right ").append('<li class="lwms-selectli .choosen " data-value="15">endee1</li>');  
-
-$(".upper .lwms-right .lwms-list").append('<li class="lwms-selectli" data-value="15">endee1</li>');  
-
-	$(".lower .lwms-right .lwms-list").append('<li class="lwms-selectli" data-value="25">endee2</li>');  */
-</script>
 {% endblock %}

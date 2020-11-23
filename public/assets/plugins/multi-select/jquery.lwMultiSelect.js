@@ -198,12 +198,14 @@
         tmpText = $tmpThis.text();
         users.user_id.push(tmpVal);
         users.users_name.push(tmpText);
-        users_temp.temp_name.push(tmpText);
-        users_temp.temp_id.push(tmpVal);
         //if option is preselected then append to selected and add lwms-selected to the available side        
         if ($tmpThis.is(':selected')) {
           tmpSelectHtml += '<li class="lwms-selectli" data-value="' + tmpVal + '">' + tmpText + '</li>';
           selectClass = ' lwms-selected';
+        }
+        else{
+          users_temp.temp_name.push(tmpText);
+          users_temp.temp_id.push(tmpVal);
         }
         tmpAvailHtml += '<li class="lwms-selectli' + selectClass + '" data-value="' + tmpVal + '">' + tmpText + '</li>';
       });
