@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Permission;
+use App\Entity\User;
 use App\Entity\UserGroup;
 use App\Form\UserGroupType;
 use App\Repository\UserGroupRepository;
@@ -108,6 +110,9 @@ class UserGroupController extends AbstractController
         $assignedUsers = $userGroup->getUsers()->toArray();
         $assignedPermissions = $userGroup->getPermission()->toArray();
 
+        $assignedUsers =  $userGroup->getUsers()->toArray();
+        $assignedPermissions =$userGroup->getPermission()->toArray();
+        // dd($assignedPermissions);
         $assignedUsersId = array();
         $assignedPermId = array();
 
@@ -118,7 +123,7 @@ class UserGroupController extends AbstractController
         foreach($assignedPermissions as $perm ){
             $assignedPermId[] = $perm->getId();    
         }
-
+// dd($assignedPermId);
         return $this->render('user_group/user.html.twig',
              [
                 'user_group' => $userGroup,
@@ -190,11 +195,55 @@ class UserGroupController extends AbstractController
     }
 
      /**
-     * @Route("/saveP", name="user_group_permission1", methods={"POST","GET"})
+     * @Route("/savegroup/{id}", name="user_group_permission1", methods={"POST","GET"})
      */
-    public function SaveUserGroupPermission(Request $request)
+    public function SaveUserGroupPermission(Request $request,UserGroup $userGroup)
     {
-      dd($request->request->all());
+
+        $em = $this->getDoctrine()->getManager();
+     $newPermList = $request->request->get("permission");
+     $NewUserList = $request->request->get("user");
+
+      //delete all permissions under this group
+      $oldPermissionLists = $userGroup->getPermission();
+        
+      foreach ($oldPermissionLists as $key => $oldperm) {
+           $userGroup->removePermission($oldperm);
+      }
+
+      //delete all user lists under this group
+      $oldUserLists = $userGroup->getUsers();
+        
+      foreach ($oldUserLists as $key => $olduser) {
+           $userGroup->removeUser($olduser);
+      }
+
+
+
+
+     if($newPermList)
+     {
+        foreach ($newPermList as $key => $newperm) {
+            $newPermisson = $em->getRepository(Permission::class)->find($newperm);
+            $userGroup->addPermission($newPermisson);
+        }
+     }
+
+     if($NewUserList)
+     {
+        foreach ($NewUserList as $key => $newuser) {
+            $newuser = $em->getRepository(User::class)->find($newuser);
+            $userGroup->addUser($newuser);
+        }
+     }
+
+      $em->flush();
+
+ 
+     return $this->redirectToRoute("user_group_users",['id'=>$userGroup->getId()]);
+
+ 
+
     }
 
 }
