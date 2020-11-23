@@ -68,6 +68,7 @@
 							<div class="card-body">
 
 
+<<<<<<< HEAD
 								<table class="table table-hover">
 									<thead class="thead-light">
 										<tr>
@@ -86,10 +87,26 @@
                 
                 
                 <th>actions</th>
+=======
+							<table class="table table-hover">
+								<thead class="thead-light">
+									<tr>
+										<th>#</th>
+						                <th>Name</th>
+						                <th>Brand</th>
+						                <th>Product Type</th>
+						                {# <th>Model</th>
+						                <th>Serial</th> #}
+						                <th>Price</th>
+						                <th>Category</th>
+						                <th>actions</th>
+						                <th>#</th>
+>>>>>>> nebiyou
 										</tr>
 									</thead>
 									<tbody>
 										{% set i = 1 %}
+									
 										{% for product in products %}
 											<tr>
 												<td>
@@ -136,6 +153,7 @@
 													</form>
 												
 												</td>
+												<td><label><input type="checkbox"></label><td>
 
 											</tr>
 										{% else %}
@@ -145,7 +163,7 @@
 										{% endfor %}
 									</tbody>
 								</table>
-								<div class="float-right">{{ knp_pagination_render(products) }}</div>
+								{#<div class="float-right">{{ knp_pagination_render(products) }}</div>#}
 
 
 							</div>
