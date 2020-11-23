@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Requests; 
+use App\Entity\ApprovalLog;
+use App\Entity\Requests;
+use App\Entity\UserGroup;
 use App\Form\RequestsType;
 use App\Repository\RequestsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,11 +22,21 @@ class RequestsController extends AbstractController
      */
     public function index(RequestsRepository $requestsRepository): Response
     {
+        // $all = $requestsRepository->findAll();
+        // foreach ($all as $key => $value) {
+        //     $all[$key]=$value->approvalLogs
+        // }
+        // $all[] 
+
         return $this->render('requests/index.html.twig', [
             'requests' => $requestsRepository->findAll(),
         ]);
     }
-
+        public function theksort($arr)
+        {
+            asort($arr);
+            return $arr;
+        }
     /**
      * @Route("/new", name="requests_new", methods={"GET","POST"})
      */
@@ -95,61 +107,39 @@ class RequestsController extends AbstractController
      public function doApprovalOrReject(Requests $requests, $approve, $reject, $approver)
     {
         $em = $this->getDoctrine()->getManager();
-
-        if($approve)
-        {
+        // dd($approver);
+        foreach ($approver as $key => $level) {
+          
+            $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>$level]);
+            if(!$alreadyApproved)
+            {
+                $appLog = new ApprovalLog();
+                $appLog->setApprover($this->getUser());
+                $appLog->setApprovalLevel($level);
+                $appLog->setRequest($requests);
+                $appLog->setApprovalDate(new \DateTime());
+                if($approve)
+                {
+                     $appLog->setStatus(1);
+                }
+                else if($reject)
+                {
+                    $appLog->setStatus(2);
+                }
+                else
+                {
+                   // dd("Neither approved nor Rejected");
+                }
+                $em->persist($appLog);
+            }
             
-            switch ($approver) 
+            if($level==3)
             {
-                case '1':
-                $requests->setApproval1($this->getUser());
-                $requests->setStatus(1);
-                    break;
-                case '2':
-                //if($isLastApprover && $order->getStatus()==1) $order->setClosed(1);
-                $requests->setApproval2($this->getUser());
-                $requests->setStatus(2);
-                
-                    break;
-                case '3':
-                $requests->setApproval3($this->getUser());
-                $requests->setStatus(3);
                 $requests->setClosed(1);
-                
-                    break;
-                default:
-                    # code...
-                    break;
             }
+            
         }
-        else if($reject)
-        {
-           
-            switch ($approver) 
-            {
-                case '1':
-                $requests->setApproval1($this->getUser());
-                $requests->setStatus(10);
-                    break;
-                case '2':
-                $requests->setApproval2($this->getUser());
-                $requests->setStatus(20);
-                    break;
-                case '3':
-                $requests->setApproval3($this->getUser());
-                $requests->setStatus(30);
-                $requests->setClosed(0);
-                    break;
-                default:
-                dd("CASE DEFAULT....");
-                    break;
-            }
-        }
-        else
-        {
-            dd("Neither approved nor Rejected");
-        }
-       
+            
             $em->flush();
 
     }
@@ -160,9 +150,39 @@ class RequestsController extends AbstractController
     {
         $approve = $request->request->get('approve');
         $reject = $request->request->get('reject');
+        $em = $this->getDoctrine()->getManager();
+
        
-        $approver = 3;
-        self::doApprovalOrReject($requests, $approve, $reject, $approver);
+        $ug = $em->getRepository(UserGroup::class)->find(1);
+        $ugList = $this->getUser()->getUserGroup();
+        $permissions = array();
+        $approver = array();
+        foreach ($ugList  as $key => $ug) {
+            $temp = $ug->getPermission();
+            foreach ($temp  as $key => $perm) {
+                // $permissions[] = $perm;
+                if($perm->getCode()=="approver1")
+                {
+                    $approver[] = 1;
+                }
+                elseif($perm->getCode()=="approver2")
+                {
+                    $approver[] = 2;
+                }
+                elseif($perm->getCode()=="approver3")
+                {
+                    $approver[] = 3;
+                }
+                else{
+                    //ignore
+                }
+            }
+             
+        }
+        
+     //   $approver =$ug->getPermission();
+        // dd($approver);
+        $this->doApprovalOrReject($requests, $approve, $reject, $approver);
     
         return $this->redirectToRoute('requests_index');
     }

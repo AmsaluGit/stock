@@ -218,9 +218,6 @@ class UserGroupController extends AbstractController
            $userGroup->removeUser($olduser);
       }
 
-
-
-
      if($newPermList)
      {
         foreach ($newPermList as $key => $newperm) {

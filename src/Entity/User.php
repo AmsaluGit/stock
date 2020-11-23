@@ -113,6 +113,11 @@ class User implements UserInterface
      */
     private $userGroup;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ApprovalLog::class, mappedBy="approver")
+     */
+    private $approvalLogs;
+
 
 
     public function __construct()
@@ -120,6 +125,7 @@ class User implements UserInterface
         $this->transfers = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->requests = new ArrayCollection();
+        $this->approvalLogs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -448,6 +454,36 @@ class User implements UserInterface
     {
         if ($this->userGroup->contains($userGroup)) {
             $this->userGroup->removeElement($userGroup);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ApprovalLog[]
+     */
+    public function getApprovalLogs(): Collection
+    {
+        return $this->approvalLogs;
+    }
+
+    public function addApprovalLog(ApprovalLog $approvalLog): self
+    {
+        if (!$this->approvalLogs->contains($approvalLog)) {
+            $this->approvalLogs[] = $approvalLog;
+            $approvalLog->setApprover($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApprovalLog(ApprovalLog $approvalLog): self
+    {
+        if ($this->approvalLogs->removeElement($approvalLog)) {
+            // set the owning side to null (unless already changed)
+            if ($approvalLog->getApprover() === $this) {
+                $approvalLog->setApprover(null);
+            }
         }
 
         return $this;
