@@ -32,11 +32,11 @@ class RequestsController extends AbstractController
             'requests' => $requestsRepository->findAll(),
         ]);
     }
-        public function theksort($arr)
+        /*public function theksort($arr)
         {
             asort($arr);
             return $arr;
-        }
+        }*/
     /**
      * @Route("/new", name="requests_new", methods={"GET","POST"})
      */
