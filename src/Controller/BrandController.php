@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/brand")
@@ -16,13 +17,61 @@ use Symfony\Component\Routing\Annotation\Route;
 class BrandController extends AbstractController
 {
     /**
-     * @Route("/", name="brand_index", methods={"GET"})
+     * @Route("/", name="brand_index", methods={"GET","POST"})
      */
-    public function index(BrandRepository $brandRepository): Response
+    public function index(Request $request, BrandRepository $brandRepository, PaginatorInterface $paginator): Response
     {
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $brand= $brandRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(BrandType::class, $brand);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+              //  $department->setUpdatedAt(new \DateTime());
+            
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('brand_index');
+            }
+            $queryBuilder=$brandRepository->findbrand($request->query->get('search'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                18
+            );
+            return $this->render('brand/index.html.twig', [
+                'brands' => $data,
+                'form' => $form->createView(),
+                'edit'=>$id
+            ]);    
+        }
+        $brand = new Brand();
+        $form = $this->createForm(BrandType::class, $brand);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($brand);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('brand_index');
+        }
+
+        $queryBuilder=$brandRepository->findbrand($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            18
+        );
         return $this->render('brand/index.html.twig', [
-            'brands' => $brandRepository->findAll(),
+            'brands' => $data,
+            'form' => $form->createView(),
+            'edit'=>false
         ]);
+        // return $this->render('brand/index.html.twig', [
+        //     'brands' => $brandRepository->findAll(),
+        // ]);
     }
 
     /**

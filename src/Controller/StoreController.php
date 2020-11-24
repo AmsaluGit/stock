@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/store")
@@ -16,9 +17,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class StoreController extends AbstractController
 {
     /**
-     * @Route("/", name="store_index", methods={"GET"})
+     * @Route("/", name="store_index", methods={"GET","POST"})
      */
-    public function index(StoreRepository $storeRepository): Response
+    public function index(Request $request, StoreRepository $storeRepository, PaginatorInterface $paginator): Response
     {
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
@@ -33,20 +34,20 @@ class StoreController extends AbstractController
     
                 return $this->redirectToRoute('store_index');
             }
-            $queryBuilder=$storeRepository->findDepartment($request->query->get('search'));
+            $queryBuilder=$storeRepository->findStore($request->query->get('search'));
             $data=$paginator->paginate(
                 $queryBuilder,
                 $request->query->getInt('page',1),
                 18
             );
-            return $this->render('department/index.html.twig', [
-                'departments' => $data,
+            return $this->render('store/index.html.twig', [
+                'stores' => $data,
                 'form' => $form->createView(),
                 'edit'=>$id
             ]);    
         }
-        $department = new Department();
-        $form = $this->createForm(DepartmentType::class, $department);
+        $store = new Store();
+        $form = $this->createForm(StoreType::class, $store);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -54,26 +55,23 @@ class StoreController extends AbstractController
             /*$department->setIsActive(true);
             $department->setCreatedAt(new \DateTime());
             $department->setRegisteredBy($this->getUser());*/
-            $entityManager->persist($department);
+            $entityManager->persist($store);
             $entityManager->flush();
 
-            return $this->redirectToRoute('department_index');
+            return $this->redirectToRoute('store_index');
         }
 
-        $queryBuilder=$departmentRepository->findDepartment($request->query->get('search'));
+        $queryBuilder=$storeRepository->findStore($request->query->get('search'));
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page',1),
             18
         );
-        return $this->render('department/index.html.twig', [
-            'departments' => $data,
+        return $this->render('store/index.html.twig', [
+            'stores' => $data,
             'form' => $form->createView(),
             'edit'=>false
         ]);
-        // return $this->render('store/index.html.twig', [
-        //     'stores' => $storeRepository->findAll(),
-        // ]);
     }
 
     /**
