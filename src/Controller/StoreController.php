@@ -20,9 +20,60 @@ class StoreController extends AbstractController
      */
     public function index(StoreRepository $storeRepository): Response
     {
-        return $this->render('store/index.html.twig', [
-            'stores' => $storeRepository->findAll(),
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $store= $storeRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(StoreType::class, $store);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+              //  $department->setUpdatedAt(new \DateTime());
+            
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('store_index');
+            }
+            $queryBuilder=$storeRepository->findDepartment($request->query->get('search'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                18
+            );
+            return $this->render('department/index.html.twig', [
+                'departments' => $data,
+                'form' => $form->createView(),
+                'edit'=>$id
+            ]);    
+        }
+        $department = new Department();
+        $form = $this->createForm(DepartmentType::class, $department);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            /*$department->setIsActive(true);
+            $department->setCreatedAt(new \DateTime());
+            $department->setRegisteredBy($this->getUser());*/
+            $entityManager->persist($department);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('department_index');
+        }
+
+        $queryBuilder=$departmentRepository->findDepartment($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            18
+        );
+        return $this->render('department/index.html.twig', [
+            'departments' => $data,
+            'form' => $form->createView(),
+            'edit'=>false
         ]);
+        // return $this->render('store/index.html.twig', [
+        //     'stores' => $storeRepository->findAll(),
+        // ]);
     }
 
     /**
