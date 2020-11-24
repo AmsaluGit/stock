@@ -30,20 +30,7 @@ class Requests
      */
     private $requestedDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="requests")
-     */
-    private $approval1;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="requests")
-     */
-    private $approval2;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="requests")
-     */
-    private $approval3;
+ 
 
     /**
      * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="request")
@@ -75,9 +62,15 @@ class Requests
      */
     private $delivered;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ApprovalLog::class, mappedBy="request")
+     */
+    private $approvalLogs;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->approvalLogs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -109,41 +102,7 @@ class Requests
         return $this;
     }
 
-    public function getApproval1(): ?User
-    {
-        return $this->approval1;
-    }
-
-    public function setApproval1(?User $approval1): self
-    {
-        $this->approval1 = $approval1;
-
-        return $this;
-    }
-
-    public function getApproval2(): ?User
-    {
-        return $this->approval2;
-    }
-
-    public function setApproval2(?User $approval2): self
-    {
-        $this->approval2 = $approval2;
-
-        return $this;
-    }
-
-    public function getApproval3(): ?User
-    {
-        return $this->approval3;
-    }
-
-    public function setApproval3(?User $approval3): self
-    {
-        $this->approval3 = $approval3;
-
-        return $this;
-    }
+    
 
     /**
      * @return Collection|Orders[]
@@ -232,6 +191,36 @@ class Requests
     public function setDelivered(?int $delivered): self
     {
         $this->delivered = $delivered;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ApprovalLog[]
+     */
+    public function getApprovalLogs(): Collection
+    {
+        return $this->approvalLogs;
+    }
+
+    public function addApprovalLog(ApprovalLog $approvalLog): self
+    {
+        if (!$this->approvalLogs->contains($approvalLog)) {
+            $this->approvalLogs[] = $approvalLog;
+            $approvalLog->setRequest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApprovalLog(ApprovalLog $approvalLog): self
+    {
+        if ($this->approvalLogs->removeElement($approvalLog)) {
+            // set the owning side to null (unless already changed)
+            if ($approvalLog->getRequest() === $this) {
+                $approvalLog->setRequest(null);
+            }
+        }
 
         return $this;
     }
