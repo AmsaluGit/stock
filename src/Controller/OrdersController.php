@@ -75,7 +75,7 @@ class OrdersController extends AbstractController
         ]);*/
         $em = $this->getDoctrine()->getManager();
        
-        $reason = $request->request->get('reason');
+        $reason = $request->request->get('reason'); 
         
 
         //manage parent(Requests table)

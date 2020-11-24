@@ -18,7 +18,7 @@ class RequestsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Requests::class);
     }
-
+ 
     // /**
     //  * @return Requests[] Returns an array of Requests objects
     //  */
@@ -31,7 +31,7 @@ class RequestsRepository extends ServiceEntityRepository
 
           /* $qb =  $qb->innerJoin("r.product","p");
             $qb->andWhere("p.name  LIKE '%".$search."%'");*/
-            $qb =   $qb ->andWhere('r.approval1 is NULL and r.approval2 is NULL and r.approval3 is NULL');
+            // $qb =   $qb ->andWhere('r.approval1 is NULL and r.approval2 is NULL and r.approval3 is NULL');
            $qb =   $qb->andWhere('r.status is NULL or r.status =:zero')
             ->setParameter('zero', 0)
             ->andWhere('r.closed is NULL or r.status =:zero2')
