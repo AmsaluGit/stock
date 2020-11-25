@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\StockRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,16 @@ class Stock
      * @ORM\Column(type="date")
      */
     private $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="stocks")
+     */
+    private $company;
+
+    public function __construct()
+    {
+        ;
+    }
 
  
 
@@ -79,6 +91,17 @@ class Stock
 
         return $this;
     }
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
+
+        return $this;
+    }
 
     public function getDate(): ?\DateTimeInterface
     {
@@ -91,6 +114,8 @@ class Stock
 
         return $this;
     }
+
+    
 
 
 }

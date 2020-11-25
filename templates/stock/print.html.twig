@@ -78,7 +78,8 @@
 					</b></center>
 				</div>
 				<div class="col-md-12">
-                    ስም <u> {{app.user}}  </u> ከዚህ በታች በዝርዝር የተመለከተውን {{ "now"|date("M d") }} ቀን {{ "now"|date("Y") }} ዓ.ም ከ _________________________________ <br>
+                    ስም <u> {{app.user}}  </u> ከዚህ በታች በዝርዝር የተመለከተውን {{ "now"|date("M d") }} ቀን {{ "now"|date("Y") }} ዓ.ም ከ {% if stocks[0].company is defined  and stocks[0].company is not null %} <u>    {{ stocks[0].company}}</u> {% endif %}
+					 <br>
                     ተቀበያለሁ። 
 					<table width="100%" border="1">
 						<thead>
