@@ -1,0 +1,142 @@
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}company index
+{% endblock %}
+{% block maintitle %}
+
+	Manage companies
+{% endblock %}
+{% block breadcrumb %}
+	<li class="breadcrumb-item active">Resource
+	</li>
+	<li class="breadcrumb-item active">company</li>
+{% endblock %}
+{% block body %}
+	<div class="row">
+		<div class="card col-md">
+
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card card-info {{edit?'':'collapsed-card'}}">
+							<div class="card-header">
+								<h3 class="card-title">
+									{% if edit  %}Edit
+									{% else %}
+										Add New
+									{% endif %}
+								</h3>
+
+								<div class="card-tools">
+									<button type="button" class="btn btn-tool" data-card-widget="collapse">
+										<i class="fas {{edit?'fa-minus':'fa-plus'}}"></i>
+									</button>
+								</div>
+								<!-- /.card-tools -->
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								{% if edit  %}
+									{% set button_label = 'Update' %}
+								{% endif %}
+								{{ include('company/_form.html.twig') }}
+
+
+							</div>
+							<!-- /.card-body -->
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<div class="card card ">
+							<div class="card-header">
+								<h3 class="card-title">College List</h3>
+								<div class="card-tools">
+
+									<form class="form-inline ml-3">
+										<div class="input-group ">
+											<input class="form-control" autocomplete="off" name="search" type="search" placeholder="Search" aria-label="Search">
+											<div class="input-group-append">
+												<button class=" input-group-text btn btn-navbar " type="submit">
+													<i class="fas fa-search"></i>
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="card-body">
+
+
+								<table class="table table-hover">
+									<thead class="thead-light">
+										<tr>
+											<th>#</th>
+											<th>Name</th>
+											<th>Desciption</th>
+											<th>actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% set i = 1 %}
+										{% for company in companies %}
+											<tr>
+												<td>
+													{{ i }}
+													{% set i = i+1 %}
+												</td>
+												<td>{{ company.name }}</td>
+												<td>{{ company.description }}</td>
+
+
+												<td>
+
+													<form class="d-inline" method="post">
+
+
+														<input type="hidden" name="edit" value="{{company.id}}">
+														<button class="btn btn-info btn-sm" title="Edit">
+															<i class="fa fa-edit"></i>
+														</button>
+													</form>
+													<form class="d-inline" method="post" action="{{ path('company_delete', {'id': company.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+
+														<input type="hidden" name="_method" value="DELETE">
+														<input
+														type="hidden" name="_token" value="{{ csrf_token('delete' ~ company.id) }}">
+														{#  <button type="button" data-type="confirm" class="btn btn-danger js-sweetalert" title="Delete">#}
+														<button class="btn btn-danger btn-sm" title="Delete">
+															<i class="fa fa-trash"></i>
+														</button>
+													</form>
+													<a href="{{ path('company_show', {'id': company.id}) }}" class="btn btn-info btn-sm" title="Show">
+														<i class="fa fa-eye"></i>
+													</a>
+
+												</td>
+
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="5">no records found</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+								<div class="float-right">{{ knp_pagination_render(companies) }}</div>
+
+
+							</div>
+						</div>
+					</div>
+					<!-- /.card-body -->
+				</div>
+			</div>
+
+		</div>
+		<!-- /.card-body -->
+	</div>
+
+{% endblock %}
