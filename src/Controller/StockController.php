@@ -162,7 +162,6 @@ class StockController extends AbstractController
 
         $entityManager = $this->getDoctrine()->getManager();
         $data = $entityManager->getRepository(Stock::class)->findBy(array('id'=>$item));
-        // var_dump($request->request->get("checked_list"));
         return $this->render("stock/print.html.twig",[
             'stocks' => $data
         ]);

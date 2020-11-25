@@ -153,8 +153,8 @@ class RequestsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
        
-        $ug = $em->getRepository(UserGroup::class)->find(1);
-        $ugList = $this->getUser()->getUserGroup();
+        $ug = $em->getRepository(UserGroup::class)->find();
+        $ugList = $this->getUser()->getUserGroup(1);
         $permissions = array();
         $approver = array();
         foreach ($ugList  as $key => $ug) {
