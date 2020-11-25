@@ -81,18 +81,19 @@ class OrdersController extends AbstractController
         //manage parent(Requests table)
         $requests = $em->getRepository(Requests::class)->getIfNewRequestsExist($this->getUser());
         // $requests = $em->getRepository(Requests::class)->getIfNewRequestsExist(1);
+        // dd($requests);
         if(!$requests)
         {
             $requests = new Requests();
+            $requests->setReason($reason);
+            $requests->setRequester($this->getUser());
+            $requests->setRequestedDate(new DateTime('now'));
+            $requests->setStatus(0);
+            $em->persist($requests);
         }
 
-        $requests->setReason($reason);
-        $requests->setRequester($this->getUser());
-        $requests->setRequestedDate(new DateTime('now'));
-        $requests->setStatus(0);
-        $em->persist($requests);
+      
 
-        $requests->setRequester($this->getUser());
 
         //manage children(Orders table)
         $products = $request->getSession()->get($this->getUser()->getId());

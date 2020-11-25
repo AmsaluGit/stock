@@ -113,30 +113,40 @@ class RequestsController extends AbstractController
             $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>$level]);
             if(!$alreadyApproved)
             {
-                $appLog = new ApprovalLog();
-                $appLog->setApprover($this->getUser());
-                $appLog->setApprovalLevel($level);
-                $appLog->setRequest($requests);
-                $appLog->setApprovalDate(new \DateTime());
-                if($approve)
+                if($level==3) //ask two questions: are 1 and 2 approved
                 {
-                     $appLog->setStatus(1);
+                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>1]);
+                    $alreadyApproved2 = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>2]);
+                    if(!$alreadyApproved1 || !$alreadyApproved2) continue;
+                    $requests->setClosed(1);
+                     
                 }
-                else if($reject)
+                if ($level==2) //ask one question is 1 approved
                 {
-                    $appLog->setStatus(2);
+                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>1]);
+                    if(!$alreadyApproved1) continue;
                 }
-                else
-                {
-                   // dd("Neither approved nor Rejected");
-                }
-                $em->persist($appLog);
+                
+                    $appLog = new ApprovalLog();
+                    $appLog->setApprover($this->getUser());
+                    $appLog->setApprovalLevel($level);
+                    $appLog->setRequest($requests);
+                    $appLog->setApprovalDate(new \DateTime());
+                    if($approve)
+                    {
+                        $appLog->setStatus(1);
+                    }
+                    else if($reject)
+                    {
+                        $appLog->setStatus(2);
+                    }
+                    else
+                    {
+                    // dd("Neither approved nor Rejected");
+                    }
+                    $em->persist($appLog);
             }
             
-            if($level==3)
-            {
-                $requests->setClosed(1);
-            }
             
         }
             
