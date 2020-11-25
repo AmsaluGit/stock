@@ -145,6 +145,7 @@ class ProductController extends AbstractController
             $rowsPerPage
         );
 
+        // dd($queryBuilder)
         return $this->render('product/index.html.twig', [
             'products' => $data,
             'form' => $form->createView(),
