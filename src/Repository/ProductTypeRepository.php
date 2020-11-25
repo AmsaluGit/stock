@@ -19,6 +19,19 @@ class ProductTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, ProductType::class);
     }
 
+    public function findProductType($search=null)
+    {
+        $qb=$this->createQueryBuilder('c');
+        if($search)
+            $qb->andWhere("c.name  LIKE '%".$search."%'")
+            ->andWhere("c.description  LIKE '%".$search."%'");
+
+            return 
+            $qb->orderBy('c.id', 'ASC')
+            ->getQuery()
+     
+        ;
+    }
     // /**
     //  * @return ProductType[] Returns an array of ProductType objects
     //  */

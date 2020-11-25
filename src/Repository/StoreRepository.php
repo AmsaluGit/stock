@@ -19,6 +19,20 @@ class StoreRepository extends ServiceEntityRepository
         parent::__construct($registry, Store::class);
     }
 
+    public function findStore($search=null)
+    {
+        $qb=$this->createQueryBuilder('c');
+        if($search)
+            $qb->andWhere("c.name  LIKE '%".$search."%'")
+            ->andWhere("c.description  LIKE '%".$search."%'")
+            ->andWhere("c.isActive  LIKE '%".$search."%'");
+
+            return 
+            $qb->orderBy('c.id', 'ASC')
+            ->getQuery()
+     
+        ;
+    }
     // /**
     //  * @return Store[] Returns an array of Store objects
     //  */

@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
+
 
 /**
  * @Route("/categories")
@@ -16,12 +18,55 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoriesController extends AbstractController
 {
     /**
-     * @Route("/", name="categories_index", methods={"GET"})
+     * @Route("/", name="categories_index", methods={"GET","POST"})
      */
-    public function index(CategoriesRepository $categoriesRepository): Response
+    public function index(Request $request, CategoriesRepository $categoryRepository, PaginatorInterface $paginator): Response
     {
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $category= $categoryRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(CategoriesType::class, $category);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('categories_index');
+            }
+            $queryBuilder=$categoryRepository->findCategory($request->query->get('search'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                18
+            );
+            return $this->render('categories/index.html.twig', [
+                'categories' => $data,
+                'form' => $form->createView(),
+                'edit'=>$id
+            ]);    
+        }
+        $category = new Categories();
+        $form = $this->createForm(CategoriesType::class, $category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($category);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('categories_index');
+        }
+
+        $queryBuilder=$categoryRepository->findCategory($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            18
+        );
         return $this->render('categories/index.html.twig', [
-            'categories' => $categoriesRepository->findAll(),
+            'categories' => $data,
+            'form' => $form->createView(),
+            'edit'=>false
         ]);
     }
 
@@ -72,9 +117,10 @@ class CategoriesController extends AbstractController
             return $this->redirectToRoute('categories_index');
         }
 
-        return $this->render('categories/edit.html.twig', [
+        return $this->render('categories/index.html.twig', [
             'category' => $category,
             'form' => $form->createView(),
+            'edit' => $category->getId()
         ]);
     }
 

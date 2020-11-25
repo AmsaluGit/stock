@@ -69,26 +69,6 @@ class ProductRepository extends ServiceEntityRepository
         // $count = sizeof($columns);
         // $flag = 0;
 
-        
-        // $searchQuery = "";
-        // for ($i = 0; $i < $count; $i++)
-        // {
-        //     if($columns[$i]['searchable'] and ++$flag != $count)
-        //         $searchQuery .= 'product.'.$columns[$i]['data'].' LIKE \'%'.$searchItem.'%\' or ';
-        //     else if($columns[$i]['searchable'])
-        //         $searchQuery .= 'product.'.$columns[$i]['data'].' LIKE \'%'.$searchItem.'%\'';
-        // }
-
-        // if ($searchQuery !== null)
-        // {
-        //     $query->andWhere($searchQuery);
-        //     $countQuery->andWhere($searchQuery);
-        // }
-        //     }
-        // }
-
-
-
         $searchQuery =  'product.name LIKE \'%'.$searchItem.'%\'
                          or product.description LIKE \'%'.$searchItem.'%\' 
                          or product.price LIKE \'%'.$searchItem.'%\'

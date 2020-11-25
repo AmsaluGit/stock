@@ -53,9 +53,6 @@ class DepartmentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            /*$department->setIsActive(true);
-            $department->setCreatedAt(new \DateTime());
-            $department->setRegisteredBy($this->getUser());*/
             $entityManager->persist($department);
             $entityManager->flush();
 
