@@ -45,19 +45,21 @@
 			<div class="help-block text-danger">{{form_errors(form.username)}}</div>
 		</div>
 	</div>
+	<div class="col-md-6"></div>
 	<div class="col-md-6">
-		{# <div class="form-group mt-2 ">
-			{{form_label(form.password.first)}}
-			{{ form_widget(form.password.first,{'attr':{'class':form_errors(form.password.first)? 'form-control  is-invalid':'form-control ','placeholder':"Enter..."}}) }}
-			<div class="help-block text-danger">{{form_errors(form.password.first)}}</div>
-		</div> #}
-		{# <div class="form-group mt-2 ">
-			{{form_label(form.password.second)}}
-			{{ form_widget(form.password.second,{'attr':{'class':form_errors(form.password.second)? 'form-control  is-invalid':'form-control ','placeholder':"Enter..."}}) }}
-			<div class="help-block text-danger">{{form_errors(form.password.second)}}</div>
-		</div> #}
+		<div class="form-group mt-2">
+			{{form_label(form.userType)}}
+			{{ form_widget(form.userType,{'attr':{'class':form_errors(form.userType)? 'form-control  is-invalid':'form-control ','placeholder':"Enter..."}}) }}
+			<div class="help-block text-danger">{{form_errors(form.userType)}}</div>
+		</div>
+		<div class="form-group mt-2 ">
+			{{form_label(form.department)}}
+			{{ form_widget(form.department,{'attr':{'class':form_errors(form.department)? 'form-control  is-invalid':'form-control ','placeholder':"Enter..."}}) }}
+			<div class="help-block text-danger">{{form_errors(form.department)}}</div>
+		</div>
 	</div>
 
+	<div class="col-md-6"></div>
 	<div class="card-footer float-right">
 		<a href="{{app.request.headers.get('referer')}}" class="btn btn-info ">back</a>
 		<button class="btn  btn-success ">{{ button_label|default('Save') }}</button>
