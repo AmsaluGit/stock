@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Stock;
 use App\Form\StockType;
+use App\Form\Filter\StockFilterType;
 use App\Repository\StockRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,12 +19,16 @@ class StockController extends AbstractController
 {
     /**
      * @Route("/", name="stock_index", methods={"GET","POST"})
-     */
+     */ 
 
     public function index(Request $request, StockRepository $stockRepository, PaginatorInterface $paginator): Response
     {
         $pageSize=5;
-
+        
+        $stock = new Stock();
+        $searchForm = $this->createForm(StockFilterType::class,$stock);
+        $searchForm->handleRequest($request);
+        
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $stock=$stockRepository->findOneBy(['id'=>$id]);
@@ -34,7 +39,6 @@ class StockController extends AbstractController
                 $stock->setDate(new \DateTime());
             
                 $this->getDoctrine()->getManager()->flush();
-    
                 return $this->redirectToRoute('stock_index');
             }
             $queryBuilder=$stockRepository->findStock($request->query->get('search'));
@@ -46,18 +50,15 @@ class StockController extends AbstractController
             return $this->render('stock/index.html.twig', [
                 'stocks' => $data,
                 'form' => $form->createView(),
+                'searchForm' => $searchForm->createView(),
                 'edit'=>$id
             ]);    
         }
-        $stock = new Stock();
         $form = $this->createForm(StockType::class, $stock);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            /*$stock->setIsActive(true);
-            $stock->setCreatedAt(new \DateTime());
-            $stock->setReceiver($this->getUser());*/
             $stock->setDate(new \DateTime());
             $entityManager->persist($stock);
             $entityManager->flush();
@@ -65,15 +66,17 @@ class StockController extends AbstractController
             return $this->redirectToRoute('stock_index');
         }
 
-        $queryBuilder=$stockRepository->findStock($request->query->get('search'));
+        $queryBuilder=$stockRepository->filterData($request->query->get('quantity'),$request->query->get('date'),$request->query->get('product'),$request->query->get('company'),$request->query->get('store'));
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page',1),
             $pageSize
         );
+        
         return $this->render('stock/index.html.twig', [
             'stocks' => $data,
             'form' => $form->createView(),
+            'searchForm' => $searchForm->createView(),
             'edit'=>false
         ]);
     }  

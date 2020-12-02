@@ -19,7 +19,7 @@ class StockRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Stock::class);
     }
-
+ 
     public function findStock($search=null)
     {
         $qb=$this->createQueryBuilder('s');
@@ -29,14 +29,11 @@ class StockRepository extends ServiceEntityRepository
             $qb->innerJoin("s.product","p");
             $qb->andWhere("p.name  LIKE '%".$search."%'");
         }
-            
-
-         return           
         
+        return          
          $qb->orderBy('s.date', 'asc')
-          
-               ->getQuery()
-               ->getResult();
+            ->getQuery()
+            ->getResult();
     }
 
     public function findStockInOut($search=null)
@@ -65,7 +62,27 @@ class StockRepository extends ServiceEntityRepository
     }
 
 
-
+    public function filterData($qua, $date, $prod, $comp, $store)
+    {
+        return  $this->createQueryBuilder('s')
+            ->innerJoin('s.product',"p")
+            ->innerJoin('s.store','store')
+            ->innerJoin('s.company','c')
+            ->Where('s.quantity LIKE :quantity')
+            ->andWhere('store.id LIKE :store')
+            ->andWhere('c.id LIKE :company')
+            ->andWhere('s.date LIKE :date')
+            ->andWhere('p.id LIKE :product')
+            ->setParameter('quantity', '%'.$qua.'%')
+            ->setParameter('store', '%'.$store.'%')
+            ->setParameter('company', '%'.$comp.'%')
+            ->setParameter('date', '%'.$date.'%')
+            ->setParameter('product', '%'.$prod.'%')
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     // /**
     //  * @return Stock[] Returns an array of Stock objects

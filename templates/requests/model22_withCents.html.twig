@@ -230,3 +230,53 @@
 
 </script>
 </html>
+
+
+<div class="col-xs-12 col-md-12">
+									{{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
+										<div class="row">
+											
+											<div class="col-sm-2">		
+												<div class="form-group">
+													<label class="col-sm-12 control-label no-padding-right">Requester</label>
+													{# {{ form_widget(searchForm.requester,{'attr':{'class':'form-control'},'full_name':'name','value':app.request.get('name') })}} #}
+													{# <input type="text" class="form-control" name="name"/> #}
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group">
+													<label class="col-sm-12 control-label no-padding-right">Requested Date</label>
+													{{ form_widget(searchForm.requestedDate,{'attr':{'class':'form-control'},'full_name':'date','value': app.request.get('date')}) }}
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group">
+													<label class="col-sm-12 control-label no-padding-right">Approver 1</label>
+													{{ form_widget(searchForm.approval1,{'attr':{'class':'form-control'},'full_name':'productType','approver1': app.request.get('approver1')}) }}
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group">
+													<label class="col-sm-12 control-label no-padding-right">Approver 2</label>
+													{{ form_widget(searchForm.approval2,{'attr':{'class':'form-control'},'full_name':'approver2','value': app.request.get('approver2')}) }}
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group">
+													<label class="col-sm-12 control-label no-padding-right">Approver 3</label>
+													{{ form_widget(searchForm.approval3,{'attr':{'class':'form-control'},'full_name':'approver3','value': app.request.get('approver3')}) }}
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group">
+													<label class="col-sm-12 control-label no-padding-right"></label>
+													<button class="btn btn-info" style="margin-top:35px;width:100%;"><i class="fas fa-search"></i></button>
+												</div>
+											</div>
+										{{ form_end(form) }}
+									</div>

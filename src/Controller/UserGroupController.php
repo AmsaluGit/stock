@@ -6,6 +6,7 @@ use App\Entity\Permission;
 use App\Entity\User;
 use App\Entity\UserGroup;
 use App\Form\UserGroupType;
+use App\Form\Filter\UserGroupFilterType;
 use App\Repository\UserGroupRepository;
 use App\Repository\UserRepository;
 use App\Repository\PermissionRepository;
@@ -25,7 +26,10 @@ class UserGroupController extends AbstractController
      */
     public function index(UserGroupRepository $userGroupRepository,Request $request, PaginatorInterface $paginator): Response
     {
-        
+             $userGroup = new UserGroup();
+             $searchForm = $this->createForm(UserGroupFilterType::class, $userGroup);
+             $searchForm->handleRequest($request);
+
      //   $this->denyAccessUnlessGranted('vw_usr_grp');
             if($request->request->get('edit')){
                 $this->denyAccessUnlessGranted('edt_usr_grp');
@@ -52,11 +56,12 @@ class UserGroupController extends AbstractController
                 return $this->render('user_group/index.html.twig', [
                     'user_groups' => $data,
                     'form' => $form->createView(),
+                    'searchForm' => $searchForm->createView(),
                     'edit'=>$id
                 ]);
     
             }
-            $userGroup = new UserGroup();
+            
             $form = $this->createForm(UserGroupType::class, $userGroup);
             $form->handleRequest($request);
     
@@ -72,7 +77,7 @@ class UserGroupController extends AbstractController
     
                 return $this->redirectToRoute('user_group_index');
             }
-            $queryBuilder=$userGroupRepository->findUserGroup($request->query->get('search'));
+            $queryBuilder=$userGroupRepository->findUserGroup($request->query->get('name'),$request->query->get('description'),$request->query->get('isActive'));
             $data=$paginator->paginate(
                 $queryBuilder,
                 $request->query->getInt('page',1),
@@ -81,6 +86,7 @@ class UserGroupController extends AbstractController
             return $this->render('user_group/index.html.twig', [
                 'user_groups' => $data,
                 'form' => $form->createView(),
+                'searchForm' => $searchForm->createView(),
                 'edit'=>false
             ]);
         

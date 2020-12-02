@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Form\Filter\ProductFilterType;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,7 +97,11 @@ class ProductController extends AbstractController
      */
     public function index(Request $request, ProductRepository $productRepository, PaginatorInterface $paginator): Response
     {
-        $rowsPerPage=15;
+        $rowsPerPage=10;
+        $product = new Product();
+        $searchForm = $this->createForm(ProductFilterType::class,$product);
+        $searchForm->handleRequest($request);
+        
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $product=$productRepository->findOneBy(['id'=>$id]);
@@ -119,38 +124,36 @@ class ProductController extends AbstractController
             return $this->render('product/index.html.twig', [
                 'products' => $data,
                 'form' => $form->createView(),
+                'searchForm' => $searchForm->createView(),
                 'edit'=>$id
             ]);    
         }
 
-        $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            /*$product->setIsActive(true);
-            $product->setCreatedAt(new \DateTime());
-            $product->setRegisteredBy($this->getUser());*/
             $entityManager->persist($product);
             $entityManager->flush();
 
             return $this->redirectToRoute('product_index');
         }
-
-        $queryBuilder = $productRepository->findProduct($request->query->get('search'));
+        
+        $queryBuilder = $productRepository->filterData($request->query->get('name'),$request->query->get('brand'),$request->query->get('productType'),$request->query->get('price'),$request->query->get('category'));
         $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page',1),
             $rowsPerPage
         );
 
-        // dd($queryBuilder)
-        return $this->render('product/index.html.twig', [
+        return $this->render('product/index.html.twig', array(
             'products' => $data,
+            'request' => $request,
             'form' => $form->createView(),
+            'searchForm' => $searchForm->createView(),
             'edit'=>false
-        ]);
+        ));
     }  
 
     /**
