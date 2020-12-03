@@ -107,7 +107,7 @@ class RequestsController extends AbstractController
      public function doApprovalOrReject(Requests $requests, $approve, $reject, $approver)
     {
         $em = $this->getDoctrine()->getManager();
-        // dd($approver);
+        //  dd($approve);
         foreach ($approver as $key => $level) {
           
             $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>$level]);
@@ -132,13 +132,15 @@ class RequestsController extends AbstractController
                     $appLog->setApprovalLevel($level);
                     $appLog->setRequest($requests);
                     $appLog->setApprovalDate(new \DateTime());
-                    if($approve)
+                    if($approve=="Approve")
                     {
                         $appLog->setStatus(1);
+                        $requests->setStatus(1);//just response
                     }
-                    else if($reject)
+                    else if($reject=="Reject")
                     {
                         $appLog->setStatus(2);
+                        $requests->setStatus(1);//just response
                     }
                     else
                     {
@@ -160,14 +162,15 @@ class RequestsController extends AbstractController
     {
         $approve = $request->request->get('approve');
         $reject = $request->request->get('reject');
+       
         $em = $this->getDoctrine()->getManager();
 
        
-        $ug = $em->getRepository(UserGroup::class)->find();
-        $ugList = $this->getUser()->getUserGroup(1);
+        //$ug = $em->getRepository(UserGroup::class)->find();
+        $ugList = $this->getUser()->getUserGroup();
         $permissions = array();
         $approver = array();
-        foreach ($ugList  as $key => $ug) {
+        foreach ($ugList  as $key => $ug) { 
             $temp = $ug->getPermission();
             foreach ($temp  as $key => $perm) {
                 // $permissions[] = $perm;

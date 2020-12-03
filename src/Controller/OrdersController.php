@@ -107,7 +107,7 @@ class OrdersController extends AbstractController
             $order->setRequest($requests);
             $em->persist($order);
         }
-       
+      
         $em->flush();
         $request->getSession()->set($this->getUser()->getId(),array());
         return $this->redirectToRoute("balance");

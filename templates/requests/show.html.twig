@@ -130,7 +130,7 @@
 <th><a href="{{ path('requests_index') }}" class="btn btn-primary">Back</a></th>
 {% if not requests.closed %}
 <th  style="margin:0px"><form action ="{{ path('requests_approve', {'id': requests.id}) }}" method="POST"> <input type="submit" value="Approve" name="approve" class="btn btn-success"></input></form></th>
-
+ 
 
 <th  style="margin:0px"><form action ="{{ path('requests_approve', {'id': requests.id}) }}" method="POST"> <input type="submit" value="Reject" name="reject" class="btn btn-warning"></input></form></th>
 
