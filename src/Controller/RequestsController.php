@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/requests")
@@ -20,23 +21,20 @@ class RequestsController extends AbstractController
     /**
      * @Route("/", name="requests_index", methods={"GET"})
      */
-    public function index(RequestsRepository $requestsRepository): Response
+    public function index(RequestsRepository $requestsRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        // $all = $requestsRepository->findAll();
-        // foreach ($all as $key => $value) {
-        //     $all[$key]=$value->approvalLogs
-        // }
-        // $all[] 
-
+        $rowsPerPage = 10;
+        $queryBuilder=$requestsRepository->findByName($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            $rowsPerPage
+        );
         return $this->render('requests/index.html.twig', [
-            'requests' => $requestsRepository->findAll(),
+            'requests' => $data,
         ]);
     }
-        /*public function theksort($arr)
-        {
-            asort($arr);
-            return $arr;
-        }*/
+
     /**
      * @Route("/new", name="requests_new", methods={"GET","POST"})
      */

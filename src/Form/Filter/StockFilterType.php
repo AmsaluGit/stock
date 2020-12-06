@@ -12,8 +12,8 @@ class StockFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('quantity')
-           ->add('date')
+            ->add('quantity',null,array('required'=>false))
+            ->add('date')
             ->add('product')
             ->add('company')
             ->add('store')

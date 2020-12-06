@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Form\Filter\ProductFilterType;
+use App\Repository\OrdersRepository;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -155,6 +156,47 @@ class ProductController extends AbstractController
             'edit'=>false
         ));
     }  
+
+    /**
+     * @Route("/report1", name="product_report", methods={"GET"})
+     */
+    public function report(Request $request, ProductRepository $productRepository, PaginatorInterface $paginator)
+    {
+        $product = new Product();
+        $searchForm = $this->createForm(ProductFilterType::class,$product);
+        $searchForm->handleRequest($request);
+
+        $rowsPerPage = 10;
+        $queryBuilder = $productRepository->filterData($request->query->get('name'),$request->query->get('brand'),$request->query->get('productType'),$request->query->get('price'),$request->query->get('category'));
+        $data = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            $rowsPerPage
+        );
+
+        return $this->render('product/report.html.twig', array(
+            'products' => $data,
+            'request' => $request,
+            'searchForm' => $searchForm->createView()
+        ));
+    }
+
+     /**
+     * @Route("/report/show", name="report_show", methods={"GET"})
+     */
+    public function report_show(OrdersRepository $orderRepository, PaginatorInterface $paginator)
+    {
+        $queryBuilder = $orderRepository->findProduct(1);
+        $data = $paginator->paginate(
+            $queryBuilder,
+            1,
+            10
+        );
+
+        return $this->render('product/report-show.html.twig', array(
+            'product' => $data
+        ));
+    }
 
     /**
      * @Route("/new", name="product_new", methods={"GET","POST"})

@@ -39,16 +39,15 @@ class RequestsRepository extends ServiceEntityRepository
         return $qb ;
     }
     
-
-    /*
-    public function findOneBySomeField($value): ?Requests
+    public function findByName($value)
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
+            ->join('r.requester', 'requester')
+            ->where('requester.firstName like :val')
+            // ->where('CONCAT(requester.firstName," ",requester.middleName," ",requester.lastName) LIKE :val')
+            ->setParameter('val', '%'.$value.'%')
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
 }

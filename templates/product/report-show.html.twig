@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Departement index
+{% endblock %}
+{% block maintitle %}
+
+	Manage products
+{% endblock %}
+{% block breadcrumb %}
+	<li class="breadcrumb-item active">Stock
+	</li>
+	<li class="breadcrumb-item active">product</li>
+{% endblock %}
+{% block body %}
+    {{ dump(product) }}
+{% endblock %}
