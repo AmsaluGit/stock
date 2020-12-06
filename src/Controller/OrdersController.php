@@ -9,6 +9,7 @@ use App\Form\OrdersType;
 use App\Repository\OrdersRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,7 +64,18 @@ class OrdersController extends AbstractController
         return $this->redirectToRoute("balance");
     }
 
+    public function getRequestedQuantity($product)
+    {
+        $conn = $this->getDoctrine()->getConnection();
+        $stock_request  = "select product_id, sum(quantity) as quantity from stock where product_id=$product";
+        $stock_result = $conn->query($stock_request)->fetchAll();
 
+        $order_request  = "select product_id, sum(quantity) as quantity from orders where product_id=$product";
+        $order_result = $conn->query($order_request)->fetchAll();
+        //   dd($stock_result);
+
+         return array("stock"=>$stock_result[0]['quantity'],"requested"=>$order_result[0]['quantity'],);
+    }
 
     /**
      * @Route("/requestitems", name="requestitems", methods={"GET","POST"})
@@ -76,8 +88,35 @@ class OrdersController extends AbstractController
         $em = $this->getDoctrine()->getManager();
        
         $reason = $request->request->get('reason'); 
+        $products = $request->getSession()->get($this->getUser()->getId());
+        $valid_request_exist=false;
         
-
+        foreach ($products as $key => $val) {
+            $prod = $em->getRepository(Product::class)->find($key);
+            $avail = $this->getRequestedQuantity($prod->getId());
+        $stock = $avail["stock"];
+        $requested = $avail["requested"];//this is the total number of requested stock
+        $allowed_to_request= $stock - $requested;
+        $quantity_requested_by_this_user = $val;
+        if($allowed_to_request < $quantity_requested_by_this_user) //you can't request this item.
+        {
+            $this->addFlash("warning","There is not enough ".$prod->getName()." to satisfy your request.");
+            // return $this->redirectToRoute('user_group_index');
+            continue;
+        }
+        else
+        {
+            $valid_request_exist=true;
+        }
+          // if(!($avail['stock'] || $avail['requested'])) continue;
+            //$container[]= array("unit"=>$product->getUnitOfMeasure()->getName(), "productId"=>$product->getId(),"productName"=>$product->getName(),"avail"=>$avail); 
+        }
+// dd($valid_request_exist);
+        if(!$valid_request_exist) 
+        {
+            $request->getSession()->set($this->getUser()->getId(),array());
+            return $this->redirectToRoute("balance");
+        }
         //manage parent(Requests table)
         $requests = $em->getRepository(Requests::class)->getIfNewRequestsExist($this->getUser());
         // $requests = $em->getRepository(Requests::class)->getIfNewRequestsExist(1);
@@ -96,7 +135,7 @@ class OrdersController extends AbstractController
 
 
         //manage children(Orders table)
-        $products = $request->getSession()->get($this->getUser()->getId());
+        
         foreach ($products as $key => $value) {
             $prod = $em->getRepository(Product::class)->find($key);
             $order = new Orders();
@@ -107,7 +146,7 @@ class OrdersController extends AbstractController
             $order->setRequest($requests);
             $em->persist($order);
         }
-       
+      
         $em->flush();
         $request->getSession()->set($this->getUser()->getId(),array());
         return $this->redirectToRoute("balance");

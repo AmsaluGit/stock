@@ -41,13 +41,14 @@ class BalanceController extends AbstractController
         $product = 1;
         $container =null;
         $products = $this->getDoctrine()->getManager()->getRepository(Product::class)->findAll();
+        // dd($products);
         foreach ($products as $key => $product) {
             $avail = $this->getRequestedQuantity($product->getId());
-            // if($product->getId() == 4) dd($avail);
+            //  if($product->getId() == 16) dd($avail);
            if(!($avail['stock'] || $avail['requested'])) continue;
             $container[]= array("unit"=>$product->getUnitOfMeasure()->getName(), "productId"=>$product->getId(),"productName"=>$product->getName(),"avail"=>$avail); 
         }
-        //  dd($container);
+        //   dd($container);
        /* $conn = $this->getDoctrine()->getConnection();
         $stock_request  = "select id from product";
         $stock_result = $conn->query($stock_request)->fetchAll();
