@@ -83,6 +83,18 @@ class StockRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    
+    public function findTotalForProduct($id)
+    {
+        return  $this->createQueryBuilder('s')
+            ->select("sum(s.quantity) as total")
+            ->Join('s.product',"p")
+            ->Where('p.id = :product')
+            ->setParameter('product', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 
     // /**
     //  * @return Stock[] Returns an array of Stock objects

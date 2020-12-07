@@ -35,15 +35,29 @@ class OrdersRepository extends ServiceEntityRepository
     //     ;
     // }
 
-    public function findProduct($id)
+    public function productTotalOrder($product_id)
     {
         return $this->createQueryBuilder('o')
+            ->select("sum(o.quantity) as total_order") 
             ->join('o.product','p')
-            ->join('p.brand','b')
-            ->andWhere('p.id = :val')
-            ->setParameter('val', $id)
+            ->Where('p.id = :val')
+            ->setParameter('val', $product_id)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function productTotalApproved($product_id)
+    {
+        return $this->createQueryBuilder('o')
+            ->select("sum(o.quantity) as total_order") 
+            ->join('o.product','p')
+            ->join('o.request','r')
+            ->Where('p.id = :val')
+            ->andWhere('r.closed = 1')
+            ->setParameter('val', $product_id)
+            ->getQuery()
+            ->getOneOrNullResult()
         ;
     }
 }

@@ -127,6 +127,20 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findProductForReport($id)
+    {
+        return  $this->createQueryBuilder('p')
+                ->select("p.name as product_name","p.description as description","p.price","b.name as brand","c.name as category","pt.name as productType")
+                ->innerJoin('p.productType',"pt")
+                ->innerJoin('p.brand','b')
+                ->innerJoin('p.category','c')
+                ->where("p.id = :id")
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->getOneOrNullResult()
+            ;
+    }
     
 
     /*

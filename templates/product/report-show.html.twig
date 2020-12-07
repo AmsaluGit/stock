@@ -3,14 +3,44 @@
 {% block title %} Departement index
 {% endblock %}
 {% block maintitle %}
-
 	Manage products
 {% endblock %}
-{% block breadcrumb %}
-	<li class="breadcrumb-item active">Stock
-	</li>
-	<li class="breadcrumb-item active">product</li>
+{% block stylesheets %}
+	<style>
+		dt{
+			margin-bottom: 10px;
+		}
+	</style>
 {% endblock %}
 {% block body %}
-    {{ dump(product) }}
+    <div class="card" style="width: 100%; padding: 50px 15px 15px 30px;">
+  <div class="card-body">
+		<dl class="row">
+			<dt class="col-sm-3">Product Name</dt>
+			<dd class="col-sm-9">{{ product.product_name }}</dd>
+
+			<dt class="col-sm-3">Product Description</dt>
+			<dd class="col-sm-9">{{ product.description }}</dd>
+
+			<dt class="col-sm-3">Brand</dt>
+			<dd class="col-sm-9">{{ product.brand}}</dd>
+
+			<dt class="col-sm-3 text-truncate">Product Type</dt>
+			<dd class="col-sm-9">{{ product.productType }} </dd>
+
+			<dt class="col-sm-3 text-truncate">Category</dt>
+			<dd class="col-sm-9">{{ product.category }} </dd>
+
+			<dt class="col-sm-3 text-truncate">Total Registered</dt>
+			<dd class="col-sm-9">{{ totalP.total }} </dd>
+
+			<dt class="col-sm-3 text-truncate">Total request</dt>
+			<dd class="col-sm-9">{{ totalR.total_order }} </dd>
+
+			<dt class="col-sm-3 text-truncate">Total Approved Requests</dt>
+			<dd class="col-sm-9">{{ totalA.total_order }} </dd>
+				
+		</dl>
+  </div>
+</div>
 {% endblock %}

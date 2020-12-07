@@ -7,6 +7,7 @@ use App\Form\ProductType;
 use App\Form\Filter\ProductFilterType;
 use App\Repository\OrdersRepository;
 use App\Repository\ProductRepository;
+use App\Repository\StockRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -184,17 +185,19 @@ class ProductController extends AbstractController
      /**
      * @Route("/report/show", name="report_show", methods={"GET"})
      */
-    public function report_show(OrdersRepository $orderRepository, PaginatorInterface $paginator)
+    public function report_show(Request $request, ProductRepository $productRepository, OrdersRepository $orderRepository, StockRepository $stockRepository,  PaginatorInterface $paginator)
     {
-        $queryBuilder = $orderRepository->findProduct(1);
-        $data = $paginator->paginate(
-            $queryBuilder,
-            1,
-            10
-        );
+        $id = $request->query->get("id");
+        $product = $productRepository->findProductForReport($id);
+        $totalProduct = $stockRepository->findTotalForProduct($id);
+        $totalRequested = $orderRepository->productTotalApproved($id);
+        $totalApproved = $orderRepository->productTotalOrder($id);       
 
         return $this->render('product/report-show.html.twig', array(
-            'product' => $data
+            'product' => $product,
+            'totalP' => $totalProduct,
+            'totalR' => $totalRequested,
+            'totalA' => $totalApproved
         ));
     }
 
