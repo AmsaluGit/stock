@@ -82,13 +82,7 @@
 											<div class="help-block with-errors"></div>
 										</div>
 									</div>
-									<div class="col-sm-2">
-										<div class="form-group">
-											<label class="col-sm-12 control-label no-padding-right">{{ form_label(searchForm.price) }}</label>
-											{{ form_widget(searchForm.price,{'attr':{'class':'form-control'},'full_name':'price','value': app.request.get('price')}) }}
-											<div class="help-block with-errors"></div>
-										</div>
-									</div>
+								 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="col-sm-12 control-label no-padding-right">{{ form_label(searchForm.category) }}</label>
@@ -114,7 +108,7 @@
 						                <th>Product Type</th>
 						                {# <th>Model</th>
 						                <th>Serial</th> #}
-						                <th>Price</th>
+						                {# <th>Price</th> #}
 						                <th>Category</th>
 						                <th>actions</th>
 										</tr>
@@ -133,7 +127,7 @@
                                                 <td>{{ product.productType }}</td>
 												{# <td>{{ product.model }}</td>
 												<td>{{ product.serial }}</td> #}
-												<td>{{ product.price }}</td>
+												{# <td>{{ product.price }}</td> #}
 											    <td>{{ product.category }}</td>
 												<td>
 													<a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-info btn-sm" title="Show">

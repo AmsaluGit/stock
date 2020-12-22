@@ -72,7 +72,6 @@ class ProductRepository extends ServiceEntityRepository
 
         $searchQuery =  'product.name LIKE \'%'.$searchItem.'%\'
                          or product.description LIKE \'%'.$searchItem.'%\' 
-                         or product.price LIKE \'%'.$searchItem.'%\'
                          or brand.name LIKE \'%'.$searchItem.'%\'
                          or category.name LIKE \'%'.$searchItem.'%\'
                          ';
@@ -116,11 +115,11 @@ class ProductRepository extends ServiceEntityRepository
             ->andWhere('b.id LIKE :brand')
             ->andWhere('c.id LIKE :category')
             ->andWhere('pt.id LIKE :product_type')
-            ->andWhere('p.price LIKE :price')
+         
             ->setParameter('name', '%'.$name.'%')
             ->setParameter('brand', '%'.$brand.'%')
             ->setParameter('product_type', '%'.$product_type.'%')
-            ->setParameter('price', '%'.$price.'%')
+            
             ->setParameter('category', '%'.$category.'%')
             ->orderBy('p.id', 'ASC')
             ->getQuery()
@@ -131,7 +130,7 @@ class ProductRepository extends ServiceEntityRepository
     public function findProductForReport($id)
     {
         return  $this->createQueryBuilder('p')
-                ->select("p.name as product_name","p.description as description","p.price","b.name as brand","c.name as category","pt.name as productType")
+                ->select("p.name as product_name","p.description as description","b.name as brand","c.name as category","pt.name as productType")
                 ->innerJoin('p.productType',"pt")
                 ->innerJoin('p.brand','b')
                 ->innerJoin('p.category','c')

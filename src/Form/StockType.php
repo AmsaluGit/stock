@@ -6,6 +6,7 @@ use App\Entity\Stock;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Positive;
 
 class StockType extends AbstractType
 {
@@ -17,6 +18,7 @@ class StockType extends AbstractType
             ->add('product')
             ->add('company')
             ->add('store')
+            ->add('price')
             
         ;
     }

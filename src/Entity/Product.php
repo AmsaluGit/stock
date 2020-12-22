@@ -51,10 +51,6 @@ class Product
      */
     private $stocks;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $price;
 
     /**
      * @ORM\ManyToOne(targetEntity=UnitOfMeasure::class)
@@ -168,18 +164,6 @@ class Product
     public function __toString()
     {
         return $this->name;
-    }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(float $price): self
-    {
-        $this->price = $price;
-
-        return $this;
     }
 
     public function getUnitOfMeasure(): ?UnitOfMeasure

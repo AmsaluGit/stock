@@ -110,6 +110,7 @@ class OrdersController extends AbstractController
     
 
         //manage children(Orders table)
+        // dd($products);
         
         foreach ($products as $key => $value) {
             $prod = $em->getRepository(Product::class)->find($key);
@@ -117,7 +118,7 @@ class OrdersController extends AbstractController
             $order->setProduct($prod);
             $order->setQuantity($value);
             $order->setModel($prod->getBrand()->getName());
-            $order->setUnitprice($prod->getprice());
+            // $order->setUnitprice($prod->getprice());
             $order->setRequest($requests);
             $em->persist($order);
         }

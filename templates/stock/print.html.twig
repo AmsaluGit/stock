@@ -41,7 +41,7 @@
 			<div class="col-sm-6">
 				<center>
                     <p style="float: left">ሞዴል 19<br>Model 19</p>
-					<img class="logo" src="IMG_20200826_193957.jpg"><br>
+					<img class="logo" src="{{asset('assets/images/logo.png')}}"><br>
 					<p>የኢትዮጵያ ፌደራላዊ ዲሞክራሲያዊ ሪፐብሊክ</p>
 					<p> THE FEDERAL DEMOCRATIC REPUBLIC<br> OF ETHIOPIA</p>
 					<P>ገንዘብ ሚኒስቴር</P>
@@ -124,8 +124,8 @@
 								<td>{{1}}</td>
 								<td>{{10}}</td>
 								<td>{{stock.quantity}}{% set sum1 = sum1+stock.quantity%} </td>
-								<td>{{stock.product.price}}{% set sum2 = sum2+stock.product.price %}</td>
-								<td>{% set total = stock.product.price * stock.quantity%} {{total}}{% set sum3 = sum1+total %}</td>
+								<td>{{stock.price}}{% set sum2 = sum2+stock.price %}</td>
+								<td>{% set total = stock.price * stock.quantity%} {{total}}{% set sum3 = sum1+total %}</td>
 							</tr>	
 							{% endfor %}						
 							<tr>

@@ -59,10 +59,15 @@ class BalanceController extends AbstractController
 // dd($this->getRequestedQuantity($product->getId()));
 /*if($container)
 {*/
-    $queryBuilder=$stockRepository->findStockInOut($request->query->get('search'));
+    // $queryBuilder=$stockRepository->findStockInOut($request->query->get('search'));
+
+    // if(!$container) 
+    // {
+    //     $container = [];
+    // }
     $data=$paginator->paginate(
         // $queryBuilder,
-        $container,
+        $container?$container:[],
         $request->query->getInt('page',1),
         $pageSize
     );
@@ -79,7 +84,7 @@ class BalanceController extends AbstractController
         }
     }
 
-/*}
+/*} 
 else
 {*/
     /*return $this->render('balance/index.html.twig', [
@@ -104,7 +109,7 @@ else
 
         $order_request  = "select product_id, sum(quantity) as quantity from orders where product_id=$product";
         $order_result = $conn->query($order_request)->fetchAll();
-        //   dd($stock_result);
+        //  dd($stock_result);
 
          return array("stock"=>$stock_result[0]['quantity'],"requested"=>$order_result[0]['quantity'],);
     }

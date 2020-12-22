@@ -15,7 +15,7 @@ class ProductFilterType extends AbstractType
     {
         $builder
             ->add('name',null,  array('required'=>false))
-            ->add('price',NumberType::class,['required' => false])
+            // ->add('price',NumberType::class,['required' => false])
             ->add('brand')
             ->add('category')
             ->add('productType')
