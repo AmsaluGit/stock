@@ -67,6 +67,8 @@ class StoreController extends AbstractController
             $request->query->getInt('page',1),
             18
         );
+
+        // dd($queryBuilder);
         return $this->render('store/index.html.twig', [
             'stores' => $data,
             'form' => $form->createView(),

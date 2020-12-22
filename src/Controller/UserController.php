@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\Filter\UserFilterType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/user")
@@ -17,12 +19,66 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/", name="user_index", methods={"GET"})
+     * @Route("/", name="user_index", methods={"GET","POST"})
      */
-    public function index(UserRepository $userRepository): Response
+    public function index(Request $request, UserRepository $userRepository, PaginatorInterface $paginator): Response 
     {
+        $pageSize=5;
+
+        $user = new User();
+        $searchForm = $this->createForm(userFilterType::class,$user);
+        $searchForm->handleRequest($request);
+        
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $user=$userRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(userType::class, $user);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+                $user->setDate(new \DateTime());
+            
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('user_index');
+            }
+            $queryBuilder=$userRepository->filterUser($request->query->get('firstName'),$request->query->get('middleName'),$request->query->get('lastName'),$request->query->get('userName'),$request->query->get('department'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                $pageSize
+            );
+            return $this->render('user/index.html.twig', [
+                'users' => $data,
+                'form' => $form->createView(),
+                'searchForm' => $searchForm->createView(),
+                'edit'=>$id
+            ]);    
+        }
+        $form = $this->createForm(userType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $user->setDate(new \DateTime());
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('user_index');
+        }
+
+        $queryBuilder = $userRepository->filterUser($request->query->get('firstName'),$request->query->get('middleName'),$request->query->get('lastName'),$request->query->get('userName'),$request->query->get('department'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            $pageSize
+        );
+
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $data,
+            'form' => $form->createView(),
+            'searchForm' => $searchForm->createView(),
+            'edit'=>false
         ]);
     }
 

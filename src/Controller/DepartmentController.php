@@ -21,7 +21,7 @@ class DepartmentController extends AbstractController
      */
     public function index(Request $request, DepartmentRepository $departmentRepository, PaginatorInterface $paginator): Response
     {
- 
+        $rowsPerPage = 10;
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $department=$departmentRepository->findOneBy(['id'=>$id]);
@@ -39,7 +39,7 @@ class DepartmentController extends AbstractController
             $data=$paginator->paginate(
                 $queryBuilder,
                 $request->query->getInt('page',1),
-                18
+                $rowsPerPage
             );
             return $this->render('department/index.html.twig', [
                 'departments' => $data,

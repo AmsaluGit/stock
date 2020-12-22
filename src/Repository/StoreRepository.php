@@ -22,16 +22,16 @@ class StoreRepository extends ServiceEntityRepository
     public function findStore($search=null)
     {
         $qb=$this->createQueryBuilder('c');
-        if($search)
-            $qb->andWhere("c.name  LIKE '%".$search."%'")
-            ->andWhere("c.description  LIKE '%".$search."%'")
-            ->andWhere("c.isActive  LIKE '%".$search."%'");
-
-            return 
-            $qb->orderBy('c.id', 'ASC')
+            $qb->Where("c.name  LIKE :name")
+            ->orWhere("c.description  LIKE :description")
+            // ->andWhere("c.isActive  LIKE :active");
+            ->setParameter("name",'%'.$search.'%')
+            ->setParameter("description",'%'.$search.'%')
+            ->orderBy('c.id', 'ASC')
             ->getQuery()
-     
-        ;
+            ->getResult();
+
+            return $qb; 
     }
     // /**
     //  * @return Store[] Returns an array of Store objects

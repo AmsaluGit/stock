@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry) 
     {
         parent::__construct($registry, User::class);
     }
@@ -36,6 +36,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function filterUser($fname, $mname, $lname, $userType, $dep)
+    {
+        return  $this->createQueryBuilder('u')
+            // ->join('u.userType','ut')
+            ->innerJoin('u.department','dt')
+            ->Where('u.firstName LIKE :firstName')
+            ->andWhere('u.middleName LIKE :middleName')
+            ->andWhere('u.lastName LIKE :lastName')
+            ->andWhere('u.username LIKE :username')
+            ->andWhere('dt.id LIKE :department')
+            ->setParameter('firstName', '%'.$fname.'%')
+            ->setParameter('middleName', '%'.$mname.'%')
+            ->setParameter('lastName', '%'.$lname.'%')
+            ->setParameter('username', '%'.$userType.'%')
+            ->setParameter('department', '%'.$dep.'%')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

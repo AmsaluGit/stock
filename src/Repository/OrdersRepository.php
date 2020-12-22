@@ -22,29 +22,42 @@ class OrdersRepository extends ServiceEntityRepository
     // /**
     //  * @return Order[] Returns an array of Order objects
     //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    
+    // public function findByExampleField($value)
+    // {
+    //     return $this->createQueryBuilder('o')
+    //         ->andWhere('o.exampleField = :val')
+    //         ->setParameter('val', $value)
+    //         ->orderBy('o.id', 'ASC')
+    //         ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
 
-    /*
-    public function findOneBySomeField($value): ?Order
+    public function productTotalOrder($product_id)
     {
         return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select("sum(o.quantity) as total_order") 
+            ->join('o.product','p')
+            ->Where('p.id = :val')
+            ->setParameter('val', $product_id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+    public function productTotalApproved($product_id)
+    {
+        return $this->createQueryBuilder('o')
+            ->select("sum(o.quantity) as total_order") 
+            ->join('o.product','p')
+            ->join('o.request','r')
+            ->Where('p.id = :val')
+            ->andWhere('r.closed = 1')
+            ->setParameter('val', $product_id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

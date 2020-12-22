@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\ProductType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -101,22 +102,46 @@ class ProductRepository extends ServiceEntityRepository
         );
     }
 
-    // /**
-    //  * @return Product[] Returns an array of Product objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Product[] Returns an array of Product objects
+     */
+
+    public function filterData($name, $brand, $product_type, $price, $category)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+        return  $this->createQueryBuilder('p')
+            ->innerJoin('p.productType',"pt")
+            ->innerJoin('p.brand','b')
+            ->innerJoin('p.category','c')
+            ->Where('p.name LIKE :name')
+            ->andWhere('b.id LIKE :brand')
+            ->andWhere('c.id LIKE :category')
+            ->andWhere('pt.id LIKE :product_type')
+            ->andWhere('p.price LIKE :price')
+            ->setParameter('name', '%'.$name.'%')
+            ->setParameter('brand', '%'.$brand.'%')
+            ->setParameter('product_type', '%'.$product_type.'%')
+            ->setParameter('price', '%'.$price.'%')
+            ->setParameter('category', '%'.$category.'%')
             ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
+    public function findProductForReport($id)
+    {
+        return  $this->createQueryBuilder('p')
+                ->select("p.name as product_name","p.description as description","p.price","b.name as brand","c.name as category","pt.name as productType")
+                ->innerJoin('p.productType',"pt")
+                ->innerJoin('p.brand','b')
+                ->innerJoin('p.category','c')
+                ->where("p.id = :id")
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->getOneOrNullResult()
+            ;
+    }
+    
 
     /*
     public function findOneBySomeField($value): ?Product

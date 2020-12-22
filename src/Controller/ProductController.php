@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Form\Filter\ProductFilterType;
+use App\Repository\OrdersRepository;
 use App\Repository\ProductRepository;
+use App\Repository\StockRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,7 +99,11 @@ class ProductController extends AbstractController
      */
     public function index(Request $request, ProductRepository $productRepository, PaginatorInterface $paginator): Response
     {
-        $rowsPerPage=15;
+        $rowsPerPage=10;
+        $product = new Product();
+        $searchForm = $this->createForm(ProductFilterType::class,$product);
+        $searchForm->handleRequest($request);
+        
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $product=$productRepository->findOneBy(['id'=>$id]);
@@ -119,39 +126,80 @@ class ProductController extends AbstractController
             return $this->render('product/index.html.twig', [
                 'products' => $data,
                 'form' => $form->createView(),
+                'searchForm' => $searchForm->createView(),
                 'edit'=>$id
             ]);    
         }
 
-        $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            /*$product->setIsActive(true);
-            $product->setCreatedAt(new \DateTime());
-            $product->setRegisteredBy($this->getUser());*/
             $entityManager->persist($product);
             $entityManager->flush();
 
             return $this->redirectToRoute('product_index');
         }
-
-        $queryBuilder = $productRepository->findProduct($request->query->get('search'));
+        
+        $queryBuilder = $productRepository->filterData($request->query->get('name'),$request->query->get('brand'),$request->query->get('productType'),$request->query->get('price'),$request->query->get('category'));
         $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page',1),
             $rowsPerPage
         );
 
-        // dd($queryBuilder)
-        return $this->render('product/index.html.twig', [
+        return $this->render('product/index.html.twig', array(
             'products' => $data,
+            'request' => $request,
             'form' => $form->createView(),
+            'searchForm' => $searchForm->createView(),
             'edit'=>false
-        ]);
+        ));
     }  
+
+    /**
+     * @Route("/report1", name="product_report", methods={"GET"})
+     */
+    public function report(Request $request, ProductRepository $productRepository, PaginatorInterface $paginator)
+    {
+        $product = new Product();
+        $searchForm = $this->createForm(ProductFilterType::class,$product);
+        $searchForm->handleRequest($request);
+
+        $rowsPerPage = 10;
+        $queryBuilder = $productRepository->filterData($request->query->get('name'),$request->query->get('brand'),$request->query->get('productType'),$request->query->get('price'),$request->query->get('category'));
+        $data = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            $rowsPerPage
+        );
+
+        return $this->render('product/report.html.twig', array(
+            'products' => $data,
+            'request' => $request,
+            'searchForm' => $searchForm->createView()
+        ));
+    }
+
+     /**
+     * @Route("/report/show", name="report_show", methods={"GET"})
+     */
+    public function report_show(Request $request, ProductRepository $productRepository, OrdersRepository $orderRepository, StockRepository $stockRepository,  PaginatorInterface $paginator)
+    {
+        $id = $request->query->get("id");
+        $product = $productRepository->findProductForReport($id);
+        $totalProduct = $stockRepository->findTotalForProduct($id);
+        $totalRequested = $orderRepository->productTotalApproved($id);
+        $totalApproved = $orderRepository->productTotalOrder($id);       
+
+        return $this->render('product/report-show.html.twig', array(
+            'product' => $product,
+            'totalP' => $totalProduct,
+            'totalR' => $totalRequested,
+            'totalA' => $totalApproved
+        ));
+    }
 
     /**
      * @Route("/new", name="product_new", methods={"GET","POST"})
