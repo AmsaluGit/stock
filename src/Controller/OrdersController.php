@@ -20,36 +20,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class OrdersController extends AbstractController
 {
-    /** 
-     * @Route("/", name="order_index", methods={"GET"})
-     */
-    // public function index(OrdersRepository $orderRepository): Response
-    // {
-    //     return $this->render('orders/index.html.twig', [
-    //        // 'orders' => $orderRepository->findAll(),
-    //         'orders' => $orderRepository->findBy([],["id"=>"DESC"]),
-    //     ]);
-    // }
-
-
+    
     /**
      * @Route("/addtocart/{id}", name="addtocart", methods={"GET","POST"})
      */
     public function addToCart(Request $request, Product $product): Response
     {
-        /*return $this->render('order/index.html.twig', [
-            'orders' => $orderRepository->findAll(),
-        ]);*/
-
-        
+       
         $em = $this->getDoctrine()->getManager();
        
         $quantity = $request->request->get('quantity');
        
-        // $id = $request->request->get('id'); 
-        // $request->getSession()->invalidate();
         $mycart = $request->getSession()->get($this->getUser()->getId(),null);
-  
         if($mycart)
         {
             $mycart[$product->getId()]=$quantity;
@@ -82,11 +64,7 @@ class OrdersController extends AbstractController
      */
     public function requestOrder(Request $request): Response
     {
-        /*return $this->render('order/index.html.twig', [
-            'orders' => $orderRepository->findAll(),
-        ]);*/
         $em = $this->getDoctrine()->getManager();
-       
         $reason = $request->request->get('reason'); 
         $products = $request->getSession()->get($this->getUser()->getId());
         $valid_request_exist=false;
@@ -108,10 +86,8 @@ class OrdersController extends AbstractController
         {
             $valid_request_exist=true;
         }
-          // if(!($avail['stock'] || $avail['requested'])) continue;
-            //$container[]= array("unit"=>$product->getUnitOfMeasure()->getName(), "productId"=>$product->getId(),"productName"=>$product->getName(),"avail"=>$avail); 
+         
         }
-// dd($valid_request_exist);
         if(!$valid_request_exist) 
         {
             $request->getSession()->set($this->getUser()->getId(),array());
@@ -131,8 +107,7 @@ class OrdersController extends AbstractController
             $em->persist($requests);
         }
 
-      
-
+    
 
         //manage children(Orders table)
         
@@ -152,73 +127,4 @@ class OrdersController extends AbstractController
         return $this->redirectToRoute("balance");
         
     } 
-
-
-    /**
-     * @Route("/new", name="order_new", methods={"GET","POST"})
-     */
-    /*public function new(Request $request): Response
-    {
-        $order = new Order();
-        $form = $this->createForm(OrderType::class, $order);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($order);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('order_index');
-        }
-
-        return $this->render('orders/new.html.twig', [
-            'order' => $order,
-            'form' => $form->createView(),
-        ]);
-    } */
-
-    /**
-     * @Route("/item/{id}", name="order_show", methods={"GET"})
-     */
-    /*public function show(Orders $order): Response
-    {
-        
-        return $this->render('orders/show.html.twig', [
-            'order' => $order,
-        ]);
-    }*/
-    
-    /**
-     * @Route("/{id}/edit", name="order_edit", methods={"GET","POST"})
-     */
-    /*public function edit(Request $request, Orders $order): Response
-    {
-        $form = $this->createForm(OrdersType::class, $order);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('order_index');
-        }
-
-        return $this->render('orders/edit.html.twig', [
-            'order' => $order,
-            'form' => $form->createView(),
-        ]); 
-    }*/
-
-    /**
-     * @Route("/{id}", name="order_delete", methods={"DELETE"})
-     */
-    /*public function delete(Request $request, Orders $order): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$order->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($order);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('order_index');
-    }*/
 }

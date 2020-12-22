@@ -3,6 +3,9 @@ status column on requests table
 1=> at least one approver/rejector responded.
 2=>completely approved
 
+closed column on requests table
+0 or NULL 
+
 status column on requests table
 1 ==> approved
 2==> rejected
