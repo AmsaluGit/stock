@@ -48,11 +48,8 @@ class Orders
      */
     private $status;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true, options={"default":"0"})
-     */
-    private $allowedQuantity;
-
+ 
+ 
 
     /**
      * @ORM\ManyToOne(targetEntity=Requests::class, inversedBy="orders")
@@ -129,17 +126,6 @@ class Orders
         return $this;
     }
 
-    public function getAllowedQuantity(): ?int
-    {
-        return $this->allowedQuantity;
-    }
-
-    public function setAllowedQuantity(?int $allowedQuantity): self
-    {
-        $this->allowedQuantity = $allowedQuantity;
-
-        return $this;
-    }
 
     public function getUnitprice(): ?int
     {

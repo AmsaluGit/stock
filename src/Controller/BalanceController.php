@@ -38,7 +38,7 @@ class BalanceController extends AbstractController
             return $this->redirectToRoute('balance');
         }*/
 
-        $product = 1;
+        // $product = 1;
         $container =null;
         $products = $this->getDoctrine()->getManager()->getRepository(Product::class)->findAll();
         // dd($products);
@@ -107,11 +107,16 @@ else
         $stock_request  = "select product_id, sum(quantity) as quantity from stock where product_id=$product";
         $stock_result = $conn->query($stock_request)->fetchAll();
 
-        $order_request  = "select product_id, sum(quantity) as quantity from orders where product_id=$product";
+        $order_request  = "select o.product_id as product_id, sum(o.quantity) as quantity from orders as o inner join requests as r on r.id=o.request_id where product_id=$product and r.closed is NULL";
         $order_result = $conn->query($order_request)->fetchAll();
-        //  dd($stock_result);
 
-         return array("stock"=>$stock_result[0]['quantity'],"requested"=>$order_result[0]['quantity'],);
+        $approved_request="select sum(o.quantity) as quantity from orders as o inner join requests as r on r.id=o.request_id where product_id=$product and r.closed=1 and r.status=1";
+        $approved_result = $conn->query($approved_request)->fetchAll();
+        $stock = $stock_result[0]['quantity'] - $approved_result[0]['quantity'];
+        // dd($stock);
+        //    dd(array("stock"=>$stock_result[0]['quantity'],"requested"=>$order_result[0]['quantity'],));
+
+         return array("stock"=>$stock,"requested"=>$order_result[0]['quantity']?$order_result[0]['quantity']:0);
     }
 
 }

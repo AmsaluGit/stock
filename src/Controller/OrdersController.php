@@ -78,7 +78,7 @@ class OrdersController extends AbstractController
         $quantity_requested_by_this_user = $val;
         if($allowed_to_request < $quantity_requested_by_this_user) //you can't request this item.
         {
-            $this->addFlash("warning","There is not enough ".$prod->getName()." to satisfy your request.");
+            $this->addFlash("warning","There is no enough ".$prod->getName()." to satisfy your request.");
             // return $this->redirectToRoute('user_group_index');
             continue;
         }

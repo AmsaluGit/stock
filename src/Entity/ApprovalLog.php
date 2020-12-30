@@ -42,6 +42,12 @@ class ApprovalLog
      */
     private $approvalLevel;
 
+ 
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default":"0"})
+     */
+    private $allowedQuantity;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +109,18 @@ class ApprovalLog
     public function setApprovalLevel(int $approvalLevel): self
     {
         $this->approvalLevel = $approvalLevel;
+
+        return $this;
+    }
+
+    public function getAllowedQuantity(): ?int
+    {
+        return $this->allowedQuantity;
+    }
+
+    public function setAllowedQuantity(?int $allowedQuantity): self
+    {
+        $this->allowedQuantity = $allowedQuantity;
 
         return $this;
     }
