@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Stock index
+{% block title %}
+	Stock index
 {% endblock %}
 {% block maintitle %}
 
@@ -17,46 +18,42 @@
 
 			<div class="card-body">
 				<div class="row">
-				
-                
-                	{# <div class="col-md-12">
-						<div class="card card-info {{'collapsed-card'}}">
-							 
-							 
-							<div class="card-body">
-							 
-								{{ include('stock/_form.html.twig') }}
-
-
-							</div>
-						 
-						</div>
-					</div> #}
-
 					<div class="col-md-12">
 						<div class="card card ">
 							<div class="card-header">
-					{% if  carts %}
+								{% if  carts %}
 
-						<div class="container conatainer-fluid p-2 col-12" style="background-color:#17a2b8;">
+									<div class="container conatainer-fluid p-2 col-12" style="background-color:#17a2b8;">
+										<table class="table table-condensed table-bordered" style="background:#fff;width:60%">
+											<thead>
+												<th>Product</th>
+												<th>Quantity</th>
+												<th>Action</th>
+											</thead>
+											<tbody>
+												{% for items in carts %}
+													<tr>
+														<td>{{items.product_name}}</td>
+														<td>{{items.quantity}}</td>
+														<td>
+															<a href="{{ path('product_show', {'id': items.id}) }}" class="btn btn-sm">Edit</a>
+														</td>
+													</tr>
 
-						{% for prod,quant in carts %}
-							<div class="row">
-							<div class="col-md-4"> <h4 class="card-title text-black">{{prod}}</h4> </div>
-							<div class="col-md-1 "> <h4 class="card-title">{{quant}}</h4> </div>
-							<div class="col-md-7"> <h3 class="card-title"></h3> </div>
-							</div>
-						{% endfor %} 
+												{% endfor %}
+											</tbody>
+										</table>
 
-						<form action="{{path('requestitems')}}" method="POST">
-					
-						<textarea  class=" p-2" name="reason"  placeholder="write your reason here..." required style="width: 60%;"></textarea>
-						<br>
-							<input type="submit" name="req"  class="btn btn-warning" value="Request"/>
-						</form>
-						</div>
-						<br>
-					{% endif %}
+										<form action="{{path('requestitems')}}" method="POST">
+
+											<textarea class=" p-2" name="reason" placeholder="write your reason here..." required style="width: 60%;"></textarea>
+											<br>
+											<input type="submit" name="req" class="btn btn-primary" value="Request"/>
+											<a href="{{ path('reset_request')}}" class="btn btn-danger">Reset</a>
+										</form>
+									</div>
+									<br>
+								{% endif %}
 								<div class="card-tools">
 
 									<form class="form-inline ml-3">
@@ -72,9 +69,6 @@
 								</div>
 							</div>
 							<div class="card-body">
-
-
-
 								<table class="table table-hover">
 									<thead class="thead-light">
 										<tr>
@@ -85,34 +79,24 @@
 											<th>UOM</th>
 											<th>actions</th>
 										</tr>
-									</thead> 
+									</thead>
 									<tbody>
 										{% set i = 1 %}
 										{% for stock in stocks %}
-
-										{# <pre>
-											{{ dump(stock) }}
-										</pre> #}
 											<tr>
 												<td>
 													{{ i }}
 													{% set i = i+1 %}
 												</td>
-												 <td>{{ stock.productName }}</td>
+												<td>{{ stock.productName }}</td>
 												<td>{{ stock.avail.stock }}</td>
 												<td>{{ stock.avail.requested }}</td>
-											 
-												 <td>{{ stock.unit }}</td> 
-												   
+												<td>{{ stock.unit }}</td>
 												<td>
-
-													
-													<a href="{{ path('product_show', {'id': stock.productId}) }}" class="btn btn-info btn-sm 
-													{% if stock.avail.requested >= stock.avail.stock %} disabled {% endif %}" title="Show" >
+													<a href="{{ path('product_show', {'id': stock.productId}) }}" class="btn btn-info btn-sm																																					{% if stock.avail.requested >= stock.avail.stock %} disabled {% endif %}" title="Show">
 														<i class="">More</i>
-													</a> 
+													</a>
 
-                                                   
 
 												</td>
 
@@ -121,7 +105,7 @@
 											<tr>
 												<td colspan="5">no records found</td>
 											</tr>
-										{% endfor %} 
+										{% endfor %}
 									</tbody>
 								</table>
 								<div class="float-right">{{ knp_pagination_render(stocks) }}</div>

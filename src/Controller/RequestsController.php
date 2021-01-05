@@ -6,6 +6,7 @@ use App\Entity\ApprovalLog;
 use App\Entity\Requests;
 use App\Entity\UserGroup;
 use App\Form\RequestsType;
+use App\Entity\Orders;
 use App\Repository\RequestsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,10 +103,11 @@ class RequestsController extends AbstractController
         return $this->redirectToRoute('requests_index');
     }
 
-     public function doApprovalOrReject(Requests $requests, $approve, $reject, $approver)
+     public function doApprovalOrReject($requests,$request, $approve, $reject, $approver)
     {
         $em = $this->getDoctrine()->getManager();
-        //  dd($approve);
+        $orders = $em->getRepository(Orders::class)->findBy(['request'=>$requests]);      
+
         foreach ($approver as $key => $level) {
           
             $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>$level]);
@@ -119,19 +121,23 @@ class RequestsController extends AbstractController
                     $requests->setClosed(1);
                      
                 }
-                if ($level==2) //ask one question is 1 approved
+                elseif ($level==2) //ask one question is 1 approved
                 {
                     $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>1]);
                     if(!$alreadyApproved1) continue;
                 }
-                
+
+                $i = 0;
+                foreach($orders as $key => $value){
                     $appLog = new ApprovalLog();
                     $appLog->setApprover($this->getUser());
                     $appLog->setApprovalLevel($level);
                     $appLog->setRequest($requests);
+                    $appLog->setOrder($value);
                     $appLog->setApprovalDate(new \DateTime());
                     if($approve=="Approve")
                     {
+                        $appLog->setAllowedQuantity($request->get('approved_quantity')[$i]);
                         $appLog->setStatus(1);
                         $requests->setStatus(1);//just response
                     }
@@ -145,11 +151,14 @@ class RequestsController extends AbstractController
                     // dd("Neither approved nor Rejected");
                     }
                     $em->persist($appLog);
+                    $i++;
+                }
+                    
             }
             
             
         }
-            
+            // dd($appLog);
             $em->flush();
 
     }
@@ -190,10 +199,8 @@ class RequestsController extends AbstractController
             }
              
         }
-        
      //   $approver =$ug->getPermission();
-        // dd($approver);
-        $this->doApprovalOrReject($requests, $approve, $reject, $approver);
+        $this->doApprovalOrReject($requests, $request->request, $approve, $reject, $approver);
     
         return $this->redirectToRoute('requests_index');
     }

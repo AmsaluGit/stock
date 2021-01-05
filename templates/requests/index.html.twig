@@ -79,18 +79,13 @@
 
 												<td>{{ request.requester }}</td>
 												<td>{{ request.requestedDate ? request.requestedDate|date('Y-m-d') : '' }}</td>
-{#| sort ((a,b) => a.approvalLevel <=> b.approvalLevel ) | column('approvalLevel') #}
 												{% set logs = request.approvalLogs  %}
 
 												{% for indx in 0..2 %}
-
 													<td>
-
 														{% if logs[indx] is defined and not null %}
-{# <pre>
-	{{ dump(logs[indx].approvalLevel) }}
-</pre> #}
 															{% if logs[indx].approvalLevel == 1 + indx %}
+															    {{ indx }}
 																{% if logs[indx].status == 1 %}
 																	<i class="fa fa-check" style="color:green"></i>
 																{% elseif logs[indx].status == 2  %}
@@ -98,9 +93,10 @@
 																{% else %}
 																	<i class="fa fa-spinner" style="color:primary"></i>
 																{% endif %}
-
 																&nbsp;
 																{{ logs[indx].approver }}
+																{% else %}
+																{{indx}}
 															{% endif %}
 														
 														{% else %}

@@ -1,60 +1,57 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Product{% endblock %}
+{% block title %}Product
+{% endblock %}
+{% block maintitle %}
+    Product
+{% endblock %}
 
 {% block body %}
-    <h1>Product</h1>
-    <form action="{{ path('addtocart', {'id': product.id}) }}" method="POST">
-    <table class="table">
-        <tbody>
-  
-            <tr>
-                <th>Name</th>
-                <td>{{ product.name }}</td>
-            </tr>
-            {# <tr>
-                <th>Price</th>
-                <td>{{ product.price }}</td>
-            </tr> #}
-            {# <tr>
-                <th>Quantity</th>
-                <td>{{ stock.price }}</td>
-            </tr> #}
+	{# <h1>Product</h1> #}
+	<div class="card" style="padding-bottom:25px;">
+		<form action="{{ path('addtocart', {'id': product.id}) }}" method="POST">
+			<table class="table table-responsive" >
+				<tbody >
 
-            <tr>
-                <th>Product Type</th>
-                <td>{{ product.productType }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ product.description }}</td>
-            </tr>
-       
-             <tr>
-                <th>Category</th>
-                <td>{{ product.category }}</td>
-            </tr>
-           
-                <tr>
-                    <th>Quantity</th>
-                    <td><input type="number" name = "quantity" placeholder="Insert quantity here" required/></td>
-                </tr>
-              
-                {# <tr>
-                    <th>Request Purpose</th>
-                    <td ><textarea type="text" name = "remark" placeholder="Write any remarks here." style="widht:440px" ></textarea></td>
-                </tr>
-             #}
-                
-        </tbody>
-   
-    </table>
-   
-         <a href="{{ path('product_index') }}" class="btn btn-primary">back to list</a>
+					<tr>
+						<th style="width:300px">Name</th>
+						<td>{{ product.name }}</td>
+					</tr>
 
-     	<button type="submit" class="btn btn-success" title="Request"><i class="fa fa-cart-arrow-down">Add to cart</i></button> 
-        </form>
+					<tr>
+						<th>Product Type</th>
+						<td>{{ product.productType }}</td>
+					</tr>
+					<tr>
+						<th>Description</th>
+						<td>{{ product.description }}</td>
+					</tr>
 
-                                                   
+					<tr>
+						<th>Category</th>
+						<td>{{ product.category }}</td>
+					</tr>
 
+					<tr>
+						<th>Available Items</th>
+						<td>{{ avail }}</td>
+					</tr>
+
+					<tr>
+						<th>Quantity</th>
+						<td><input type="number" name="quantity" id="quantity" min="1" max={{avail}} required/></td>
+					</tr>
+				</tbody>
+
+			</table>
+
+			<a href="{{ path('product_index') }}" class="btn btn-primary" style="margin-left:25px;">back to list</a>
+
+			<button type="submit" class="btn btn-success" title="Request">
+				<i class="fa fa-cart-arrow-down">Add to cart</i>
+			</button>
+		</form>
+	</div>
+
+	{% block javascript%}{% endblock %}
 {% endblock %}

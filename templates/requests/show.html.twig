@@ -71,6 +71,7 @@
 				</table>
 
 <hr>
+<form action ="{{ path('requests_approve', {'id': requests.id}) }}" method="POST">
 {% for order  in requests.orders %}
     
 				<table class="table">
@@ -111,7 +112,13 @@
 							</th>
 							<td>{{ order.quantity }}</td>
 						</tr>
-					
+						
+						<tr>
+							<th>
+								<span class="badge {{coloring}}">Approved quantity</span>
+							</th>
+							<td><input type="number" name="approved_quantity[]" value={{ order.quantity }} min="1" max="{{order.quantity}}"/></td>
+						</tr>
 					
 					</tbody>
 				</table>
@@ -129,7 +136,7 @@
 
 <th><a href="{{ path('requests_index') }}" class="btn btn-primary">Back</a></th>
 {% if not requests.closed %}
-<th  style="margin:0px"><form action ="{{ path('requests_approve', {'id': requests.id}) }}" method="POST"> <input type="submit" value="Approve" name="approve" class="btn btn-success"></input></form></th>
+<th  style="margin:0px"> <input type="submit" value="Approve" name="approve" class="btn btn-success"></input></form></th>
  
 
 <th  style="margin:0px"><form action ="{{ path('requests_approve', {'id': requests.id}) }}" method="POST"> <input type="submit" value="Reject" name="reject" class="btn btn-warning"></input></form></th>

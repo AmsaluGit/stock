@@ -28,6 +28,11 @@ class ApprovalLog
     private $request;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Orders::class, inversedBy="approvalLogs")
+     */
+    private $order;
+
+    /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="approvalLogs")
      */
     private $approver;
@@ -73,6 +78,18 @@ class ApprovalLog
     public function setRequest(?Requests $request): self
     {
         $this->request = $request;
+
+        return $this;
+    }
+
+    public function getOrder(): ?Orders
+    {
+        return $this->order;
+    }
+
+    public function setOrder(?Orders $orders): self
+    {
+        $this->order = $orders;
 
         return $this;
     }

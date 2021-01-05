@@ -26,23 +26,50 @@ class OrdersController extends AbstractController
      */
     public function addToCart(Request $request, Product $product): Response
     {
-       
+        $mycart = array();
         $em = $this->getDoctrine()->getManager();
-       
         $quantity = $request->request->get('quantity');
-       
-        $mycart = $request->getSession()->get($this->getUser()->getId(),null);
-        if($mycart)
+        // $request->getSession()->set($this->getUser()->getId(),null);
+        $mycart = $request->getSession()->get($this->getUser()->getId(),null);          
+
+        // dd($mycart);
+        if(isset($mycart) && sizeof($mycart)>0)
         {
-            $mycart[$product->getId()]=$quantity;
-            $request->getSession()->set($this->getUser()->getId(),$mycart);
+            $items_in_cart = array();
+
+            foreach($mycart as $key => $items)
+            {
+                $items_in_cart[$key] = $items;    
+            }
+            
+            $items_in_cart[$product->getId()] =$quantity;
+            $request->getSession()->set($this->getUser()->getId(),$items_in_cart);
         }
-        else //new
+        else 
         {
             $request->getSession()->set($this->getUser()->getId(), array($product->getId()=>$quantity));
         }
-        //    dd($mycart);
 
+        return $this->redirectToRoute("balance");
+    }
+
+    /**
+     * @Route("/reset", name="reset_request", methods={"GET"})
+     */
+    public function resetRequest(Request $request): Response
+    {
+        // $quantity = $request->request->get('quantity');
+        $request->getSession()->set($this->getUser()->getId(),null);     
+        // if($mycart)
+        // {
+        //     $mycart[$product->getId()]=$quantity;
+        //     $request->getSession()->set($this->getUser()->getId(),$mycart);
+        // }
+        // else //new
+        // {
+        //     $request->getSession()->set($this->getUser()->getId(), array($product->getId()=>$quantity));
+        // }
+        // // dd($request->getSession());
         return $this->redirectToRoute("balance");
     }
 

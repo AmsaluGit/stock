@@ -73,14 +73,13 @@ class BalanceController extends AbstractController
     );
 
     $produ_on_cart = $request->getSession()->get($this->getUser()->getId());
-// dd($produ_on_cart);
     $temp = null;
     if($produ_on_cart)
     {
         $p = $em->getRepository(Product::class);
         foreach ($produ_on_cart as $key => $value) 
         {
-            $temp[$p->find($key)->getName()]=$value;
+            $temp[]= array('id'=>$key,'product_name' => $p->find($key)->getName(),'quantity'=> $value);
         }
     }
 

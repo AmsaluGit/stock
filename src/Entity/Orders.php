@@ -48,7 +48,10 @@ class Orders
      */
     private $status;
 
- 
+   /**
+     * @ORM\OneToMany(targetEntity=ApprovalLog::class, mappedBy="order")
+     */
+    private $approvalLogs;
  
 
     /**
@@ -163,7 +166,23 @@ class Orders
         return $this;
     }
 
-   
+    // /**
+    //  * @return Collection|ApprovalLog[]
+    //  */
+    // public function getApprovalLogs(): Collection
+    // {
+    //     return $this->approvalLogs;
+    // }
+
+    public function addApprovalLog(ApprovalLog $approvalLog): self
+    {
+        if (!$this->approvalLogs->contains($approvalLog)) {
+            $this->approvalLogs[] = $approvalLog;
+            $approvalLog->setOrder($this);
+        }
+
+        return $this;
+    }
 
 
 }
