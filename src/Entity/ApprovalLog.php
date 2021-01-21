@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ApprovalLogRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,12 +28,7 @@ class ApprovalLog
      * @ORM\ManyToOne(targetEntity=Requests::class, inversedBy="approvalLogs")
      */
     private $request;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Orders::class, inversedBy="approvalLogs")
-     */
-    private $order;
-
+ 
     /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="approvalLogs")
      */
@@ -48,10 +45,17 @@ class ApprovalLog
     private $approvalLevel;
 
  
+  
+
     /**
-     * @ORM\Column(type="integer", nullable=true, options={"default":"0"})
+     * @ORM\OneToMany(targetEntity=ItemApprovalStatus::class, mappedBy="approvalLog")
      */
-    private $allowedQuantity;
+    private $itemApprovalStatuses;
+
+    public function __construct()
+    {
+        $this->itemApprovalStatuses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -82,18 +86,7 @@ class ApprovalLog
         return $this;
     }
 
-    public function getOrder(): ?Orders
-    {
-        return $this->order;
-    }
-
-    public function setOrder(?Orders $orders): self
-    {
-        $this->order = $orders;
-
-        return $this;
-    }
-
+ 
     public function getApprover(): ?user
     {
         return $this->approver;
@@ -129,15 +122,34 @@ class ApprovalLog
 
         return $this;
     }
+ 
 
-    public function getAllowedQuantity(): ?int
+    /**
+     * @return Collection|ItemApprovalStatus[]
+     */
+    public function getItemApprovalStatuses(): Collection
     {
-        return $this->allowedQuantity;
+        return $this->itemApprovalStatuses;
     }
 
-    public function setAllowedQuantity(?int $allowedQuantity): self
+    public function addItemApprovalStatus(ItemApprovalStatus $itemApprovalStatus): self
     {
-        $this->allowedQuantity = $allowedQuantity;
+        if (!$this->itemApprovalStatuses->contains($itemApprovalStatus)) {
+            $this->itemApprovalStatuses[] = $itemApprovalStatus;
+            $itemApprovalStatus->setApprovalLog($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemApprovalStatus(ItemApprovalStatus $itemApprovalStatus): self
+    {
+        if ($this->itemApprovalStatuses->removeElement($itemApprovalStatus)) {
+            // set the owning side to null (unless already changed)
+            if ($itemApprovalStatus->getApprovalLog() === $this) {
+                $itemApprovalStatus->setApprovalLog(null);
+            }
+        }
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrdersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -63,6 +65,16 @@ class Orders
      * @ORM\Column(type="integer", nullable=true)
      */
     private $unitprice;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ItemApprovalStatus::class, mappedBy="orders")
+     */
+    private $itemApprovalStatuses;
+
+    public function __construct()
+    {
+        $this->itemApprovalStatuses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -179,6 +191,36 @@ class Orders
         if (!$this->approvalLogs->contains($approvalLog)) {
             $this->approvalLogs[] = $approvalLog;
             $approvalLog->setOrder($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ItemApprovalStatus[]
+     */
+    public function getItemApprovalStatuses(): Collection
+    {
+        return $this->itemApprovalStatuses;
+    }
+
+    public function addItemApprovalStatus(ItemApprovalStatus $itemApprovalStatus): self
+    {
+        if (!$this->itemApprovalStatuses->contains($itemApprovalStatus)) {
+            $this->itemApprovalStatuses[] = $itemApprovalStatus;
+            $itemApprovalStatus->setOrders($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemApprovalStatus(ItemApprovalStatus $itemApprovalStatus): self
+    {
+        if ($this->itemApprovalStatuses->removeElement($itemApprovalStatus)) {
+            // set the owning side to null (unless already changed)
+            if ($itemApprovalStatus->getOrders() === $this) {
+                $itemApprovalStatus->setOrders(null);
+            }
         }
 
         return $this;
