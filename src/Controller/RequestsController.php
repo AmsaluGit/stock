@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\ApprovalLog;
+use App\Entity\ItemApprovalStatus;
 use App\Entity\Requests;
 use App\Entity\UserGroup;
 use App\Form\RequestsType;
@@ -64,6 +65,8 @@ class RequestsController extends AbstractController
      */
     public function show(Requests $request): Response
     {
+
+        // dd($request);
         return $this->render('requests/show.html.twig', [
             'requests' => $request,
         ]);
@@ -107,7 +110,7 @@ class RequestsController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $orders = $em->getRepository(Orders::class)->findBy(['request'=>$requests]);      
-
+        $modifiedQuantities = $request->all();
         foreach ($approver as $key => $level) {
           
             $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>$level]);
@@ -121,23 +124,60 @@ class RequestsController extends AbstractController
                     $requests->setClosed(1);
                      
                 }
-                elseif ($level==2) //ask one question is 1 approved
+                elseif ($level==2) //ask one question: is 1 approved
                 {
                     $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>1]);
                     if(!$alreadyApproved1) continue;
                 }
 
                 $i = 0;
+
+                $appLog = new ApprovalLog();
+                $appLog->setApprover($this->getUser());
+                $appLog->setApprovalLevel($level);
+                $appLog->setRequest($requests);
+                $appLog->setApprovalDate(new \DateTime());
+                $em->persist($appLog);
+                
+
+                if($approve=="Approve")
+                    {
+                        // $appLog->setAllowedQuantity($request->get('approved_quantity')[$i]);
+                        $appLog->setStatus(1);
+                        $requests->setStatus(1);//just response
+                    }
+                    else if($reject=="Reject")
+                    {
+                        $appLog->setStatus(2);
+                        $requests->setStatus(1);//just response
+                    }
+                    else
+                    {
+                    // dd("Neither approved nor Rejected");
+                    }
+                    $em->flush();
+
+
                 foreach($orders as $key => $value){
+                    $itemApprovalStatus = new ItemApprovalStatus();
+                    $itemApprovalStatus->setApprovalLog($appLog);
+                    $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$value->getId()]);
+                    $itemApprovalStatus->setOrders($value);
+                    $em->persist($itemApprovalStatus);
+                   
+                }
+            //   $em->flush();
+
+               /* foreach($orders as $key => $value){
                     $appLog = new ApprovalLog();
                     $appLog->setApprover($this->getUser());
                     $appLog->setApprovalLevel($level);
                     $appLog->setRequest($requests);
-                    $appLog->setOrder($value);
+                    // $appLog->setOrder($value);
                     $appLog->setApprovalDate(new \DateTime());
                     if($approve=="Approve")
                     {
-                        $appLog->setAllowedQuantity($request->get('approved_quantity')[$i]);
+                        // $appLog->setAllowedQuantity($request->get('approved_quantity')[$i]);
                         $appLog->setStatus(1);
                         $requests->setStatus(1);//just response
                     }
@@ -152,7 +192,9 @@ class RequestsController extends AbstractController
                     }
                     $em->persist($appLog);
                     $i++;
-                }
+                }*/
+
+
                     
             }
             
