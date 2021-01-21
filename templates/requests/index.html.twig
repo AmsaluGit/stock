@@ -85,7 +85,7 @@
 													<td>
 														{% if logs[indx] is defined and not null %}
 															{% if logs[indx].approvalLevel == 1 + indx %}
-															    {{ indx }}
+															    {# {{ indx }} #}
 																{% if logs[indx].status == 1 %}
 																	<i class="fa fa-check" style="color:green"></i>
 																{% elseif logs[indx].status == 2  %}
@@ -96,7 +96,7 @@
 																&nbsp;
 																{{ logs[indx].approver }}
 																{% else %}
-																{{indx}}
+																{# {{indx}} #}
 															{% endif %}
 														
 														{% else %}
