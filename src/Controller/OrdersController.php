@@ -97,8 +97,8 @@ class OrdersController extends AbstractController
         $valid_request_exist=false;
         
         foreach ($products as $key => $val) {
-            $prod = $em->getRepository(Product::class)->find($key);
-            $avail = $this->getRequestedQuantity($prod->getId());
+        $prod = $em->getRepository(Product::class)->find($key);
+        $avail = $this->getRequestedQuantity($prod->getId());
         $stock = $avail["stock"];
         $requested = $avail["requested"];//this is the total number of requested stock
         $allowed_to_request= $stock - $requested;
@@ -145,7 +145,7 @@ class OrdersController extends AbstractController
             $order->setProduct($prod);
             $order->setQuantity($value);
             $order->setModel($prod->getBrand()->getName());
-            // $order->setUnitprice($prod->getprice());
+            $order->setUnitprice($prod->getprice());
             $order->setRequest($requests);
             $em->persist($order);
         }
