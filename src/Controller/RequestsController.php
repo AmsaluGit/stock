@@ -111,6 +111,7 @@ class RequestsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $orders = $em->getRepository(Orders::class)->findBy(['request'=>$requests]);      
         $modifiedQuantities = $request->all();
+        // dd($modifiedQuantities);
         foreach ($approver as $key => $level) {
           
             $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>$level]);
@@ -163,44 +164,16 @@ class RequestsController extends AbstractController
                     $itemApprovalStatus->setApprovalLog($appLog);
                     $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$value->getId()]);
                     $itemApprovalStatus->setOrders($value);
+                    $value->setSerial($modifiedQuantities["serial_".$value->getId()]);
                     $em->persist($itemApprovalStatus);
                    
                 }
-            //   $em->flush();
-
-               /* foreach($orders as $key => $value){
-                    $appLog = new ApprovalLog();
-                    $appLog->setApprover($this->getUser());
-                    $appLog->setApprovalLevel($level);
-                    $appLog->setRequest($requests);
-                    // $appLog->setOrder($value);
-                    $appLog->setApprovalDate(new \DateTime());
-                    if($approve=="Approve")
-                    {
-                        // $appLog->setAllowedQuantity($request->get('approved_quantity')[$i]);
-                        $appLog->setStatus(1);
-                        $requests->setStatus(1);//just response
-                    }
-                    else if($reject=="Reject")
-                    {
-                        $appLog->setStatus(2);
-                        $requests->setStatus(1);//just response
-                    }
-                    else
-                    {
-                    // dd("Neither approved nor Rejected");
-                    }
-                    $em->persist($appLog);
-                    $i++;
-                }*/
-
-
-                    
+                               
             }
             
             
         }
-            // dd($appLog);
+       
             $em->flush();
 
     }

@@ -20,10 +20,7 @@ class Orders
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="orders")
-     */
-    private $product;
+  
 
     /**
      * @ORM\Column(type="integer")
@@ -50,10 +47,7 @@ class Orders
      */
     private $status;
 
-   /**
-     * @ORM\OneToMany(targetEntity=ApprovalLog::class, mappedBy="order")
-     */
-    private $approvalLogs;
+ 
  
 
     /**
@@ -70,6 +64,11 @@ class Orders
      * @ORM\OneToMany(targetEntity=ItemApprovalStatus::class, mappedBy="orders")
      */
     private $itemApprovalStatuses;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Stock::class, inversedBy="orders")
+     */
+    private $stock;
 
     public function __construct()
     {
@@ -154,17 +153,7 @@ class Orders
         return $this;
     }
 
-    public function getProduct(): ?Product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?Product $product): self
-    {
-        $this->product = $product;
-
-        return $this;
-    }
+ 
 
     public function getRequest(): ?Requests
     {
@@ -178,24 +167,7 @@ class Orders
         return $this;
     }
 
-    // /**
-    //  * @return Collection|ApprovalLog[]
-    //  */
-    // public function getApprovalLogs(): Collection
-    // {
-    //     return $this->approvalLogs;
-    // }
-
-    public function addApprovalLog(ApprovalLog $approvalLog): self
-    {
-        if (!$this->approvalLogs->contains($approvalLog)) {
-            $this->approvalLogs[] = $approvalLog;
-            $approvalLog->setOrder($this);
-        }
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection|ItemApprovalStatus[]
      */
@@ -222,6 +194,18 @@ class Orders
                 $itemApprovalStatus->setOrders(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStock(): ?Stock
+    {
+        return $this->stock;
+    }
+
+    public function setStock(?Stock $stock): self
+    {
+        $this->stock = $stock;
 
         return $this;
     }

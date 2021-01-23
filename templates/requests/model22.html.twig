@@ -131,16 +131,16 @@
 						
 							<tr>
 								<td>{{loop.index}}</td>
-								<td>{{order.product.name}}</td>
+								<td>{{order.stock.product.name}}</td>
 								<td>{{order.model}}</td>
-								<td>{{order.serial}}</td>
+								<td>{{ order.serial }}</td>
 								<td> </td>
 								<td> </td>
 								{% set quantity = order.itemApprovalStatuses | last.allowedQuantity %}
 								<td>{{ quantity }}</td>
 								<td>{{order.unitprice}}</td>
 								<td>{{ order.unitprice * quantity }}</td>
-								<td>Remarks here ...</td>
+								<td></td>
 								{% set total = total +  order.unitprice * quantity  %}
 								
 								 

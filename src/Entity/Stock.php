@@ -49,9 +49,14 @@ class Stock
      */
     private $price;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="stock")
+     */
+    private $orders;
+
     public function __construct()
     {
-        ;
+        $this->orders = new ArrayCollection();
     }
 
  
@@ -128,6 +133,36 @@ class Stock
     public function setPrice(?float $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Orders[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Orders $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setStock($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Orders $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getStock() === $this) {
+                $order->setStock(null);
+            }
+        }
 
         return $this;
     }
