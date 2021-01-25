@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
- * @Route("/producttype")
+ * @Route("/usage/type")
  */
 class ProductTypeController extends AbstractController
 {
