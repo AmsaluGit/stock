@@ -70,6 +70,11 @@ class Orders
      */
     private $stock;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $approvedQuantity;
+
     public function __construct()
     {
         $this->itemApprovalStatuses = new ArrayCollection();
@@ -166,7 +171,6 @@ class Orders
 
         return $this;
     }
-
    
     /**
      * @return Collection|ItemApprovalStatus[]
@@ -206,6 +210,18 @@ class Orders
     public function setStock(?Stock $stock): self
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function getApprovedQuantity(): ?int
+    {
+        return $this->approvedQuantity;
+    }
+
+    public function setApprovedQuantity(?int $approvedQuantity): self
+    {
+        $this->approvedQuantity = $approvedQuantity;
 
         return $this;
     }

@@ -150,21 +150,20 @@
 												<th>#</th>
 												<th>#</th>
 												<th>Product</th>
+												<th>price per unit</th>
 												<th>Total quantity</th>
 												{# <th>store</th> #}
-												<th>price per unit</th>
-												{# <th>company</th> #}
-												{# <th>date</th> #}
-												 <th>Given</th> 
-												 <th>Requested</th> 
 
-												<th>actions</th>
-											</tr>
+												{# <th>company</th> #}
+												{# <th>date</th> #}<th>Given
+												</th><th>Requested
+												</th><th>actions
+											</th>
+										</tr>
 										</thead>
-										<tbody>
+											<tbody>
 											{% set i = 1 %}
-											<script type="text/javascript">
-												$allItems = [];
+												<script type="text/javascript"> $allItems = [];
 											</script>
 											{% for stock in stocks %}
 												<tr>
@@ -177,13 +176,28 @@
 														{% set i = i+1 %}
 													</td>
 													<td>{{ stock.product }}</td>
+													<td>{{ stock.price }}</td>
 													<td>{{ stock.quantity }}</td>
 													{# <td>{{ stock.store }}</td> #}
-													<td>{{ stock.price }}</td>
+
 													{# <td>{{ stock.company}}</td> #}
 													{# <td>{{ stock.date | date('Y-m-d') }}</td> #}
-													<td>{{ 0 }}</td>
-													<td>{{ 0 }}</td>
+													{# {% for exam in exams | filter(a=>a.course.type != 1) %} #}
+													{% set  countDelivered = 0 %}
+													{% set  countRequested = 0 %}
+
+
+														{% for myorder in stock.orders  %}
+															{% if myorder.approvedQuantity %}
+															{% set  countDelivered = countDelivered + myorder.approvedQuantity %}
+														{% else %}
+															{% set  countRequested = countRequested + myorder.quantity %}
+														{% endif %}
+													{% endfor %}
+
+
+													<td>{{ countDelivered  }}</td>
+													<td>{{ countRequested }}</td>
 													<td>
 
 														<form class="d-inline" method="post" action="">

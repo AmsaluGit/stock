@@ -188,7 +188,10 @@ class RequestsController extends AbstractController
                             
                             $value->setSerial($modifiedQuantities["serial_".$value->getId()]);
                         }
-                        
+
+                        $value->setDelivered(1);
+                        $value->setApprovedQuantity($modifiedQuantities[$value->getId()]);
+                     
                     }
                     $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$value->getId()]);
                     $itemApprovalStatus->setOrders($value);
