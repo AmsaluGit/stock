@@ -166,13 +166,14 @@ class RequestsController extends AbstractController
                     {
                         if( isset($modifiedQuantities["serial_".$value->getId()]))
                         {
-                            $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$value->getId()]);
+                            
+                            $value->setSerial($modifiedQuantities["serial_".$value->getId()]);
                         }
                         
                     }
-                    
+                    $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$value->getId()]);
                     $itemApprovalStatus->setOrders($value);
-                    $value->setSerial($modifiedQuantities["serial_".$value->getId()]);
+                    
                     $em->persist($itemApprovalStatus);
                    
                 }
