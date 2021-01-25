@@ -162,7 +162,15 @@ class RequestsController extends AbstractController
                 foreach($orders as $key => $value){
                     $itemApprovalStatus = new ItemApprovalStatus();
                     $itemApprovalStatus->setApprovalLog($appLog);
-                    $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$value->getId()]);
+                    if($level==3)
+                    {
+                        if( isset($modifiedQuantities["serial_".$value->getId()]))
+                        {
+                            $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$value->getId()]);
+                        }
+                        
+                    }
+                    
                     $itemApprovalStatus->setOrders($value);
                     $value->setSerial($modifiedQuantities["serial_".$value->getId()]);
                     $em->persist($itemApprovalStatus);
