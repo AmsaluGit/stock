@@ -122,7 +122,11 @@
 									<td><input type="number" name="{{ order.id }}" value="{{ currentQuantity }}" min="1" max="{{ currentQuantity }}" {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
 								</tr>
 
-								{% if  order.itemApprovalStatuses | last and  order.itemApprovalStatuses | last.approvalLog.approvalLevel >= 2 %}
+								{# {% if  order.itemApprovalStatuses | last and  order.itemApprovalStatuses | last.approvalLog.approvalLevel == 3 %} #}
+							 
+								{# {% if requests.requester.id == app.user.id %} #}
+								{% if approvalLevel == 3 %} 
+								
 
 									<tr>
 										<th>

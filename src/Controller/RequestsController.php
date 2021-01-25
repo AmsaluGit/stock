@@ -65,10 +65,29 @@ class RequestsController extends AbstractController
      */
     public function show(Requests $request): Response
     {
+     //   $this->denyAccessUnlessGranted('approver3');
+        $approvalLevel = 0;
+        $user = $this->getUser();
+        $permissionList = array();
+        $userGroupsList = $user->getUserGroup();
+        foreach ($userGroupsList as $group) {
+             $tempPermissinList = $group->getPermission();
+             foreach ($tempPermissinList  as $perm) {
+                $permissionList[] = $perm->getName();
+             }
+        }
 
-        // dd($request);
+
+        if (in_array("Approver3",$permissionList)) {
+            $approvalLevel = 3;
+        }
+
+        // dd($permissionList);
+   
         return $this->render('requests/show.html.twig', [
             'requests' => $request,
+            'approvalLevel'=> $approvalLevel
+
         ]);
     }
 
@@ -93,7 +112,7 @@ class RequestsController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="requests_delete", methods={"DELETE"})
+     * @Route("/delete/{id}", name="requests_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Requests $requests): Response
     {
