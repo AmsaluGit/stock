@@ -155,8 +155,12 @@
 												{# <th>store</th> #}
 
 												{# <th>company</th> #}
-												{# <th>date</th> #}<th>Given
-												</th><th>Requested
+												{# <th>date</th> #}
+												<th>Given
+												</th>
+												<th>Avaiable
+												</th>
+												<th>Requested
 												</th><th>actions
 											</th>
 										</tr>
@@ -197,6 +201,7 @@
 
 
 													<td>{{ countDelivered  }}</td>
+													<td>{{ countDelivered - countRequested }}</td>
 													<td>{{ countRequested }}</td>
 													<td>
 
