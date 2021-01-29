@@ -78,7 +78,7 @@ class RequestsController extends AbstractController
         }
 
 
-        if (in_array("Approver3",$permissionList)) {
+        if (in_array("approver3",$permissionList)) {
             $approvalLevel = 3;
         }
 
