@@ -75,9 +75,15 @@ class Orders
      */
     private $approvedQuantity;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Serials::class, mappedBy="orders")
+     */
+    private $serials;
+
     public function __construct()
     {
         $this->itemApprovalStatuses = new ArrayCollection();
+        $this->serials = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,6 +228,36 @@ class Orders
     public function setApprovedQuantity(?int $approvedQuantity): self
     {
         $this->approvedQuantity = $approvedQuantity;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Serials[]
+     */
+    public function getSerials(): Collection
+    {
+        return $this->serials;
+    }
+
+    public function addSerial(Serials $serial): self
+    {
+        if (!$this->serials->contains($serial)) {
+            $this->serials[] = $serial;
+            $serial->setOrders($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSerial(Serials $serial): self
+    {
+        if ($this->serials->removeElement($serial)) {
+            // set the owning side to null (unless already changed)
+            if ($serial->getOrders() === $this) {
+                $serial->setOrders(null);
+            }
+        }
 
         return $this;
     }

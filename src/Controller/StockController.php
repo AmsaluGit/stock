@@ -13,9 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 
-/**
- * @Route("/stock")
- */
 class StockController extends AbstractController
 {
     /**
@@ -107,7 +104,7 @@ class StockController extends AbstractController
 
 
     /**
-     * @Route("/new", name="stock_new", methods={"GET","POST"})
+     * @Route("stock/new", name="stock_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -130,7 +127,7 @@ class StockController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="stock_show", methods={"GET"})
+     * @Route("stock/{id}", name="stock_show", methods={"GET"})
      */
     public function show(Stock $stock, ProductRepository $productRepository): Response
     {
@@ -153,7 +150,7 @@ class StockController extends AbstractController
 
 
     /**
-     * @Route("/more/{id}", name="more", methods={"GET","POST"})
+     * @Route("stock/more/{id}", name="more", methods={"GET","POST"})
      */
     public function more(Stock $stock, ProductRepository $productRepository): Response
     {
@@ -192,7 +189,7 @@ class StockController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="stock_edit", methods={"GET","POST"})
+     * @Route("stock/{id}/edit", name="stock_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Stock $stock): Response
     {
@@ -212,7 +209,7 @@ class StockController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="stock_delete", methods={"DELETE"})
+     * @Route("stock/{id}", name="stock_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Stock $stock): Response
     {
@@ -225,7 +222,7 @@ class StockController extends AbstractController
         return $this->redirectToRoute('stock_index');
     }
      /**
-     * @Route("/print", name="stock_print", methods={"post"})
+     * @Route("stock/print", name="stock_print", methods={"post"})
      */
     public function print(Request $request): Response
     {

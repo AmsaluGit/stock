@@ -67,6 +67,8 @@ class Requests
      */
     private $approvalLogs;
 
+   
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -224,4 +226,6 @@ class Requests
 
         return $this;
     }
+
+    
 }

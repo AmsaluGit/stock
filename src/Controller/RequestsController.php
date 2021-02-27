@@ -8,6 +8,7 @@ use App\Entity\Requests;
 use App\Entity\UserGroup;
 use App\Form\RequestsType;
 use App\Entity\Orders;
+use App\Entity\Serials;
 use App\Repository\RequestsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,10 +27,10 @@ class RequestsController extends AbstractController
     public function index(RequestsRepository $requestsRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $rowsPerPage = 10;
-        $queryBuilder=$requestsRepository->findByName($request->query->get('search'));
-        $data=$paginator->paginate(
+        $queryBuilder = $requestsRepository->findByName($request->query->get('search'));
+        $data = $paginator->paginate(
             $queryBuilder,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             $rowsPerPage
         );
         return $this->render('requests/index.html.twig', [
@@ -65,28 +66,49 @@ class RequestsController extends AbstractController
      */
     public function show(Requests $request): Response
     {
-     //   $this->denyAccessUnlessGranted('approver3');
+
+        //   $this->denyAccessUnlessGranted('approver3');
+        $em = $this->getDoctrine()->getManager();
         $approvalLevel = 0;
         $user = $this->getUser();
         $permissionList = array();
         $userGroupsList = $user->getUserGroup();
+
         foreach ($userGroupsList as $group) {
-             $tempPermissinList = $group->getPermission();
-             foreach ($tempPermissinList  as $perm) {
+            $tempPermissinList = $group->getPermission();
+            foreach ($tempPermissinList  as $perm) {
                 $permissionList[] = $perm->getName();
-             }
+            }
         }
 
 
-        if (in_array("approver3",$permissionList)) {
+        if (in_array("Approver3", $permissionList)) {
             $approvalLevel = 3;
         }
 
+        if ($approvalLevel == 3) {
+            $orders = $em->getRepository(orders::class)->findBy(['request' => $request, 'serial' => null]);
+            foreach ($orders as $order) {
+                $quantity = $order->getApprovedQuantity();
+                for ($i = 1; $i <= $quantity; $i++) {
+                    $serial = new Serials();
+                    $serial->setOrders($order);
+                    $order->setSerial(1); //generated.
+                    $em->persist($serial);
+                }
+            }
+            // $itemApprovalStatus = 
+            $request->getApprovalLogs();
+            $em->flush();
+        }
+
         // dd($permissionList);
-   
+
         return $this->render('requests/show.html.twig', [
             'requests' => $request,
-            'approvalLevel'=> $approvalLevel
+            'approvalLevel' => $approvalLevel,
+            // 'serials'=>$serials
+
 
         ]);
     }
@@ -116,7 +138,7 @@ class RequestsController extends AbstractController
      */
     public function delete(Request $request, Requests $requests): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$requests->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $requests->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($requests);
             $entityManager->flush();
@@ -125,29 +147,26 @@ class RequestsController extends AbstractController
         return $this->redirectToRoute('requests_index');
     }
 
-     public function doApprovalOrReject($requests,$request, $approve, $reject, $approver)
+    public function doApprovalOrReject($requests, $request, $approve, $reject, $approver)
     {
         $em = $this->getDoctrine()->getManager();
-        $orders = $em->getRepository(Orders::class)->findBy(['request'=>$requests]);      
+        $orders = $em->getRepository(Orders::class)->findBy(['request' => $requests]);
         $modifiedQuantities = $request->all();
         // dd($modifiedQuantities);
         foreach ($approver as $key => $level) {
-          
-            $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>$level]);
-            if(!$alreadyApproved)
-            {
-                if($level==3) //ask two questions: are 1 and 2 approved
+
+            $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => $level]);
+            if (!$alreadyApproved) {
+                if ($level == 3) //ask two questions: are 1 and 2 approved
                 {
-                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>1]);
-                    $alreadyApproved2 = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>2]);
-                    if(!$alreadyApproved1 || !$alreadyApproved2) continue;
+                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 1]);
+                    $alreadyApproved2 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 2]);
+                    if (!$alreadyApproved1 || !$alreadyApproved2) continue;
                     $requests->setClosed(1);
-                     
-                }
-                elseif ($level==2) //ask one question: is 1 approved
+                } elseif ($level == 2) //ask one question: is 1 approved
                 {
-                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request'=>$requests,'approver'=>$this->getUser(),'approvalLevel'=>1]);
-                    if(!$alreadyApproved1) continue;
+                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 1]);
+                    if (!$alreadyApproved1) continue;
                 }
 
                 $i = 0;
@@ -158,55 +177,63 @@ class RequestsController extends AbstractController
                 $appLog->setRequest($requests);
                 $appLog->setApprovalDate(new \DateTime());
                 $em->persist($appLog);
-                
 
-                if($approve=="Approve")
-                    {
-                        // $appLog->setAllowedQuantity($request->get('approved_quantity')[$i]);
-                        $appLog->setStatus(1);
-                        $requests->setStatus(1);//just response
-                    }
-                    else if($reject=="Reject")
-                    {
-                        $appLog->setStatus(2);
-                        $requests->setStatus(1);//just response
-                    }
-                    else
-                    {
+
+                if ($approve == "Approve") {
+                    // $appLog->setAllowedQuantity($request->get('approved_quantity')[$i]);
+                    $appLog->setStatus(1);
+                    $requests->setStatus(1); //just response
+                } else if ($reject == "Reject") {
+                    $appLog->setStatus(2);
+                    $requests->setStatus(1); //just response
+                } else {
                     // dd("Neither approved nor Rejected");
-                    }
-                    $em->flush();
+                }
+                $em->flush();
 
 
-                foreach($orders as $key => $value){
+                foreach ($orders as $key => $value) {
                     $itemApprovalStatus = new ItemApprovalStatus();
                     $itemApprovalStatus->setApprovalLog($appLog);
-                    if($level==3)
-                    {
-                        if( isset($modifiedQuantities["serial_".$value->getId()]))
-                        {
+                    if ($level == 2) {
+                        $value->setApprovedQuantity($modifiedQuantities[$value->getId()]);
+                    }
+                    if ($level == 3) {
+                        foreach ($modifiedQuantities as $k => $v) {
+                            /*$post = explode("_", $k);
                             
-                            $value->setSerial($modifiedQuantities["serial_".$value->getId()]);
+                            if (sizeof($post) == 2) {
+
+                                $serial = $em->getRepository(Serials::class)->find($post[1]);
+
+                                dd($serial);
+                                if ($post[0] == "serial") {
+                                    $serial->setSerial($v);  
+                                }
+                                else
+                                {
+                                    $serial->setModel($v);  
+                                }
+                            }*/
                         }
+                        /*if (isset($modifiedQuantities["serial_" . $value->getId()])) {
+
+                            $value->setSerial($modifiedQuantities["serial_" . $value->getId()]);
+                        }*/
 
                         $value->setDelivered(1);
-                        $value->setApprovedQuantity($modifiedQuantities[$value->getId()]);
-                     
+                        // $value->setApprovedQuantity($modifiedQuantities[$value->getId()]);
+
                     }
                     $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$value->getId()]);
                     $itemApprovalStatus->setOrders($value);
-                    
-                    $em->persist($itemApprovalStatus);
-                   
-                }
-                               
-            }
-            
-            
-        }
-       
-            $em->flush();
 
+                    $em->persist($itemApprovalStatus);
+                }
+            }
+        }
+
+        $em->flush();
     }
     /**
      * @Route("/{id}/approve", name="requests_approve", methods={"GET","POST"})
@@ -215,39 +242,32 @@ class RequestsController extends AbstractController
     {
         $approve = $request->request->get('approve');
         $reject = $request->request->get('reject');
-       
+
         $em = $this->getDoctrine()->getManager();
 
-       
+
         //$ug = $em->getRepository(UserGroup::class)->find();
         $ugList = $this->getUser()->getUserGroup();
         $permissions = array();
         $approver = array();
-        foreach ($ugList  as $key => $ug) { 
+        foreach ($ugList  as $key => $ug) {
             $temp = $ug->getPermission();
             foreach ($temp  as $key => $perm) {
                 // $permissions[] = $perm;
-                if($perm->getCode()=="approver1")
-                {
+                if ($perm->getCode() == "approver1") {
                     $approver[] = 1;
-                }
-                elseif($perm->getCode()=="approver2")
-                {
+                } elseif ($perm->getCode() == "approver2") {
                     $approver[] = 2;
-                }
-                elseif($perm->getCode()=="approver3")
-                {
+                } elseif ($perm->getCode() == "approver3") {
                     $approver[] = 3;
-                }
-                else{
+                } else {
                     //ignore
                 }
             }
-             
         }
-     //   $approver =$ug->getPermission();
+        //   $approver =$ug->getPermission();
         $this->doApprovalOrReject($requests, $request->request, $approve, $reject, $approver);
-    
+
         return $this->redirectToRoute('requests_index');
     }
 
@@ -257,7 +277,7 @@ class RequestsController extends AbstractController
     public function model22(Requests $requests): Response
     {
         return $this->render('requests/model22.html.twig', [
-           // 'orders' => $orderRepository->findAll(),
+            // 'orders' => $orderRepository->findAll(),
             'requests' => $requests
         ]);
     }

@@ -121,25 +121,35 @@
 									{% endif %}
 									<td><input type="number" name="{{ order.id }}" value="{{ currentQuantity }}" min="1" max="{{ currentQuantity }}" {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
 								</tr>
+ 
 
-								{# {% if  order.itemApprovalStatuses | last and  order.itemApprovalStatuses | last.approvalLog.approvalLevel == 3 %} #}
-							 
-								{# {% if requests.requester.id == app.user.id %} #}
-								{% if approvalLevel == 3 %} 
-								
 
+								 
+
+
+								 {% if approvalLevel == 3 %} 
+								{% for ser in order.serials %}
+									
+ 
+	
 									<tr>
 										<th>
-											<span class="badge {{coloring}}">Serial Number</span>
+											<span class="badge {{coloring}}">Serial number</span>
 										</th>
+										<td><input type="text" name="serial_{{ ser.id }}" value="{{ ser.serial }}"  {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
 
-										<td><input type="text" name="serial_{{ order.id }}" value="{{ order.serial }}" required {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
+										<th>
+											<span class="badge {{coloring}}">Model number</span>
+										</th>
+										<td><input type="text" name="model_{{ ser.id }}" value="{{ ser.model }}"  {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
 
 									</tr>
-								{% endif %}
+								
+								{% endfor %}
+								{% endif %} 
 
 							</tbody>
-						</table>
+						</table/>
 						<hr>
 					{% endfor %}
 					{% if  requests.closed is same as(null) %}
