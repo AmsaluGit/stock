@@ -5,13 +5,10 @@
 {% endblock %}
 
 {% block stylesheets %}
-    <style>
-
-    </style>
+	<style></style>
 {% endblock %}
 
 {% block body %}
-	 
 
 
 	<div class="col-md-12">
@@ -33,12 +30,12 @@
 				</div>
 			</div>
 			<div class="card-body">
- 
 
- 			<table class="table">
+
+				<table class="table">
 					<tbody>
 						{% set coloring0 = "badge-success" %}
-                					 
+
 						<tr>
 							<th>
 								<span class="badge {{coloring0}}">RequestedDate</span>
@@ -66,90 +63,123 @@
 							</th>
 							<td>{{ requests.reason }}</td>
 						</tr>
-					
+
 					</tbody>
 				</table>
 
-<hr>
-<form action ="{{ path('requests_approve', {'id': requests.id}) }}" method="POST">
-{% for order  in requests.orders %}
-    
-				<table class="table">
-					<tbody>
-						{% set coloring = "badge-info" %}
-                        <tr style="background-color:#e9ecef">
-							{# <th> #}
-								{# <span class="badge {{coloring}}">Product</span> #}
-							{# </th> #}
-								<td ><strong style="float:left">{{ order.product | upper }}</strong></td>
-							<th>
-								{# <span class="badge {{coloring}}">Product</span> #}
-							</th>
-						
-						</tr>
-						<tr>
-							<th>
-								<span class="badge {{coloring}}">Product Type</span>
-							</th>
-							<td>{{ order.product.productType }}</td>
-						</tr>
-						<tr>
-							<th>
-								<span class="badge {{coloring}}">Category</span>
-							</th>
-							<td>{{ order.product.category }}</td>
-						</tr>
-					
-						<tr>
-							<th>
-								<span class="badge {{coloring}}">Model</span>
-							</th>
-							<td>{{ order.product.brand }}</td>
-						</tr>
-						<tr>
-							<th>
-								<span class="badge {{coloring}}">Requested quantity</span>
-							</th>
-							<td>{{ order.quantity }}</td>
-						</tr>
-						
-						<tr>
-							<th>
-								<span class="badge {{coloring}}">Approved quantity</span>
-							</th>
-							<td><input type="number" name="{{ order.id }}" value="{{ order.quantity }}" min="1" max="{{order.quantity}}"/></td>
-						</tr>
-					
-					</tbody> 
-				</table>
-                <hr>
-         {% endfor %}
-			</div>
-		</div>
-	</div>
+				<hr>
+				<form action="{{ path('requests_approve', {'id': requests.id}) }}" method="POST">
+					{% for order  in requests.orders %}
 
+						<table class="table">
+							<tbody>
+								{% set coloring = "badge-info" %}
+								<tr style="background-color:#e9ecef">
+									{# <th> #}
+									{# <span class="badge {{coloring}}">Product</span> #}
+									{# </th> #}
+										<td><strong style="float:left"> {{ order.stock.product | upper }}</strong>
+									</td>
+									<th>
+										{# <span class="badge {{coloring}}">Product</span> #}
+									</th>
 
-<table class="table table-condensed"  style="width:40%">
-<thead>
-<tr>
+								</tr>
+								<tr>
+									<th>
+										<span class="badge {{coloring}}">Product Type</span>
+									</th>
+									<td>{{ order.stock.product.productType }}</td>
+								</tr>
+								<tr>
+									<th>
+										<span class="badge {{coloring}}">Category</span>
+									</th>
+									<td>{{ order.stock.product.category }}</td>
+								</tr>
 
+								<tr>
+									<th>
+										<span class="badge {{coloring}}">Model</span>
+									</th>
+									<td>{{ order.stock.product.brand }}</td>
+								</tr>
+								<tr>
+									<th>
+										<span class="badge {{coloring}}">Requested quantity</span>
+									</th>
+									<td>{{ order.quantity }}</td>
+								</tr>
 
-<th><a href="{{ path('requests_index') }}" class="btn btn-primary">Back</a></th>
-{% if not requests.closed %}
-<th  style="margin:0px"> <input type="submit" value="Approve" name="approve" class="btn btn-success"></input></form></th>
+								<tr>
+									<th>
+										<span class="badge {{coloring}}">Approved quantity</span>
+									</th>
+									{% set currentQuantity = order.quantity %}
+									{% if order.itemApprovalStatuses | last %}
+										{% set currentQuantity = order.itemApprovalStatuses | last.allowedQuantity %}
+									{% endif %}
+									<td><input type="number" name="{{ order.id }}" value="{{ currentQuantity }}" min="1" max="{{ currentQuantity }}" {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
+								</tr>
  
 
-<th  style="margin:0px"><form action ="{{ path('requests_approve', {'id': requests.id}) }}" method="POST"> <input type="submit" value="Reject" name="reject" class="btn btn-warning"></input></form></th>
 
-<th>{{ include('requests/_delete_form.html.twig') }}</th>
-
-{% else %}
-<th  style="margin:0px"><form action ="{{path('model22',{id:requests.id})}}" method="POST"> <input type="submit" value="Model 22" name="mod22" class="btn btn-info"></input></form></th>
-{% endif %}
-
-</tr>
-</thead>
-</table>
+								 
 
 
-{% endblock %}
+								 {% if approvalLevel == 3 %} 
+								{% for ser in order.serials %}
+									
+ 
+	
+									<tr>
+										<th>
+											<span class="badge {{coloring}}">Serial number</span>
+										</th>
+										<td><input type="text" name="serial_{{ ser.id }}" value="{{ ser.serial }}"  {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
+
+										<th>
+											<span class="badge {{coloring}}">Model number</span>
+										</th>
+										<td><input type="text" name="model_{{ ser.id }}" value="{{ ser.model }}"  {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
+
+									</tr>
+								
+								{% endfor %}
+								{% endif %} 
+
+							</tbody>
+						</table/>
+						<hr>
+					{% endfor %}
+					{% if  requests.closed is same as(null) %}
+						<th style="margin:0px">
+							<input type="submit" value="Approve" name="approve" class="btn btn-success">
+						</th>
+					</input>
+				</th>
+			{% endif %}
+		</form>
+
+	</div>
+</div></div><table class="table table-condensed" style="width:40%">
+<thead>
+	<tr>
+
+
+		<th>
+			<a href="{{ path('requests_index') }}" class="btn btn-primary">Back</a>
+		</th>
+		{% if not requests.closed %}
+			{# <th  style="margin:0px"> <input type="submit" value="Approve" name="approve" class="btn btn-success"></input></form></th> #}
+
+
+			<th style="margin:0px">
+				<form action="{{ path('requests_approve', {'id': requests.id}) }}" method="POST">
+					<input type="submit" value="Reject" name="reject" class="btn btn-warning"></input>
+			</th>
+		</form>
+	</tr>
+</thead></th><th>{{ include('requests/_delete_form.html.twig') }}</th>{% else %}<th style="margin:0px">
+<form action="{{path('model22',{id:requests.id})}}" method="POST">
+	<input type="submit" value="Model 22" name="mod22" class="btn btn-info"></input></th></form></th>{% endif %}</tr></thead></table>{% endblock %}

@@ -17,7 +17,7 @@
 						<th style="width:300px">Name</th>
 						<td>{{ product.name }}</td>
 					</tr>
-
+ 
 					<tr>
 						<th>Product Type</th>
 						<td>{{ product.productType }}</td>
@@ -32,10 +32,7 @@
 						<td>{{ product.category }}</td>
 					</tr>
 
-					<tr>
-						<th>Available Items</th>
-						<td>{{ avail }}</td>
-					</tr>
+				
 
 					<tr>
 						<th>Quantity</th>
@@ -46,7 +43,9 @@
 			</table>
 
 			<a href="{{ path('product_index') }}" class="btn btn-primary" style="margin-left:25px;">back to list</a>
-
+<input type = "hidden" name = "productid" value="{{ product.id }}"/>
+<input type = "hidden" name = "stockid" value="{{ stock.id }}"/>
+<input type = "hidden" name = "avail" value="{{ avail }}"/>
 			<button type="submit" class="btn btn-success" title="Request">
 				<i class="fa fa-cart-arrow-down">Add to cart</i>
 			</button>
