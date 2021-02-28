@@ -69,7 +69,7 @@ class RequestsController extends AbstractController
 
         //   $this->denyAccessUnlessGranted('approver3');
         $em = $this->getDoctrine()->getManager();
-        $approvalLevel = 0;
+        $approvalLevel = 2;//this should be dynamic
         $user = $this->getUser();
         $permissionList = array();
         $userGroupsList = $user->getUserGroup();
@@ -77,30 +77,32 @@ class RequestsController extends AbstractController
         foreach ($userGroupsList as $group) {
             $tempPermissinList = $group->getPermission();
             foreach ($tempPermissinList  as $perm) {
-                $permissionList[] = $perm->getName();
+                $permissionList[] = $perm->getCode();
             }
         }
 
+        // var_dump($permissionList);
+        // die();
 
-        if (in_array("Approver3", $permissionList)) {
+        if (in_array("approver3", $permissionList)) {
             $approvalLevel = 3;
         }
 
-        if ($approvalLevel == 3) {
-            $orders = $em->getRepository(orders::class)->findBy(['request' => $request, 'serial' => null]);
-            foreach ($orders as $order) {
-                $quantity = $order->getApprovedQuantity();
-                for ($i = 1; $i <= $quantity; $i++) {
-                    $serial = new Serials();
-                    $serial->setOrders($order);
-                    $order->setSerial(1); //generated.
-                    $em->persist($serial);
-                }
-            }
-            // $itemApprovalStatus = 
-            $request->getApprovalLogs();
-            $em->flush();
-        }
+        // if ($approvalLevel == 3) {
+        //     $orders = $em->getRepository(orders::class)->findBy(['request' => $request, 'serial' => null]);
+        //     foreach ($orders as $order) {
+        //         $quantity = $order->getApprovedQuantity();
+        //         for ($i = 1; $i <= $quantity; $i++) {
+        //             $serial = new Serials();
+        //             $serial->setOrders($order);
+        //             $order->setSerial(1); //generated.
+        //             $em->persist($serial);
+        //         }
+        //     }
+        //     // $itemApprovalStatus = 
+        //     $request->getApprovalLogs();
+        //     $em->flush();
+        // }
 
         // dd($permissionList);
 
@@ -240,6 +242,10 @@ class RequestsController extends AbstractController
      */
     public function ApproveOrReject(Request $request, Requests $requests): Response
     {
+        echo "<pre>";
+    print_r($request->request);
+    echo "</pre>";
+        die();
         $approve = $request->request->get('approve');
         $reject = $request->request->get('reject');
 

@@ -26,7 +26,7 @@
 		<link
 		href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet">
 		{#
-						    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> #}
+								    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> #}
 		<link
 		href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet">
 		<!-- jQuery -->
@@ -199,142 +199,119 @@
 					<nav class="mt-2">
 						<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-          <li class="nav-item has-treeview ">
-            <a href="#" class="nav-link ">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                Manage Stock
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
+							<li class="nav-item has-treeview ">
+								<a href="#" class="nav-link ">
+									<i class="nav-icon fas fa-chart-pie"></i>
+									<p>
+										Manage Stock
+										<i class="right fas fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
 
-            <li class="nav-item">
-                <a href="{{ path('home') }}" class="nav-link ">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Home</p>
-                </a>
-              </li>
+									<li class="nav-item">
+										<a href="{{ path('home') }}" class="nav-link ">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Home</p>
+										</a>
+									</li>
 
-              <li class="nav-item">
-                <a href=" {{ path('college_index') }} " class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>College</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('department_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Department</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('store_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Store</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('categories_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Cateories</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('brand_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Brand</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('product_type_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Usage type</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('product_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Product Type</p>
-                </a>
-              </li>
-              {# <li class="nav-item">
-                <a href="{{ path('product_index2') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Product2</p>
-                </a>
-              </li> #}
-              {# <li class="nav-item">
-                <a href="{{ path('order_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Requests</p>
-                </a>
-              </li> #}
-              <li class="nav-item">
-                <a href="{{ path('requests_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Request status</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('stock_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>  Availabe stocks</p>
-                </a>
-              </li>
-              {# <li class="nav-item">
-                <a href="{{ path('balance') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Balance</p>
-                </a>
-              </li> #}
-              <li class="nav-item">
-                <a href="{{ path('transfer_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Transfer</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('company_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Company</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('home') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Reports</p>
-                </a>
-              </li>
-              
-            </ul>
-          </li>
+									<li class="nav-item">
+										<a href=" {{ path('college_index') }} " class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>College</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('department_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Department</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('store_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Store</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('categories_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Cateories</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('brand_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Brand</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('product_type_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Usage type</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('product_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Product Type</p>
+										</a>
+									</li>
+									{# <li class="nav-item">
+									                <a href="{{ path('product_index2') }}" class="nav-link">
+									                  <i class="far fa-circle nav-icon"></i>
+									                  <p>Product2</p>
+									                </a>
+									              </li> #}
+									{# <li class="nav-item">
+									                <a href="{{ path('order_index') }}" class="nav-link">
+									                  <i class="far fa-circle nav-icon"></i>
+									                  <p>Requests</p>
+									                </a>
+									              </li> #}
+									<li class="nav-item">
+										<a href="{{ path('requests_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Request status</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('stock_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>
+												Availabe stocks</p>
+										</a>
+									</li>
+									{# <li class="nav-item">
+									                <a href="{{ path('balance') }}" class="nav-link">
+									                  <i class="far fa-circle nav-icon"></i>
+									                  <p>Balance</p>
+									                </a>
+									              </li> #}
+									<li class="nav-item">
+										<a href="{{ path('transfer_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Transfer</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('company_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Company</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('home') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Reports</p>
+										</a>
+									</li>
 
-           <li class="nav-item has-treeview  ">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                Reports
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ path('product_report') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Report 1</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Report 2</p>
-                </a>
-              </li>
-            </ul>
-          </li>
+								</ul>
+							</li>
 
-							<li class="nav-item has-treeview menu-open">
+							<li class="nav-item has-treeview  ">
 								<a href="#" class="nav-link">
 									<i class="nav-icon fas fa-chart-pie"></i>
 									<p>
@@ -358,35 +335,59 @@
 								</ul>
 							</li>
 
-          <li class="nav-item has-treeview  ">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                User management
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ path('user_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Users</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('permission_index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Permisssions</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('user_group_index') }} " class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>User Groups</p>
-                </a>
-              </li>
-            </ul>
-          </li>
+							{# <li class="nav-item has-treeview menu-open">
+								<a href="#" class="nav-link">
+									<i class="nav-icon fas fa-chart-pie"></i>
+									<p>
+										Reports
+										<i class="right fas fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="{{ path('product_report') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Report 1</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="#" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Report 2</p>
+										</a>
+									</li>
+								</ul>
+							</li> #}
+
+							{# <li class="nav-item has-treeview  ">
+								<a href="#" class="nav-link">
+									<i class="nav-icon fas fa-chart-pie"></i>
+									<p>
+										User management
+										<i class="right fas fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="{{ path('user_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Users</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('permission_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Permisssions</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ path('user_group_index') }} " class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>User Groups</p>
+										</a>
+									</li>
+								</ul>
+							</li> #}
 
 							<li class="nav-item has-treeview menu-open">
 								<a href="#" class="nav-link">
@@ -443,17 +444,17 @@
 								<ol
 									class="breadcrumb float-sm-right">
 									{# 	<li class="breadcrumb-item">
-																			<a href="/">Home</a> 
-																			</li>#}
+																												<a href="/">Home</a> 
+																												</li>#}
 									<li class="breadcrumb-item">
 										<a href="/logout">Logout
 										</a>
 									</li>
 
 									{# {% block breadcrumb %}
-									
-									
-																			{% endblock %} #}
+																		
+																		
+																												{% endblock %} #}
 								</ol>
 							</div>
 						</div>
@@ -515,41 +516,38 @@
 			</footer>
 
 
-				<!-- Control Sidebar -->
-			{# <aside class="control-sidebar control-sidebar-dark">
-						    <!-- Control sidebar content goes here -->
-						  </aside> #}
-				<!-- /.control-sidebar -->
-			</div>
-			<!-- ./wrapper -->
-			<!-- Bootstrap 4 -->
-			<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-			<!-- jquery-validation -->
-			{# <script src="../../plugins/jquery-validation/jquery.validate.min.js"></script>
-						<script src="{{asset('assets/plugins/jquery-validation/additional-methods.min.js"></script> #}
-			<!-- AdminLTE App --><script src="{{asset('assets/dist/js/adminlte.min.js')}}"> </script>
-			<script src="{{asset('assets/plugins/select2/js/select2.full.min.js')}}"></script>
-			<script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
+			<!-- Control Sidebar -->
+		{# <aside class="control-sidebar control-sidebar-dark">
+								    <!-- Control sidebar content goes here -->
+								  </aside> #}
+			<!-- /.control-sidebar -->
+		</div>
+		<!-- ./wrapper -->
+		<!-- Bootstrap 4 -->
+		<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+		<!-- jquery-validation -->
+		{# <script src="../../plugins/jquery-validation/jquery.validate.min.js"></script>
+								<script src="{{asset('assets/plugins/jquery-validation/additional-methods.min.js"></script> #}
+		<!-- AdminLTE App --><script src="{{asset('assets/dist/js/adminlte.min.js')}}"> </script>
+		<script src="{{asset('assets/plugins/select2/js/select2.full.min.js')}}"></script>
+		<script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
 
-      	<script>
-	$(function () {
-    var url = window.location;
-    // for single sidebar menu
-    $('ul.nav-sidebar a').filter(function () {
-        return this.href == url;
-    }).addClass('active');
+		<script>
+			$(function () {
+var url = window.location;
+// for single sidebar menu
+$('ul.nav-sidebar a').filter(function () {
+return this.href == url;
+}).addClass('active');
 
-    // for sidebar menu and treeview
-    $('ul.nav-treeview a').filter(function () {
-        return this.href == url;
-    }).parentsUntil(".nav-sidebar > .nav-treeview")
-        .css({'display': 'block'})
-        .addClass(' ').prev('a')
-        .addClass('active');
+// for sidebar menu and treeview
+$('ul.nav-treeview a').filter(function () {
+return this.href == url;
+}).parentsUntil(".nav-sidebar > .nav-treeview").css({'display': 'block'}).addClass(' ').prev('a').addClass('active');
 });
-	</script>
-  
-			{% block javascripts %}{% endblock %}
+		</script>
+
+		{% block javascripts %}{% endblock %}
 
 	</body>
 

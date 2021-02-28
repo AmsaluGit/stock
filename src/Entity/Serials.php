@@ -31,9 +31,7 @@ class Serials
      * @ORM\ManyToOne(targetEntity=Orders::class, inversedBy="serials")
      */
     private $orders;
-
  
-
     public function getId(): ?int
     {
         return $this->id;

@@ -68,17 +68,19 @@
 				</table>
 
 				<hr>
-				<form action="{{ path('requests_approve', {'id': requests.id}) }}" method="POST">
+				<form action="{{ path('requests_approve', {'id': requests.id}) }}" method="POST" id="approve_form">
+
 					{% for order  in requests.orders %}
 
 						<table class="table">
-							<tbody>
+							<tbody id = "tbody">
 								{% set coloring = "badge-info" %}
 								<tr style="background-color:#e9ecef">
 									{# <th> #}
 									{# <span class="badge {{coloring}}">Product</span> #}
 									{# </th> #}
-										<td><strong style="float:left"> {{ order.stock.product | upper }}</strong>
+										<td>
+											<strong style="float:left"> {{ order.stock.product | upper }}</strong>
 									</td>
 									<th>
 										{# <span class="badge {{coloring}}">Product</span> #}
@@ -119,34 +121,31 @@
 									{% if order.itemApprovalStatuses | last %}
 										{% set currentQuantity = order.itemApprovalStatuses | last.allowedQuantity %}
 									{% endif %}
-									<td><input type="number" name="{{ order.id }}" value="{{ currentQuantity }}" min="1" max="{{ currentQuantity }}" {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
+									<td><input id="quantity" type="number" onchange="changeList()" name="{{ order.id }}" value="{{ currentQuantity }}" min="1" max="{{ currentQuantity }}" {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
 								</tr>
- 
+								{% if approvalLevel == 3 %}
+									{% set counter = 0 %}
+									{% for serial in 1..currentQuantity %}
+										{% set counter = counter + 1 %}
+										<tr id="{{counter}}">
+											<th>
+												<span class="badge {{coloring}}">Serial number</span>
+											</th>
+											<td><input type="text" name="serial_number[]" class="serial_number"></td>
 
-
-								 
-
-
-								 {% if approvalLevel == 3 %} 
-								{% for ser in order.serials %}
-									
- 
-	
-									<tr>
-										<th>
-											<span class="badge {{coloring}}">Serial number</span>
-										</th>
-										<td><input type="text" name="serial_{{ ser.id }}" value="{{ ser.serial }}"  {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
-
-										<th>
-											<span class="badge {{coloring}}">Model number</span>
-										</th>
-										<td><input type="text" name="model_{{ ser.id }}" value="{{ ser.model }}"  {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
-
-									</tr>
-								
-								{% endfor %}
-								{% endif %} 
+											<th>
+												<span class="badge {{coloring}}">Model number</span>
+											</th>
+											<td><input type="text" name="model_number[]" class="model_number"></td>
+											<td>
+												<p class="fa fa-window-close" onclick="removeList({{counter}})"></p>
+											</td>
+										</tr>
+									{% endfor %}
+									<script>
+										var normal_length = '{{ counter }}';
+									</script>
+								{% endif %}
 
 							</tbody>
 						</table/>
@@ -165,21 +164,121 @@
 </div></div><table class="table table-condensed" style="width:40%">
 <thead>
 	<tr>
-
-
 		<th>
 			<a href="{{ path('requests_index') }}" class="btn btn-primary">Back</a>
 		</th>
 		{% if not requests.closed %}
 			{# <th  style="margin:0px"> <input type="submit" value="Approve" name="approve" class="btn btn-success"></input></form></th> #}
-
-
 			<th style="margin:0px">
 				<form action="{{ path('requests_approve', {'id': requests.id}) }}" method="POST">
 					<input type="submit" value="Reject" name="reject" class="btn btn-warning"></input>
 			</th>
 		</form>
+		</th><th>{{ include('requests/_delete_form.html.twig') }}</th>{% else %}<th style="margin:0px">
 	</tr>
-</thead></th><th>{{ include('requests/_delete_form.html.twig') }}</th>{% else %}<th style="margin:0px">
+	
+</thead>
 <form action="{{path('model22',{id:requests.id})}}" method="POST">
-	<input type="submit" value="Model 22" name="mod22" class="btn btn-info"></input></th></form></th>{% endif %}</tr></thead></table>{% endblock %}
+	<input type="submit" value="Model 22" name="mod22" class="btn btn-info"></input></th></form></th>{% endif %}</tr></thead></table>{% endblock %}{% block javascripts %}
+<script type="text/javascript">
+	var list = {
+		total_unchanged: normal_length,
+		total: 0,
+		id_counter: 100
+	};
+
+	list.total = normal_length;
+	
+	function changeList()
+	{
+		var value = $("#quantity").val();
+
+		if(value <= list.total_unchanged && value > 0)
+		{
+			if(value != 0 && value > list.total){
+				var condition = value - list.total;
+				last = 0;
+				if(condition == 1)
+					last = 1;
+				else if(condition > 1)
+					last = condition;
+				
+				for(i = 0; i < last; i++){
+					addList(list.id_counter++);
+					list.total += 1;
+				}
+			}
+			else if(value !=0 && value < list.total){
+				var condition = value - list.total;
+				last = 0;
+				if( condition == -1)
+					last = 1;
+				else if( condition < -1)
+					last = -1 * condition;
+				
+
+				for(i = 0; i < last; i++){
+					var last_row = $("#tbody tr:last").attr("id");
+					removeList( last_row , 1);
+				}
+
+			}
+		}
+		else{
+			$("#quantity").val(list.total);
+		}
+	}
+
+
+	function removeList( num, $flag = 0 ) {
+		if(list.total>1){
+			var item = document.getElementById(num);
+			$value = $("#quantity").val();
+			if($flag == 0){
+				$value -= 1;
+				$("#quantity").val($value);
+			}	
+			item.remove();
+			list.total -= 1;
+		}
+	}
+
+	function addList(num)
+	{
+		var body = $("<tr id = '"+ num +"'></tr>");
+		var data = $("<th><span class='badge badge-info' > Serial number </span></th>"+
+					"<td><input type = 'text'> </td>"+
+					"<th><span class='badge badge-info' > Model number </span></th>"+
+					"<td><input type = 'text'> </td>"+
+					"<td><p class='fa fa-window-close' onclick = 'removeList("+ num +")'></p></td>"
+		);
+
+		body.append(data);
+		$("#tbody").append(body);
+	}
+
+	$("#approve_form").on("submit",function(e){
+		e.preventDefault();
+		$serial = document.getElementsByName("serial_number[]");
+		$model = document.getElementsByName("model_number[]");
+		$error = false;
+		for(i = 0; i<$serial.length; i++)
+		{
+			if($serial[i].value != "")
+			{
+				if($model[i].value == "")
+				{
+					$error = true;
+				}
+			}
+		}
+
+		if($error)
+			alert("you should fill the model number if you fill serial");
+		
+		if(!$error)
+			this.submit();
+	});
+	
+</script>
+{% endblock %}
