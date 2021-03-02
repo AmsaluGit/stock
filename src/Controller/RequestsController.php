@@ -151,6 +151,7 @@ class RequestsController extends AbstractController
 
     public function doApprovalOrReject($requests, $request, $approve, $reject, $approver)
     {
+        
         $em = $this->getDoctrine()->getManager();
         $orders = $em->getRepository(Orders::class)->findBy(['request' => $requests]);
         $modifiedQuantities = $request->all();
@@ -243,8 +244,8 @@ class RequestsController extends AbstractController
     public function ApproveOrReject(Request $request, Requests $requests): Response
     {
         echo "<pre>";
-    print_r($request->request);
-    echo "</pre>";
+        print_r($request->request);
+        echo "</pre>";
         die();
         $approve = $request->request->get('approve');
         $reject = $request->request->get('reject');

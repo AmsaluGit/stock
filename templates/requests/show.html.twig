@@ -73,7 +73,6 @@
 
 				<hr>
 				<form action="{{ path('requests_approve', {'id': requests.id}) }}" method="POST" id="approve_form">
-					{{ requests.orders|length }}
 					{% for order  in requests.orders %}
 
 						<table class="table">
@@ -125,7 +124,11 @@
 									{% if order.itemApprovalStatuses | last %}
 										{% set currentQuantity = order.itemApprovalStatuses | last.allowedQuantity %}
 									{% endif %}
-									<td><input id={{ "quantity" ~ order.id }} type="number" onchange="changeList({{'quantity' ~ order.id}}, {{order.id}})" name="{{ order.id }}" value="{{ currentQuantity }}" min="1" max="{{ currentQuantity }}" {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
+									{% if approvalLevel == 3 %}
+										<td><input id={{ "quantity" ~ order.id }} type="number" onchange="changeList({{'quantity' ~ order.id}}, {{order.id}})" name="{{ order.id }}" value="{{ currentQuantity }}" min="1" max="{{ currentQuantity }}" {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
+									{% else %}
+										<td><input id={{ "quantity" ~ order.id }} type="number" name="{{ order.id }}" value="{{ currentQuantity }}" min="1" max="{{ currentQuantity }}" {% if requests.closed %} disabled="disabled" {% else %} {% endif %}></td>
+									{% endif %}
 								</tr>
 								{% set normal_length = [] %}
 								{% if approvalLevel == 3 %}
@@ -146,18 +149,20 @@
 												<p class="fa fa-window-close" onclick="removeList({{counter}},{{'quantity' ~ order.id}},{{ order.id}})"></p>
 											</td>
 										</tr>
+										
+										<script>
+											normal_length[{{order.id}}] = {{counter}}; 
+										</script>
 									{% endfor %}
+										<p style="display:none" class="order_total" data="{{order.id}}">{{counter}}</p>
 								{% endif %}
-								<script>
-									normal_length[{{order.id}}] = {{counter}}; 
-								</script>
 							</tbody>
 						</table/>
-							<p style="display:none" class="order_total" data="{{order.id}}">{{counter}}</p>
 						<hr>
 					{% endfor %}
 					{% if  requests.closed is same as(null) %}
 						<th style="margin:0px">
+							<input type="hidden" value="Approve" name="approve"/>
 							<input type="submit" value="Approve" name="approve" class="btn btn-success">
 						</th>
 					</input>
