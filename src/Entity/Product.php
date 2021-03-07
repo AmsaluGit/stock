@@ -39,7 +39,10 @@ class Product
      */
     private $category;
 
-
+    /**
+     * @ORM\Column(type="string", length = 255)
+     */
+    private $canTransfered;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductType::class, inversedBy="products")
@@ -77,6 +80,18 @@ class Product
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCanTransfered(): ?string
+    {
+        return $this->canTransfered;
+    }
+
+    public function setCanTransfered(string $canTransfered): self
+    {
+        $this->canTransfered = $canTransfered;
 
         return $this;
     }

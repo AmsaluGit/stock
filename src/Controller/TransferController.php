@@ -20,8 +20,18 @@ class TransferController extends AbstractController
      */
     public function index(TransferRepository $transferRepository): Response
     {
+        $em = $this->getDoctrine()->getConnection();
+        $query = "select transfer.id, count(transfer.id) as total,to_id,concat(t.first_name,' ',t.middle_name,' ',t.last_name) as tname, concat(f.first_name,' ',f.middle_name,' ',f.last_name) as fname, from_id, transfer.date ".
+                 "from transfer ".
+                 "join user f on f.id = from_id ".
+                 "join user t on t.id = to_id ".
+                 "where status = 0 ".
+                 "group by from_id,to_id";
+        $data = $em->query($query)->fetchAll();
+
+
         return $this->render('transfer/index.html.twig', [
-            'transfers' => $transferRepository->findAll(),
+            'transfer' => $data
         ]);
     }
 

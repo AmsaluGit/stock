@@ -20,7 +20,27 @@ class Transfer
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transfers")
      */
-    private $toId;
+    private $to;
+
+     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transfers")
+     */
+    private $from;
+
+     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transfers")
+     */
+    private $approvedBy;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $date;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity=Serials::class, inversedBy="Transfer")
+     */
+    private $serial;
 
     /**
      * @ORM\Column(type="smallint")
@@ -32,14 +52,38 @@ class Transfer
         return $this->id;
     }
 
-    public function getToId(): ?User
+    public function getTo(): ?User
     {
-        return $this->toId;
+        return $this->to;
     }
 
-    public function setToId(?User $toId): self
+    public function setTo(?User $to): self
     {
-        $this->toId = $toId;
+        $this->to = $to;
+
+        return $this;
+    }
+
+    public function getFrom(): ?User
+    {
+        return $this->from;
+    }
+
+    public function setFrom(?User $from): self
+    {
+        $this->from = $from;
+
+        return $this;
+    }
+
+    public function getApprover(): ?User
+    {
+        return $this->approver;
+    }
+
+    public function setApprover(?User $approver): self
+    {
+        $this->approver = $approver;
 
         return $this;
     }
@@ -52,6 +96,30 @@ class Transfer
     public function setStatus(int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getSerial(): ?string
+    {
+        return $this->serial;
+    }
+
+    public function setSerial(?Serials $serial): self
+    {
+        $this->serial = $serial;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

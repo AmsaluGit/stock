@@ -273,9 +273,17 @@
 									<li class="nav-item">
 										<a href="{{ path('requests_index') }}" class="nav-link">
 											<i class="far fa-circle nav-icon"></i>
-											<p>Request status</p>
+											<p>Issued Requests</p>
 										</a>
 									</li>
+
+									<li class="nav-item">
+										<a href="{{ path('requests_index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Transfer Requests</p>
+										</a>
+									</li>
+									
 									<li class="nav-item">
 										<a href="{{ path('stock_index') }}" class="nav-link">
 											<i class="far fa-circle nav-icon"></i>
@@ -289,6 +297,20 @@
 									                  <p>Balance</p>
 									                </a>
 									              </li> #}
+									<li class="nav-item">
+										<a href="{{ path('profile') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>My Items</p>
+										</a>
+									</li>
+
+									<li class="nav-item">
+										<a href="{{ path('mtransReq') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>My Transfer Requests</p>
+										</a>
+									</li>
+									
 									<li class="nav-item">
 										<a href="{{ path('transfer_index') }}" class="nav-link">
 											<i class="far fa-circle nav-icon"></i>

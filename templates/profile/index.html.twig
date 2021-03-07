@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile!
+{% endblock %}
+
+{% block body %}
+
+	<div class="container-fluid card">
+		<div class="row">
+			<div class="col-sm-12">
+                <table class="table table-stripped" style="width:100%" id="item_table">
+                    <thead>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Model</th>
+                        <th>Serial Number</th>
+                        <th>Model Number</th>
+                        <th>Requested Date</th>
+                        <th>actions</th>
+                    </thead>
+                    <tbody>
+					<script type="text/javascript"> 
+                        $allItems = [];
+					</script>
+                        {% for item in item %}
+                        <script type="text/javascript">
+                            $allItems.push({{ item.id }});
+                        </script>
+                            <tr>
+                                <td><input type="checkbox" value="{{ item.id }}">
+                                <td>{{item.name}}</td>
+                                <td>{{item.model}}</td>
+                                <td>{{item.serial}}</td>
+                                <td>{{item.model_number}}</td>
+                                <td>{{item.requestedDate|date("Y-m-d")}}</td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button id="submit" class="btn btn-primary" style="display:none;margin-bottom: 30px;">Next >></button>
+            </div>
+		</div>
+	</div>
+    <form id="secondForm" action="{{path('transItem')}}" method="post">
+        <input type="hidden" name="checked_list[]" id="selected_list">
+    </form>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{asset('assets/plugins/datatables/datatables.min.js')}}"></script>
+    <script>
+        $(document).ready(function(){
+            $('input:checkbox').prop('checked', false);        
+        });
+
+        $("#item_table").dataTable();
+        $items = [];
+        
+        $("input[type='checkbox']").change(function () {
+            if (this.checked) {
+                $items.push(parseInt($(this).val()));
+            } else {
+                index = $items.indexOf($(this).val());
+                if (index > -2) {
+                    $items.splice(index, 1);
+                }
+                
+            }
+
+            if ($items.length > 0) {
+                $("#submit").css("display", "block");
+            } else {
+                $("#submit").css("display", "none");
+            }
+        });
+    
+    $("#submit").on("click", function (e) {
+        e.preventDefault();
+        count = $items.length;
+        $check = 1;
+        for ($i = 0; $i < count; $i ++) {
+            if (!$allItems.includes($items[$i])) {
+                $check = 0;
+            }
+        }
+
+        if($check)
+        {
+            $("#selected_list").val($items);
+            $("#secondForm").submit();
+        } 
+       });
+    </script>
+{% endblock %}

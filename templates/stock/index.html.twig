@@ -17,8 +17,8 @@
 
 	{% if  carts is defined and carts is not same as(null) %}
 		{# style="background-color:#17a2b8;" #}
-		<div class="container conatainer-fluid p-2 col-11" style="border: 5px solid #007bff;">
-			<table class="table  center table-bordered" style="background:#fff;width:100%">
+		<div class=" conatainer-fluid p-2 col-11" style="border: 5px solid #007bff;">
+			<table class="table  center table-bordered table-responsive" style="background:#fff;width:100%">
 				<thead>
 					<th>#</th>
 					<th>Product</th>
@@ -144,7 +144,7 @@
 										{{ form_end(form) }}
 									</div>
 
-									<table class="table table-hover">
+									<table class="table table-hover table-responsive">
 										<thead class="thead-light">
 											<tr>
 												<th>#</th>
@@ -218,8 +218,6 @@
 														<a href="{{ path('more', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
 															More
 														</a>
-
-
 													</td>
 												</tr>
 											{% else %}
@@ -250,38 +248,43 @@
 		</form>
 	{% endblock %}
 	{% block javascripts %}
+
 	<script type="text/javascript">
+	 	$(document).ready(function(){
+            $('input:checkbox').prop('checked', false);        
+        });
 		$items = [];
 
 $("input[type='checkbox']").change(function () {
-if (this.checked) {
-$items.push($(this).val());
-} else {
-index = $items.indexOf($(this).val());
-if (index > -1) {
-$items.splice(index, 1);
-}
-}
+	if (this.checked) {
+		$items.push($(this).val());
+	} else {
+		index = $items.indexOf($(this).val());
+		if (index > -2) {
+		$items.splice(index, 1);
+		}
+	}
 
-if ($items.length > 0) {
-$("#submit").css("display", "block");
-} else {
-$("#submit").css("display", "none");
-}
-});
+	if ($items.length > 0) {
+		$("#submit").css("display", "block");
+	} 
+	else {
+		$("#submit").css("display", "none");
+	}
+	});
 
-$("#submit").on("click", function (e) {
-e.preventDefault();
-count = $items.length;
-$check = 1;
-for ($i = 0; $i < count; $i ++) {
-if (!$allItems.includes($items[$i])) {
-$check = 0;
-}
-}
+	$("#submit").on("click", function (e) {
+		e.preventDefault();
+		count = $items.length;
+		$check = 1;
+		for ($i = 0; $i < count; $i ++) {
+			if (!$allItems.includes($items[$i])) {
+				$check = 0;
+			}
+		}
 
-$("#selected_list").val($items);
-$("#secondForm").submit();
-});
+		$("#selected_list").val($items);
+		$("#secondForm").submit();
+	});
 	</script>
 	{% endblock%}

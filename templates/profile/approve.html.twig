@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile!
+{% endblock %}
+
+{% block body %}
+
+	<div class="container-fluid" style="padding:15px;">
+		<div class="row">
+			<div class="col-sm-12 card">
+                <p><b>Receiver </b></p>
+                    <p class="list-group-item">{{person.firstName ~ " " ~ person.middleName ~ " " ~ person.lastName}} </p><br>
+                <p><b>Items List</b></p>
+                <table class="table table-stripped" style="width:100%" id="item_table">
+                    <thead>
+                        <th>Name</th>
+                        <th>Model</th>
+                        <th>Serial Number</th>
+                        <th>Model Number</th>
+                    </thead>
+                    <tbody>
+                        {% for item in item %}
+                            <tr>
+                                <td>{{item.name}}</td>
+                                <td>{{item.model}}</td>
+                                <td>{{item.serial}}</td>
+                                <td>{{item.model_number}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a class="btn btn-primary" href="/appTr">Approve Transfer</a>
+		</div>
+	</div>
+{% endblock %}

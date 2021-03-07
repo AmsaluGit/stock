@@ -3,21 +3,23 @@
 {% block title %}Transfer index{% endblock %}
 
 {% block body %}
-    <h1>Transfer index</h1>
-
-    <table class="table">
+    <table class="table table-stripped bg-white">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Status</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Total Items</th>
+                <th>Requested Date</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for transfer in transfers %}
+        {% for transfer in transfer %}
             <tr>
-                <td>{{ transfer.id }}</td>
-                <td>{{ transfer.status }}</td>
+                <td>{{ transfer.fname }}</td>
+                <td>{{ transfer.tname }}</td>
+                <td>{{ transfer.total }}
+                <td>{{ transfer.date }}
                 <td>
                     <a href="{{ path('transfer_show', {'id': transfer.id}) }}">show</a>
                     <a href="{{ path('transfer_edit', {'id': transfer.id}) }}">edit</a>
@@ -31,5 +33,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('transfer_new') }}">Create new</a>
 {% endblock %}

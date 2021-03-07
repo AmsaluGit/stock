@@ -19,6 +19,30 @@ class TransferRepository extends ServiceEntityRepository
         parent::__construct($registry, Transfer::class);
     }
 
+    public function getTransferRequests($id)
+    {
+        return  $this->createQueryBuilder('t')
+                ->select("t.id", "p.name", "u.firstName as fname", "u.middleName as mname", "u.lastName lname", "appBy.firstName", "appBy.middleName", "appBy.lastName", "s.model", "s.serial", 't.date', 't.status')
+                ->innerJoin("t.serial",'s')
+                ->innerJoin('s.orders',"o")
+                ->innerJoin('o.request','r')
+                ->innerJoin('o.stock', 'stock')
+                ->innerJoin('stock.product','p')
+                ->innerJoin('t.to', 'u')
+                ->LeftJoin('t.approvedBy','appBy')
+                ->where("u.id = :id")
+                ->setParameter("id",$id)  
+                ->getQuery()
+                ->getArrayResult()
+            ;
+    }
+
+    public function findTransferRequests()
+    {
+        // return  $this->createQueryBuilder('t')
+        //              ->
+    }
+
     // /**
     //  * @return Transfer[] Returns an array of Transfer objects
     //  */

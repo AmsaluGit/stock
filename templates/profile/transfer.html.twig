@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile!
+{% endblock %}
+
+{% block body %}
+
+	<div class="container-fluid" style="padding:15px;">
+		<div class="row">
+			<div class="col-sm-7 card">
+                <h5>Items</h5>
+                <table class="table table-stripped" style="width:100%" id="item_table">
+                    <thead>
+                        <th>Name</th>
+                        <th>Model</th>
+                        <th>Serial Number</th>
+                        <th>Model Number</th>
+                    </thead>
+                    <tbody>
+                        {% for item in item %}
+                            <tr>
+                                <td>{{item.name}}</td>
+                                <td>{{item.model}}</td>
+                                <td>{{item.serial}}</td>
+                                <td>{{item.model_number}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col"></div>
+            <div class="col-sm-4 card">
+                <form action="find" method="post">
+                    <div class="form-group">
+                        <label>Enter email</label>
+                        <input type="email" class="form-control" name="email">
+                    </div>
+                    <input type="submit" value="search" class="btn btn-primary">
+                </form>
+                <br>
+                <hr>
+                {% if person|length > 0 %}
+                <h5>User List</h5>
+                    <ul class="list-group" style="padding-bottom: 15px;">
+                    {% for per in person %}
+                        <li class="list-group-item"><a href="/toapp/{{per.id}}">{{per.firstName ~ " " ~ per.middleName ~ " " ~ per.lastName}} </a></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+		</div>
+	</div>
+    <form id="secondForm" action="{{path('transfer')}}" method="post">
+        <input type="hidden" name="checked_list[]" id="selected_list">
+    </form>
+{% endblock %}

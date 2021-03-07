@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile!
+{% endblock %}
+
+{% block body %}
+
+	<div class="container-fluid card">
+		<div class="row">
+			<div class="col-sm-12">
+                <table class="table table-stripped" style="width:100%" id="item_table">
+                    <thead>
+                        <th>Name</th>
+                        <th>Transfered To</th>
+                        <th>Model</th>
+                        <th>Serial Number</th>
+                        <th>Requested Date</th>
+                        <th>status</th>
+                        <th>Approved By</th>
+                    </thead>
+                    <tbody>
+                        {% for item in item %}
+                            <tr>
+                                <td>{{item.name}}</td>
+                                <td>{{item.fname}} {{item.mname}} {{ item.lname }}</td>
+                                <td>{{item.model}}</td>
+                                <td>{{item.serial}}</td>
+                                <td>{{item.date|date("Y-m-d")}}</td>
+                                <td>
+                                    {% if item.status == 0 %}
+                                        <span class="badge badge-primary">Not approved</span>
+                                    {% else %}
+                                        <span class="badge badge-success">Approved</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{item.firstName}} {{item.middleName}} {{ item.lastName }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button id="submit" class="btn btn-primary" style="display:none;margin-bottom: 30px;">Next >></button>
+            </div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{asset('assets/plugins/datatables/datatables.min.js')}}"></script>
+    <script>
+        $("#item_table").dataTable();
+    </script>
+{% endblock %}
