@@ -17,16 +17,6 @@ class Transfer
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transfers")
-     */
-    private $to;
-
-     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transfers")
-     */
-    private $from;
-
      /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transfers")
      */
@@ -36,16 +26,16 @@ class Transfer
      * @ORM\Column(type="date", nullable=true)
      */
     private $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=TransferedItemsGroup::class, inversedBy="transfers")
+     */
+    private $group;
     
     /**
      * @ORM\ManyToOne(targetEntity=Serials::class, inversedBy="Transfer")
      */
     private $serial;
-
-    /**
-     * @ORM\Column(type="smallint")
-     */
-    private $status;
 
     public function getId(): ?int
     {
@@ -60,6 +50,18 @@ class Transfer
     public function setTo(?User $to): self
     {
         $this->to = $to;
+
+        return $this;
+    }
+
+    public function getGroup(): ?TransferedItemsGroup
+    {
+        return $this->group;
+    }
+
+    public function setGroup(?TransferedItemsGroup $group): self
+    {
+        $this->group = $group;
 
         return $this;
     }
@@ -84,18 +86,6 @@ class Transfer
     public function setApprover(?User $approver): self
     {
         $this->approver = $approver;
-
-        return $this;
-    }
-
-    public function getStatus(): ?int
-    {
-        return $this->status;
-    }
-
-    public function setStatus(int $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }

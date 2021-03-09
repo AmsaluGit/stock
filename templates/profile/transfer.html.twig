@@ -32,7 +32,7 @@
             <div class="col-sm-4 card">
                 <form action="find" method="post">
                     <div class="form-group">
-                        <label>Enter email</label>
+                        <p>Enter email</p>
                         <input type="email" class="form-control" name="email">
                     </div>
                     <input type="submit" value="search" class="btn btn-primary">
@@ -40,7 +40,7 @@
                 <br>
                 <hr>
                 {% if person|length > 0 %}
-                <h5>User List</h5>
+                <p>Search Result</p>
                     <ul class="list-group" style="padding-bottom: 15px;">
                     {% for per in person %}
                         <li class="list-group-item"><a href="/toapp/{{per.id}}">{{per.firstName ~ " " ~ per.middleName ~ " " ~ per.lastName}} </a></li>
@@ -50,7 +50,4 @@
             </div>
 		</div>
 	</div>
-    <form id="secondForm" action="{{path('transfer')}}" method="post">
-        <input type="hidden" name="checked_list[]" id="selected_list">
-    </form>
 {% endblock %}

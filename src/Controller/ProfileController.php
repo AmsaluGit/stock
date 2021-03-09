@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Order;
 use App\Entity\Transfer;
 use App\Entity\Serials;
+use App\Entity\TransferedItemsGroup;
 use App\Repository\SerialsRepository;
 use App\Repository\TransferRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -121,17 +122,26 @@ class ProfileController extends AbstractController
         
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->find($person);
-        
+        $time = time()*2/1000;
+        $time = (int) $time;
+
+        $tg = new TransferedItemsGroup();
+        $tg->setFrom($this->getUser());
+        $tg->setTo($user);
+        $tg->setGroupId($time);
+        $tg->setStatus(0);
+        $tg->setDate(new \DateTime());
+        $em->persist($tg);
+        $em->flush();
+
         foreach($transfer_items as $key => $value)
         {
             $em = $this->getDoctrine()->getManager();
             $transfer = new Transfer();
-
-            $transfer->setFrom($this->getUser());
-            $transfer->setTo($user);
+            $transfer->setGroup($tg);
             $serial = $em->getRepository(Serials::class)->find($value);
             $transfer->setSerial($serial);
-            $transfer->setStatus(0);
+            $transfer->setDate(new \DateTime());
             $serial->setTransferRequest(1);
             $em->persist($transfer);
             $em->persist($serial);
@@ -183,6 +193,31 @@ class ProfileController extends AbstractController
     {
         $requests = $transferRepository->getTransferRequests($this->getUser()->getId());
         return $this->render('profile/transferRequests.html.twig', [
+            'item' => $requests,
+        ]);
+    }
+
+    /**
+     * @Route("/rtransReq", name="rtransReq")
+     */
+    public function transfer_requests_receiver(TransferRepository $transferRepository)
+    {
+        $id = $this->getUser()->getId();
+        // $em = $this->getDoctrine()->getConnection();
+        // $query = "select transfer.id, count(transfer.id) as total, concat(t.first_name,' ',t.middle_name,' ',t.last_name) as tname, concat(f.first_name,' ',f.middle_name,' ',f.last_name) as fname, from_id, transfer.date ".
+        //          "from transfer ".
+        //          "join user f on f.id = from_id ".
+        //          "join user t on t.id = to_id ".
+        //          "where status = 0 ".
+        //          "and t.id = $id ".
+        //          "group by group_id";
+        // $data = $em->query($query)->fetchAll();
+
+        // return $this->render('transfer/index.html.twig', [
+        //     'transfer' => $data
+        // ]);
+        $requests = $transferRepository->getTransferRequestsReceiver($this->getUser()->getId());
+        return $this->render('profile/incomingTransfers.html.twig', [
             'item' => $requests,
         ]);
     }

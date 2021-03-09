@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+		<link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}">
+	<style>
+		.logo{
+			margin: 10px;
+			height:100px;
+			width: 100px;
+		}
+		.person{
+			margin-top: 27px;
+			padding-left: 70px;
+		}
+		thead{
+			text-align: center;
+		}
+
+		td{
+			padding: 10px;
+		}
+
+		.container{
+			background: #fff;
+		}
+
+		.span{
+			float: left;
+			margin-left: 10px;
+		}
+
+		.bm-0{
+			border-bottom: 0px;
+		}
+
+		.bt-0{
+			border-top: 0px;
+		}
+		
+		span{
+			float: left;
+		}
+	</style>
+</head>
+<body onload="window.print()">
+	<div class="container">
+		<div class="row">
+            <div class="col-md-6">
+				<img class="logo" src="{{asset('assets/images/logo.png')}}">
+				 Public Body: Bule Hora University
+			</div>
+			<div class="col-md-6">
+				የመንግስት ግዥና ንብረት አስተዳደር ወኪል<br>
+				Govenment Procuremnt & property administration Agency<br>
+				የቋሚ ንብረት ማስተላለፊያ ቅጽ<br>
+				<b> FIXED ASSETS TRANSFER FORMAT(FAT)</b>
+			</div>
+		</div>
+		
+		<div class="row">
+            <div class="col-md-6 person" >
+				(2) ንብረቱ የተላለፈለት ተጠቃሚ<br>
+				ሰም<br> 
+				Name <u> {{group.tfname}} {{group.tmname}} {{group.tlname}}</u><br>
+				ቅጥር ግቢ <u>ቡሌ ሆራ ዪኒቨርስቲ</u><br>
+				Premises <u>Bule Hora University</u><br>
+				ዋና ክፍል<br>
+				Department<br> 
+				ህንጻ ቁጥር <br>
+				Building<br>
+				ቢሮ ቁጥር <br>
+				Room No<br>
+				የተጠቃሚ ቁጥር <br>
+				User No
+			</div>
+			<div class="col-md-6 person">
+				(1) ንብረቱ ያስተላለፈው ተጠቃሚ<br>
+				ሰም<br> 
+				Name <u>{{group.firstName}} {{group.middleName}} {{group.lastName}}</u><br>
+				ቅጥር ግቢ <u>ቡሌ ሆራ ዪኒቨርስቲ</u><br>
+				Premises <u>Bule Hora University</u><br>
+				ዋና ክፍል<br>
+				Department<br> 
+				ህንጻ ቁጥር <br>
+				Building<br>
+				ቢሮ ቁጥር <br>
+				Room No<br>
+				የተጠቃሚ ቁጥር <br>
+				User No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<table width="100%" border="1">
+					<thead>
+						<tr>
+							<th class="bm-0">
+								ቁጥር <br>
+								No.
+							</th>
+							<th class="bm-0">
+								የእቃው ዝርዝር<br>
+								Item Description
+							</th>
+							<th class="bm-0">
+								መለያ ቁጥር<br>
+								PIN(personal Identification number)
+							</th>
+							
+							<th class="bm-0">
+								የፋብሪካ ቁጥር<br>
+								Serial No.
+							</th>
+							<th class="bm-0" colspan="2">
+								ማውጫ ሰነድ<br>
+								
+							</th>
+							<th class="bm-0" >
+								መለኪያ
+							</th> 
+							<th class="bm-0">ዋጋ<br>Price</th>
+						</tr>
+						<tr>
+							<th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th class="bt-0"></th><th>Model No.</th><th>Date</th>
+							<th class="bt-0"></th><th class="bt-0"></th>
+						</tr>
+					</thead>
+					<tbody>
+					{% set count = 1 %}
+					{% for item in items %}
+						<tr>
+							<td>{{ count }}</td>
+							<td>{{ item.name }}</td>
+							<td></td>
+							<td>{{ item.serial }}</td>
+							<td>1</td>
+							<td>1</td>
+							<td>{{ item.uom }}</td>
+							<td>{{ item.price }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				<p> የተላለፈበት ምክንያት /Reason for transfer of asset <u>         </u></p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<center>
+					ያስተላላፊ ስምና ፊርማ<br>
+					signature of transferor<br><br>
+					_____________________________
+				</center>
+			</div>
+			<div class="col-md-3">
+				<center>
+					የተቀባይ ስምና ፊርማ<br>
+					signature of receiver<br><br>
+					_____________________________
+				</center>
+			</div>
+			<div class="col-md-1">
+				<center>
+					ታዛቢ<br>
+					Observer<br><br>
+					______________
+				</center>
+			</div>
+			<div class="col-md-2">
+				<center>
+					የን/አስ ሃላፊ<br>
+					Head if FAMU<br><br>
+					____________
+				</center>
+			</div>
+			<div class="col-md-3">
+				<center>
+					የተላለፈበት ቀን _____________<br><br>
+					Date of Transfer _____________
+				</center>
+			</div>
+		</div>
+		<br>
+		<p>ይህ ቅጽ በአምስት ቅጂ ተዘጋጅቶ 1ኛው ለንብረት አስተዳደር 2ኛው ለተ<span style="color:red">ለተቀባይ </span> 3ኛው ለአስተላላፊው 4ኛው ለንብረት ቀጥጥር ክፍል 5ኛው ለቋሚ ንብረት ግምጃ ቤት ። This form is in five copies. 
+			The 1st copy to FAMU 2nd copy to the receipent 3rd copy to transferor 4<sup>th</sup> copy to asset store 5<sup>th</sup> copy to Property Central Office
+			ንብረቶቹ ሲጎዱ /ሲበላሹ ለንብረት አስተዳደር ክፍል ያመልክቱ። በእጃችን የሚገኙ የመንግስት ንብረቶችን በአግባቡ እንያዝ እንጠቀም።
+		</p>
+	</div>
+</body>
+<script type="text/javascript">
+// window.onload(function(){
+// 	window.print();
+// });
+</script>
+</html>
