@@ -69,7 +69,7 @@ class RequestsController extends AbstractController
 
         //   $this->denyAccessUnlessGranted('approver3');
         $em = $this->getDoctrine()->getManager();
-        $approvalLevel = 2;//this should be dynamic
+        $approvalLevel = 0;//this should be dynamic
         $user = $this->getUser();
         $permissionList = array();
         $userGroupsList = $user->getUserGroup();
@@ -84,7 +84,7 @@ class RequestsController extends AbstractController
         // var_dump($permissionList);
         // die();
 
-        if (in_array("approver3", $permissionList)) {
+        if (in_array("Approver3", $permissionList)) {
             $approvalLevel = 3;
         }
 
@@ -242,10 +242,10 @@ class RequestsController extends AbstractController
      */
     public function ApproveOrReject(Request $request, Requests $requests): Response
     {
-        echo "<pre>";
-    print_r($request->request);
-    echo "</pre>";
-        die();
+    //     echo "<pre>";
+    // print_r($request->request);
+    // echo "</pre>";
+    //     die();
         $approve = $request->request->get('approve');
         $reject = $request->request->get('reject');
 
