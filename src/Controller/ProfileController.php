@@ -20,7 +20,9 @@ class ProfileController extends AbstractController
      */
     public function index(SerialsRepository $serialRepository)
     {
+        
         $serials = $serialRepository->getSerial($this->getUser()->getId());
+        // dd($serials);
         return $this->render('profile/index.html.twig', [
             'item' => $serials
         ]);
