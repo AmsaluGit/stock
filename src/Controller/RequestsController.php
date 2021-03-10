@@ -77,14 +77,14 @@ class RequestsController extends AbstractController
         foreach ($userGroupsList as $group) {
             $tempPermissinList = $group->getPermission();
             foreach ($tempPermissinList  as $perm) {
-                $permissionList[] = $perm->getCode();
+                $permissionList[] = strtoupper($perm->getCode());
             }
         }
 
         // var_dump($permissionList);
         // die();
 
-        if (in_array("Approver3", $permissionList)) {
+        if (in_array(strtoupper("Approver3"), $permissionList)) {
             $approvalLevel = 3;
         }
 
@@ -155,7 +155,7 @@ class RequestsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $orders = $em->getRepository(Orders::class)->findBy(['request' => $requests]);
         $modifiedQuantities = $request->all();
-        // dd($modifiedQuantities);
+        //  dd($modifiedQuantities);
         foreach ($approver as $key => $level) {
 
             $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => $level]);
@@ -195,41 +195,62 @@ class RequestsController extends AbstractController
                 $em->flush();
 
 
-                foreach ($orders as $key => $value) {
-                    $itemApprovalStatus = new ItemApprovalStatus();
-                    $itemApprovalStatus->setApprovalLog($appLog);
-                    if ($level == 2) {
-                        $value->setApprovedQuantity($modifiedQuantities[$value->getId()]);
+                foreach ($orders as $order) {
+                    $itemApprovalStatus = $em->getRepository(ItemApprovalStatus::class)->findOneBy(['approvalLog'=>$appLog,'orders'=>$order]);
+                    if(!$itemApprovalStatus)
+                    {
+                        $itemApprovalStatus = new ItemApprovalStatus();
                     }
+                   
+                    $itemApprovalStatus->setApprovalLog($appLog);
+                   /* if ($level == 2) {
+                        $order->setApprovedQuantity($modifiedQuantities[$order->getId()]);
+                    }*/
                     if ($level == 3) {
                         foreach ($modifiedQuantities as $k => $v) {
-                            /*$post = explode("_", $k);
+                            $post = explode("_", $k);
                             
-                            if (sizeof($post) == 2) {
+                            if (sizeof($post) == 2 && ($post[0] == "serial" || $post[0] == "model") && $post[1]==$order->getId() ) {
 
-                                $serial = $em->getRepository(Serials::class)->find($post[1]);
+                               
 
-                                dd($serial);
+                                // dd($serial);
                                 if ($post[0] == "serial") {
-                                    $serial->setSerial($v);  
+                                    foreach ($v as $key2 => $ser) {
+                                        $serialObj = $em->getRepository(Serials::class)->findBy(['serial'=>$ser]);
+                                        if(!$serialObj)
+                                        {
+                                            $serialObj =  new Serials();
+                                            $serialObj->setSerial($ser); 
+                                            $serialObj->setOrders($order);
+                                            $serialObj->setModel($modifiedQuantities['model_'.$order->getId()][$key2]);
+                                            $em->persist($serialObj);
+                                            $em->flush();
+                                        }
+
+                                    }
+                                   
                                 }
                                 else
                                 {
-                                    $serial->setModel($v);  
+                                   // $serial->setModel($v);  
                                 }
-                            }*/
+                               // $serial->setOrders($order);
+                               
+                              
+                            }
                         }
-                        /*if (isset($modifiedQuantities["serial_" . $value->getId()])) {
+                        /*if (isset($modifiedQuantities["serial_" . $order->getId()])) {
 
-                            $value->setSerial($modifiedQuantities["serial_" . $value->getId()]);
+                            $order->setSerial($modifiedQuantities["serial_" . $order->getId()]);
                         }*/
 
-                        $value->setDelivered(1);
-                        // $value->setApprovedQuantity($modifiedQuantities[$value->getId()]);
+                        $order->setDelivered(1);
+                        // $order->setApprovedQuantity($modifiedQuantities[$order->getId()]);
 
                     }
-                    $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$value->getId()]);
-                    $itemApprovalStatus->setOrders($value);
+                    $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$order->getId()]);
+                    $itemApprovalStatus->setOrders($order);
 
                     $em->persist($itemApprovalStatus);
                 }
@@ -255,11 +276,11 @@ class RequestsController extends AbstractController
             $temp = $ug->getPermission();
             foreach ($temp  as $key => $perm) {
                 // $permissions[] = $perm;
-                if ($perm->getCode() == "approver1") {
+                if (strtoupper($perm->getCode()) == strtoupper("approver1")) {
                     $approver[] = 1;
-                } elseif ($perm->getCode() == "approver2") {
+                } elseif (strtoupper($perm->getCode()) == strtoupper("approver2")) {
                     $approver[] = 2;
-                } elseif ($perm->getCode() == "approver3") {
+                } elseif (strtoupper($perm->getCode()) == strtoupper("approver3")) {
                     $approver[] = 3;
                 } else {
                     //ignore

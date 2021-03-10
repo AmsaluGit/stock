@@ -126,7 +126,7 @@
 							</tr>
 						</thead>
 						<tbody>
-						{% for order in requests.orders %}
+						 {# {% for order in requests.orders %}
 							
 						
 							<tr>
@@ -145,7 +145,35 @@
 								
 								 
 							</tr>
-							{% endfor %}
+							{% endfor %}  #}
+
+
+						{% for order in requests.orders %}
+							
+						{% for ser in order.serials %}
+								<tr>
+								<td>{{loop.index}}</td>
+								<td>{{ser.orders.stock.product.name}}</td>
+								<td>{{ser.model}}</td>
+								<td>{{ ser.serial }}</td>
+								<td> </td>
+								<td> </td>
+								{% set quantity = order.itemApprovalStatuses | last.allowedQuantity %}
+								<td>{{ 1 }}</td>
+								<td>{{ser.orders.unitprice}}</td>
+								<td>{{ ser.orders.unitprice * 1 }}</td>
+								<td></td>
+								{% set total = total +  ser.orders.unitprice * 1  %}
+								
+								 
+							</tr>
+						{% endfor %}
+						
+							{% endfor %} 
+
+
+
+
 							<tr>
 								<td colspan="8" style="margin-left:200px "><strong>ድምር</strong></td>
 								<td><strong>{{total}}</strong></td>
