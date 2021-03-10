@@ -135,7 +135,7 @@
 									{% set counter = 0 %}
 
 
-									{% if order.serial is not same as(null) %}
+									{% if order.serials is same as(null) %}
 										{% for serial in 1..currentQuantity %}
 											{% set counter = counter + 1 %}
 											<tr id="{{order.id ~ counter}}">
