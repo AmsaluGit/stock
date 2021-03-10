@@ -3,24 +3,67 @@
 {% block title %}Transfer{% endblock %}
 
 {% block body %}
-    <h1>Transfer</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ transfer.id }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ transfer.status }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="container card">
+        <div class="row">
+            <div class="col-sm-10">
+                <table class="table table-bordered">
+                    <tr>
+                        <td width="200px">Transfered From</td>
+                        <td>{{group.firstName}} {{group.middleName}} {{group.lastName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Transfer Date</td>
+                        <td>{{group.date| date("Y-m-d")}}</td>
+                    </tr>
+                </table>
+                <br>
 
-    <a href="{{ path('transfer_index') }}">back to list</a>
+                <center><h5>ITEMS LIST</h5></center>
 
-    <a href="{{ path('transfer_edit', {'id': transfer.id}) }}">edit</a>
+                <table class="table table-bordered">
+                    <thead>
+                        <th>Product Name</th>
+                        <th>Serial Number</th>
+                        <th>Model Number</th>
+                    </thead>
+                    <tbody>
+                        {% for tr in transfer %}
+                            <tr>
+                                <td>{{ tr.name }}</td>
+                                <td>{{ tr.serial }}</td>
+                                <td>{{ tr.model }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if app.user.id != group.sender_id %}
+                <form action="accept" method="post" style="padding:25px;">
+                    <input type="hidden" value="{{group.id}}" name="test">
+                    {% if group.status == 0 %}
+                    <input type="submit" class="btn btn-primary" value="Accept Request" style="margin-bottom: 3px;">
+                    {# {% elseif group.status == 5 %} #}
+                    <a href="reject/{{group.id}}" class="btn btn-danger"/>Reject Request</a>
+                    {% elseif group.status == 1 %}
+                        <p><i class="fa fa-check"></i> You Accepted this request</p>
+                    {% elseif (group.status == 2) or (group.status == 3) %}
+                        <p><i class="fa fa-spinner"></i> Approving in Progress</p>
+                    {% elseif group.status == 4%}
+                        <p><i class="fa fa-check"></i> Approved</p>
+                    {% else %}
+                        <p><i class="fa fa-times"> Not Accepted/Approved</i></a>
+                    {% endif %}
+                 </form>
+                {% endif %}
 
-    {{ include('transfer/_delete_form.html.twig') }}
+                {% if (group.status == approval_level) %}
+                    <a href="approve/{{group.id}}" class="btn btn-primary mb-5 ml-3">Approve</a>
+                    <a href="reject/{{group.id}}" class="btn btn-primary mb-5 ml-3">Reject</a>
+                    
+                {% elseif (group.status == 4) and (approval_level == 3)%}
+                    <a href="print/{{group.id}}" class="btn btn-success mb-5 ml-3">Print Approval</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

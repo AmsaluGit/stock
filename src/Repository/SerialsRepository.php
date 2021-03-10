@@ -47,4 +47,42 @@ class SerialsRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    //get all items registered with the respected user
+    public function getSerial($id)
+    {
+        return  $this->createQueryBuilder('s')
+                ->select("s.id", "p.name", "s.serial", "s.model as model_number", "o.model", 'r.requestedDate')
+                ->innerJoin('s.orders',"o")
+                ->innerJoin('o.request','r')
+                ->innerJoin('o.stock', 'stock')
+                ->innerJoin('stock.product', 'p')
+                ->innerJoin('r.requester','requester')
+                ->where("requester.id = :id")
+                ->andwhere("s.transfer_request = :tr")
+                ->andWhere("p.canTransfered = :ct")                
+                ->setParameters(["tr"=> 0,'id'=> $id,'ct'=>1])
+                ->getQuery()
+                ->getArrayResult()
+            ;
+    }
+
+    //get all selected items to transfer based on serials.id
+    public function getSelectedSerialsInfo($id)
+    {
+        // dump($id);
+        // die();
+        return  $this->createQueryBuilder('s')
+                ->select("s.id", "p.name", "s.serial", "s.model as model_number", "o.model", 'r.requestedDate')
+                ->innerJoin('s.orders',"o")
+                ->innerJoin('o.request','r')
+                ->innerJoin('o.stock', 'stock')
+                ->innerJoin('stock.product', 'p')
+                ->innerJoin('r.requester','requester')
+                ->where("s.id = :id")
+                ->setParameters(array("id"=>array($id)))
+                ->getQuery()
+                // ->getResult()
+            ;
+    }
 }

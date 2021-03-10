@@ -28,6 +28,15 @@ class Serials
     private $model;
 
     /**
+     * @ORM\OneToMany(targetEntity=Transfer::class, mappedBy="serials")
+     */
+    private $tranfers;
+    /** 
+    * @ORM\Column(type="integer")
+    */
+    private $transfer_request;
+    
+    /**
      * @ORM\ManyToOne(targetEntity=Orders::class, inversedBy="serials")
      */
     private $orders;
@@ -35,6 +44,18 @@ class Serials
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getTransferRequest(): ?int
+    {
+        return $this->transfer_request;
+    }
+
+    public function setTransferRequest(int $transfer_request): self
+    {
+        $this->transfer_request = $transfer_request;
+
+        return $this;
     }
 
     public function getSerial(): ?string
@@ -69,6 +90,18 @@ class Serials
     public function setOrders(?Orders $orders): self
     {
         $this->orders = $orders;
+
+        return $this;
+    }
+
+    public function getTransfer(): ?Transfer
+    {
+        return $this->transfer;
+    }
+
+    public function setTransfer(?Transfer $transfer): self
+    {
+        $this->transfer = $transfer;
 
         return $this;
     }

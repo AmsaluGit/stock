@@ -12,10 +12,12 @@ class TestController extends AbstractController
      */
     public function index()
     {
-        $rand =  random_int(1,100);
+        dump(time());
+        die();
+        // $rand =  random_int(1,100);
 
-        return $this->render('test/index.html.twig', [
-            'number' => $rand,
-        ]);
+        // return $this->render('test/index.html.twig', [
+        //     'number' => $rand,
+        // ]);
     }
 }

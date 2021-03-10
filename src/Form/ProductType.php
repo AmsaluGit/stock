@@ -13,12 +13,14 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('canTransfered')
             // ->add('price')
             ->add('description')
             ->add('brand')
             ->add('category')
             ->add('productType')
             ->add('unitOfMeasure')
+            
         ;
     }
 

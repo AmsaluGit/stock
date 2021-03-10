@@ -45,10 +45,7 @@ class Orders
     /**
      * @ORM\Column(type="smallint", nullable=true, options={"default":"0"})
      */
-    private $status;
-
- 
- 
+    private $status; 
 
     /**
      * @ORM\ManyToOne(targetEntity=Requests::class, inversedBy="orders")

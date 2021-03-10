@@ -3,24 +3,51 @@
 {% block title %}Transfer index{% endblock %}
 
 {% block body %}
-    <h1>Transfer index</h1>
-
-    <table class="table">
+    <div class="card>
+        <div class="card-header">
+            <div class="card-tools" style="float:right;margin-bottom: 10px;" >
+                <form class="form-inline ml-3">
+                    <div class="input-group ">
+                        <input class="form-control" autocomplete="off" name="search" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class=" input-group-text btn btn-navbar " type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <h3 class="card-title">Transfer Request List</h3>
+        </div>
+    </div>
+    <table class="table table-stripped bg-white">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Group Id</th>
+                <th>Requested Date</th>
                 <th>Status</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for transfer in transfers %}
+        {% for transfer in transfer %}
             <tr>
-                <td>{{ transfer.id }}</td>
-                <td>{{ transfer.status }}</td>
+                <td>{{ transfer.ffname }} {{transfer.fmname}} {{transfer.flname}}</td>
+                <td>{{ transfer.firstName }} {{transfer.middleName}} {{transfer.lastName}}</td>
+                <td>{{ transfer.group_id }}</td>
+                <td>{{ transfer.date|date("Y-m-d") }}
+                <td>{% if transfer.status == 0 %}
+
+                    {% elseif transfer.status == 1 %}
+
+
+                    {% endif %}
                 <td>
                     <a href="{{ path('transfer_show', {'id': transfer.id}) }}">show</a>
-                    <a href="{{ path('transfer_edit', {'id': transfer.id}) }}">edit</a>
+                    {# <a href="{{ path('transfer_edit', {'id': transfer.id}) }}">edit</a> #}
                 </td>
             </tr>
         {% else %}
@@ -30,6 +57,5 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('transfer_new') }}">Create new</a>
+    <div class="float-right">{{ knp_pagination_render(transfer) }}</div>
 {% endblock %}
