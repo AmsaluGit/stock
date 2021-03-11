@@ -51,7 +51,7 @@ class TransferedItemsGroupRepository extends ServiceEntityRepository
     public function get($id)
     {
         return  $this->createQueryBuilder('t')
-                ->select('u.firstName', 'u.middleName', 'u.lastName','to.firstName as tfname', "to.middleName as tmname", "to.lastName as tlname", 't.date', 't.status', 't.id', 'u.id as sender_id')
+                ->select('to.id as to_id','u.firstName', 'u.middleName', 'u.lastName','to.firstName as tfname', "to.middleName as tmname", "to.lastName as tlname", 't.date', 't.status', 't.id', 'u.id as sender_id')
                 ->innerJoin('t.from','u')
                 ->innerJoin("t.to",'to')
                 ->where('t.id = :id')
@@ -94,6 +94,7 @@ class TransferedItemsGroupRepository extends ServiceEntityRepository
                     ->where("t.status = :status")
                     ->orWhere("t.status = 4")
                     ->setParameter("status",$approval_level)
+                    ->orderBy("t.date","desc")
                     ->getQuery()
                     ->getResult()
                     ;
@@ -108,6 +109,7 @@ class TransferedItemsGroupRepository extends ServiceEntityRepository
                 ->orWhere("t.status = :status")
                 ->setParameter('group', $group)
                 ->setParameter("status",$approval_level)
+                ->orderBy("t.date","desc")
                 ->getQuery()
                 ->getResult()
                 ;       
@@ -120,6 +122,7 @@ class TransferedItemsGroupRepository extends ServiceEntityRepository
                 ->innerJoin("t.to", 'to')
                 ->where("t.status = :status")
                 ->setParameter("status",$approval_level)
+                ->orderBy("t.date","desc")
                 ->getQuery()
                 ->getResult()
                 ;
@@ -132,6 +135,7 @@ class TransferedItemsGroupRepository extends ServiceEntityRepository
                 ->andWhere("t.status = :status")
                 ->setParameter("status", $approval_level)
                 ->setParameter('group', $group)
+                ->orderBy("t.date","desc")
                 ->getQuery()
                 ->getResult()
                 ;
