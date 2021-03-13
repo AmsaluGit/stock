@@ -39,11 +39,12 @@
                 <td>{{ transfer.firstName }} {{transfer.middleName}} {{transfer.lastName}}</td>
                 <td>{{ transfer.group_id }}</td>
                 <td>{{ transfer.date|date("Y-m-d") }}
-                <td>{% if transfer.status == 0 %}
-
-                    {% elseif transfer.status == 1 %}
-
-
+                <td>{% if transfer.status == 4 %}
+                        <span><i class="badge badge-primary">Approved</i></span>
+                    {% elseif transfer.status == 7 %}
+                        <span><i class="badge badge-danger">Rejected</i></span>
+                    {% else %}
+                        <span><i class="badge badge-defult">In progress</i></span>
                     {% endif %}
                 <td>
                     <a href="{{ path('transfer_show', {'id': transfer.id}) }}">show</a>
