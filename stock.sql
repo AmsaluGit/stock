@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
--- https://www.phpmyadmin.net/
+-- version 4.5.4.1deb2ubuntu2.1
+-- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 02, 2021 at 02:12 PM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.4.9
+-- Host: localhost
+-- Generation Time: Mar 13, 2021 at 02:12 PM
+-- Server version: 5.7.33-0ubuntu0.16.04.1
+-- PHP Version: 7.4.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -18,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `inventory`
+-- Database: `stock`
 --
 
 -- --------------------------------------------------------
@@ -35,17 +34,6 @@ CREATE TABLE `approval_log` (
   `approval_date` datetime NOT NULL,
   `approval_level` smallint(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `approval_log`
---
-
-INSERT INTO `approval_log` (`id`, `request_id`, `approver_id`, `status`, `approval_date`, `approval_level`) VALUES
-(28, 1, 3, 1, '2021-02-27 17:23:14', 1),
-(31, 1, 3, 1, '2021-02-28 05:37:14', 2),
-(34, 2, 3, 1, '2021-03-02 14:02:46', 1),
-(35, 2, 3, 1, '2021-03-02 14:02:46', 2),
-(36, 2, 3, 1, '2021-03-02 14:04:11', 3);
 
 -- --------------------------------------------------------
 
@@ -88,8 +76,8 @@ CREATE TABLE `brand` (
 --
 
 INSERT INTO `brand` (`id`, `name`, `description`) VALUES
-(1, 'HP', 'b'),
-(3, 'Double A', 'double a paper');
+(1, 'Lenovo', 'd'),
+(2, 'Other', 'd');
 
 -- --------------------------------------------------------
 
@@ -108,9 +96,8 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `description`) VALUES
-(1, 'Stationary', 'g'),
-(2, 'Electronics', 'google'),
-(3, 'Stationary1', 'go');
+(1, 'HP', 'd'),
+(2, 'Electronics', 'd');
 
 -- --------------------------------------------------------
 
@@ -129,7 +116,7 @@ CREATE TABLE `college` (
 --
 
 INSERT INTO `college` (`id`, `name`, `description`) VALUES
-(1, 'Natural Science', NULL);
+(1, 'natural', NULL);
 
 -- --------------------------------------------------------
 
@@ -149,7 +136,7 @@ CREATE TABLE `company` (
 --
 
 INSERT INTO `company` (`id`, `stock_id`, `name`, `description`) VALUES
-(1, NULL, 'ethiopia transit', 'transit');
+(1, NULL, 'ju', NULL);
 
 -- --------------------------------------------------------
 
@@ -169,8 +156,7 @@ CREATE TABLE `department` (
 --
 
 INSERT INTO `department` (`id`, `college_id`, `name`, `description`) VALUES
-(1, 1, 'Biology', NULL),
-(2, 1, 'Chemistry', NULL);
+(1, 1, 'biology', NULL);
 
 -- --------------------------------------------------------
 
@@ -185,23 +171,6 @@ CREATE TABLE `item_approval_status` (
   `allowed_quantity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `item_approval_status`
---
-
-INSERT INTO `item_approval_status` (`id`, `approval_log_id`, `orders_id`, `allowed_quantity`) VALUES
-(1, 28, 1, 3),
-(3, 31, 1, 3),
-(10, 34, 2, 2),
-(11, 34, 3, 3),
-(12, 34, 4, 1),
-(13, 35, 2, 2),
-(14, 35, 3, 3),
-(15, 35, 4, 1),
-(16, 36, 2, 2),
-(17, 36, 3, 3),
-(18, 36, 4, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -210,26 +179,16 @@ INSERT INTO `item_approval_status` (`id`, `approval_log_id`, `orders_id`, `allow
 
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
-  `stock_id` int(11) DEFAULT NULL,
   `request_id` int(11) DEFAULT NULL,
+  `stock_id` int(11) DEFAULT NULL,
   `quantity` int(11) NOT NULL,
   `model` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `serial` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `delivered` smallint(6) DEFAULT 0,
-  `status` smallint(6) DEFAULT 0,
+  `delivered` smallint(6) DEFAULT '0',
+  `status` smallint(6) DEFAULT '0',
   `unitprice` int(11) DEFAULT NULL,
   `approved_quantity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`id`, `stock_id`, `request_id`, `quantity`, `model`, `serial`, `delivered`, `status`, `unitprice`, `approved_quantity`) VALUES
-(1, 4, 1, 4, 'HP', '1', NULL, NULL, 1500, 3),
-(2, 6, 2, 3, 'HP', NULL, 1, NULL, 1500, 2),
-(3, 5, 2, 4, 'HP', NULL, 1, NULL, 1200, 3),
-(4, 7, 2, 2, 'Double A', NULL, 1, NULL, 150, 1);
 
 -- --------------------------------------------------------
 
@@ -241,7 +200,7 @@ CREATE TABLE `permission` (
   `id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `description` longtext COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -249,9 +208,23 @@ CREATE TABLE `permission` (
 --
 
 INSERT INTO `permission` (`id`, `name`, `code`, `description`) VALUES
-(1, 'Approver 1', 'approver1', 'test'),
-(2, 'Approver 2', 'approver2', 'none'),
-(3, 'Approver 3', 'approver3', NULL);
+(1, 'Approver1', 'approver1', NULL),
+(2, 'Approver2', 'Approver2', NULL),
+(3, 'Approver3', 'Approver3', NULL),
+(4, 'manage college', 'manage_college', NULL),
+(5, 'manage department', 'manage_department', NULL),
+(6, 'manage store', 'manage_store', NULL),
+(7, 'manage catagory', 'manage_catagory', NULL),
+(8, 'manage brand', 'manag_brand', NULL),
+(9, 'manage usage type', 'manage_usage_type', NULL),
+(10, 'manage product type', 'manage_product_type', NULL),
+(11, 'manage unit of measure', 'manage_unit_of_measure', NULL),
+(12, 'manage request', 'manage_request', NULL),
+(13, 'manage stock', 'manage_stock', NULL),
+(14, 'manage company', 'manage_company', NULL),
+(15, 'manage report', 'manage_report', NULL),
+(16, 'manage user', 'manage_user', NULL),
+(17, 'manage permission and usergroup', 'manage_permision_and_usergroup', NULL);
 
 -- --------------------------------------------------------
 
@@ -266,31 +239,18 @@ CREATE TABLE `product` (
   `product_type_id` int(11) DEFAULT NULL,
   `unit_of_measure_id` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `can_transfered` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`id`, `brand_id`, `category_id`, `product_type_id`, `unit_of_measure_id`, `name`, `description`) VALUES
-(1, 1, 1, 1, 2, 'hp laptop', 'this is file'),
-(2, 1, 2, 2, 2, 'Hp', 'for research'),
-(3, 1, 1, 3, 2, 'Hp envy laptop', 'for research'),
-(12, 1, 1, 1, 2, 'cookie', '1222'),
-(13, 1, 1, 1, 2, 'cookie', '1222'),
-(14, 1, 1, 1, 2, 'cookie', '1222'),
-(15, 1, 1, 2, 2, 'this is', '1222'),
-(16, 1, 1, 2, 2, 'hp laptop', 'dsf'),
-(17, 1, 2, 2, 2, 'test', '23'),
-(18, 1, 2, 2, 2, 'test', '23'),
-(19, 1, 2, 2, 2, 'test', 'dfgdfg'),
-(20, 1, 2, 2, 2, 'test', '23'),
-(21, 1, 2, 2, 1, 'dfg', '1232'),
-(22, 1, 2, 2, 1, 'dfg', '1232'),
-(23, 1, 1, 1, 1, 'asdfg', 'asdf'),
-(24, NULL, NULL, NULL, NULL, 'nebiyou', NULL),
-(25, 3, 3, 1, 2, 'double A paper', 'this is product');
+INSERT INTO `product` (`id`, `brand_id`, `category_id`, `product_type_id`, `unit_of_measure_id`, `name`, `description`, `can_transfered`) VALUES
+(1, 1, 1, 1, NULL, 'Electronics', 'd', '1'),
+(2, 1, 1, 1, 1, 'Core i3 Laptop', 'desc', '1'),
+(3, 2, 2, 1, 3, 'Table', 'desc', '1');
 
 -- --------------------------------------------------------
 
@@ -309,10 +269,8 @@ CREATE TABLE `product_type` (
 --
 
 INSERT INTO `product_type` (`id`, `name`, `description`) VALUES
-(1, 'Alaqi', 'google'),
-(2, 'Alaqi', 'g'),
-(3, 'Quami', 'fd'),
-(4, 'new Product Type', 'this is description');
+(1, 'alaki', 'd'),
+(2, 'Quami', 'd');
 
 -- --------------------------------------------------------
 
@@ -336,18 +294,33 @@ CREATE TABLE `requests` (
   `requested_date` date DEFAULT NULL,
   `status` smallint(6) DEFAULT NULL,
   `closed` smallint(6) DEFAULT NULL,
-  `reason` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reason` longtext COLLATE utf8mb4_unicode_ci,
   `received_date` date DEFAULT NULL,
-  `delivered` smallint(6) DEFAULT NULL
+  `delivered` smallint(6) DEFAULT NULL,
+  `current_approval_step` smallint(6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reset_password_request`
+--
+
+CREATE TABLE `reset_password_request` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `selector` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hashed_token` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `requested_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `expires_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `requests`
+-- Dumping data for table `reset_password_request`
 --
 
-INSERT INTO `requests` (`id`, `requester_id`, `requested_date`, `status`, `closed`, `reason`, `received_date`, `delivered`) VALUES
-(1, 3, '2021-02-27', 1, NULL, 'vv', NULL, NULL),
-(2, 3, '2021-02-28', 1, 1, 'mm', NULL, NULL);
+INSERT INTO `reset_password_request` (`id`, `user_id`, `selector`, `hashed_token`, `requested_at`, `expires_at`) VALUES
+(1, 2, 'wmOLa7blseFAjP0zb1gI', 'DXx32jtaeAOcZiwjwYHgrO8m7VvviANotSn/megcgiU=', '2021-03-13 10:12:47', '2021-03-13 11:12:47');
 
 -- --------------------------------------------------------
 
@@ -359,7 +332,8 @@ CREATE TABLE `serials` (
   `id` int(11) NOT NULL,
   `orders_id` int(11) DEFAULT NULL,
   `serial` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `model` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `model` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `transfer_request` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -372,21 +346,11 @@ CREATE TABLE `stock` (
   `id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT NULL,
   `store_id` int(11) DEFAULT NULL,
+  `company_id` int(11) DEFAULT NULL,
   `quantity` int(11) NOT NULL,
   `date` date NOT NULL,
-  `company_id` int(11) DEFAULT NULL,
   `price` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `stock`
---
-
-INSERT INTO `stock` (`id`, `product_id`, `store_id`, `quantity`, `date`, `company_id`, `price`) VALUES
-(4, 3, 1, 15, '2020-12-31', 1, 1500),
-(5, 16, 2, 12, '2020-12-31', 1, 1200),
-(6, 13, 2, 10, '2021-01-05', 1, 1500),
-(7, 25, 1, 2, '2021-03-02', 1, 150);
 
 -- --------------------------------------------------------
 
@@ -406,8 +370,7 @@ CREATE TABLE `store` (
 --
 
 INSERT INTO `store` (`id`, `name`, `description`, `is_active`) VALUES
-(1, 'Store 1', 'bb', 1),
-(2, 'Store2', 'bb', 0);
+(1, 'store1', 's', 1);
 
 -- --------------------------------------------------------
 
@@ -417,8 +380,40 @@ INSERT INTO `store` (`id`, `name`, `description`, `is_active`) VALUES
 
 CREATE TABLE `transfer` (
   `id` int(11) NOT NULL,
-  `to_id_id` int(11) DEFAULT NULL,
-  `status` smallint(6) NOT NULL
+  `approved_by_id` int(11) DEFAULT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `serial_id` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transfered_items_group`
+--
+
+CREATE TABLE `transfered_items_group` (
+  `id` int(11) NOT NULL,
+  `to_id` int(11) DEFAULT NULL,
+  `from_id` int(11) DEFAULT NULL,
+  `group_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` smallint(6) NOT NULL,
+  `date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transfers_approval_log`
+--
+
+CREATE TABLE `transfers_approval_log` (
+  `id` int(11) NOT NULL,
+  `transfer_id` int(11) DEFAULT NULL,
+  `approver_id` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `approval_date` date NOT NULL,
+  `approval_level` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -437,8 +432,9 @@ CREATE TABLE `unit_of_measure` (
 --
 
 INSERT INTO `unit_of_measure` (`id`, `name`) VALUES
-(1, 'kg'),
-(2, 'pcs');
+(1, 'Kg'),
+(2, 'ml'),
+(3, 'm');
 
 -- --------------------------------------------------------
 
@@ -451,7 +447,7 @@ CREATE TABLE `user` (
   `department_id` int(11) DEFAULT NULL,
   `user_type_id` int(11) DEFAULT NULL,
   `username` varchar(180) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `roles` longtext COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '(DC2Type:json)',
+  `roles` json NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `middle_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -459,20 +455,24 @@ CREATE TABLE `user` (
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
   `locale` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `confirm_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `date` datetime DEFAULT NULL
+  `role` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `department_id`, `user_type_id`, `username`, `roles`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `is_active`, `last_login`, `locale`, `confirm_token`, `role`, `date`) VALUES
-(3, 2, NULL, 'alemu1', '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$ckguSnBFOFVpRGdrWHg3SA$Zt7tvgZnHGstftUfEiVSoOvb+rmbo/oso1gF8q2mKQg', 'alemu1', 'Leul', 'kasa', NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00 00:00:00'),
-(4, 1, NULL, 'neba', '[]', '1234', 'Nebiyou', 'Leul', 'kasa', NULL, NULL, NULL, NULL, NULL, NULL, '2020-12-07 00:00:00'),
-(6, 1, NULL, 'neba12', '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$ckguSnBFOFVpRGdrWHg3SA$Zt7tvgZnHGstftUfEiVSoOvb+rmbo/oso1gF8q2mKQg', 'Nebiyou', 'Leul', 'Temesgen', NULL, NULL, NULL, NULL, NULL, NULL, '2020-12-31 10:07:46');
+INSERT INTO `user` (`id`, `department_id`, `user_type_id`, `username`, `roles`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `is_active`, `last_login`, `date`, `locale`, `confirm_token`, `role`) VALUES
+(2, 1, 1, 'amtadesse', '["ROLE_ADMIN"]', '$argon2id$v=19$m=65536,t=4,p=1$uieDgzN672sipStssj6eEQ$C0DOqwQ1jjNgfirIHZcbVDZAN7S3RoH6va7AHH7BSl0', 'amsalu', 'tadesse', NULL, 'tadesseamsalu@gmail.com', 1, '2021-03-13 13:07:54', NULL, '1', NULL, '["ROLE_ADMIN"]'),
+(3, 1, 1, 'sahalu', '["ROLE_ADMIN"]', '$argon2id$v=19$m=65536,t=4,p=1$uieDgzN672sipStssj6eEQ$C0DOqwQ1jjNgfirIHZcbVDZAN7S3RoH6va7AHH7BSl0', 'one', 'two\r\n', NULL, 'one@one.com', 1, '2021-03-04 00:00:00', NULL, '1', NULL, NULL),
+(4, 1, 1, 'amtadesse2', '["ROLE_ADMIN"]', '$argon2id$v=19$m=65536,t=4,p=1$uieDgzN672sipStssj6eEQ$C0DOqwQ1jjNgfirIHZcbVDZAN7S3RoH6va7AHH7BSl0', 'amsalu', 'tadesse', NULL, NULL, 1, '2021-03-04 00:00:00', NULL, '1', NULL, NULL),
+(8, 1, 2, 'dhead', '["ROLE_USER"]', '$argon2id$v=19$m=65536,t=4,p=1$+FBYtmb9/16cOzN9uRRoZQ$nFWP8iSu6cGOUUytIpbjsMGTTvSV0MiSCTdnbxEhkAQ', 'dhead', 'dhead', 'dhead', NULL, 1, '2021-03-13 13:57:03', '2021-03-13 10:53:00', '1', NULL, NULL),
+(9, 1, 3, 'property', '["ROLE_USER"]', '$argon2id$v=19$m=65536,t=4,p=1$JjLSSPdC26derBwpln9fww$AmFt0LJJZ6UD2rO0Em4yPUMUMLTC5FC4rFj5zwptU4Q', 'propertyHead', 'propertyHead', 'propertyHead', NULL, 1, '2021-03-13 13:57:20', '2021-03-13 10:53:21', '1', NULL, NULL),
+(10, 1, 4, 'storekeeper', '["ROLE_USER"]', '$argon2id$v=19$m=65536,t=4,p=1$/+yxquFoK7u8aJ+DdU71cw$m1yHYUMgyO26AsjFs9ph3G9C7tkdoFRKhIA2aw6cO1A', 'StoreKeeper', 'StoreKeeper', 'StoreKeeper', NULL, 1, '2021-03-13 13:57:42', '2021-03-13 10:54:00', '1', NULL, NULL),
+(11, 1, 5, 'staff', '["ROLE_USER"]', '$argon2id$v=19$m=65536,t=4,p=1$Q3UqpWu+PGVgBtWBy2H5LA$OJ61fru/yc/WkEX+pIOvYkMSGg5Uh/YyHsVV8HrRNYo', 'Staff', 'Staff', 'Staff', NULL, 1, '2021-03-13 13:56:22', '2021-03-13 10:54:26', '1', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -485,7 +485,7 @@ CREATE TABLE `user_group` (
   `registered_by_id` int(11) NOT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL
@@ -496,7 +496,11 @@ CREATE TABLE `user_group` (
 --
 
 INSERT INTO `user_group` (`id`, `registered_by_id`, `updated_by_id`, `name`, `description`, `created_at`, `updated_at`, `is_active`) VALUES
-(1, 3, 3, 'test', 'test1', '2020-09-23 13:24:11', '2020-12-02 15:51:19', 1);
+(1, 2, NULL, 'Admins', NULL, '2021-03-02 09:08:00', NULL, 1),
+(2, 2, NULL, 'Department Heads', NULL, '2021-03-10 15:51:31', NULL, 1),
+(3, 2, 2, 'Property and General Service Head', NULL, '2021-03-10 15:51:31', '2021-03-13 09:31:24', 1),
+(4, 2, 2, 'Store Keeper', NULL, '2021-03-10 15:51:31', '2021-03-13 09:31:16', 1),
+(5, 2, NULL, 'Staffs', NULL, '2021-03-10 15:51:31', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -514,7 +518,38 @@ CREATE TABLE `user_group_permission` (
 --
 
 INSERT INTO `user_group_permission` (`user_group_id`, `permission_id`) VALUES
-(1, 3);
+(1, 1),
+(1, 2),
+(1, 4),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9),
+(1, 10),
+(1, 11),
+(1, 12),
+(1, 13),
+(1, 14),
+(1, 15),
+(1, 16),
+(1, 17),
+(2, 1),
+(2, 12),
+(2, 13),
+(3, 2),
+(3, 12),
+(3, 13),
+(4, 3),
+(4, 7),
+(4, 8),
+(4, 10),
+(4, 11),
+(4, 12),
+(4, 13),
+(4, 14),
+(4, 15),
+(5, 12),
+(5, 13);
 
 -- --------------------------------------------------------
 
@@ -527,6 +562,17 @@ CREATE TABLE `user_type` (
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `user_type`
+--
+
+INSERT INTO `user_type` (`id`, `name`, `description`) VALUES
+(1, 'admin', NULL),
+(2, 'Department Head', NULL),
+(3, 'Property and General Service Head', NULL),
+(4, 'Store Keeper', NULL),
+(5, 'Staff', NULL);
 
 -- --------------------------------------------------------
 
@@ -544,7 +590,12 @@ CREATE TABLE `user_user_group` (
 --
 
 INSERT INTO `user_user_group` (`user_id`, `user_group_id`) VALUES
-(3, 1);
+(2, 1),
+(3, 2),
+(8, 2),
+(9, 3),
+(10, 4),
+(11, 5);
 
 --
 -- Indexes for dumped tables
@@ -655,6 +706,13 @@ ALTER TABLE `requests`
   ADD KEY `IDX_7B85D651ED442CF4` (`requester_id`);
 
 --
+-- Indexes for table `reset_password_request`
+--
+ALTER TABLE `reset_password_request`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_7CE748AA76ED395` (`user_id`);
+
+--
 -- Indexes for table `serials`
 --
 ALTER TABLE `serials`
@@ -681,7 +739,25 @@ ALTER TABLE `store`
 --
 ALTER TABLE `transfer`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_4034A3C07478AF67` (`to_id_id`);
+  ADD KEY `IDX_4034A3C02D234F6A` (`approved_by_id`),
+  ADD KEY `IDX_4034A3C0FE54D947` (`group_id`),
+  ADD KEY `IDX_4034A3C0AF82D095` (`serial_id`);
+
+--
+-- Indexes for table `transfered_items_group`
+--
+ALTER TABLE `transfered_items_group`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_F688DC0F30354A65` (`to_id`),
+  ADD KEY `IDX_F688DC0F78CED90B` (`from_id`);
+
+--
+-- Indexes for table `transfers_approval_log`
+--
+ALTER TABLE `transfers_approval_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_5BFCA07F537048AF` (`transfer_id`),
+  ADD KEY `IDX_5BFCA07FBB23766C` (`approver_id`);
 
 --
 -- Indexes for table `unit_of_measure`
@@ -736,140 +812,132 @@ ALTER TABLE `user_user_group`
 -- AUTO_INCREMENT for table `approval_log`
 --
 ALTER TABLE `approval_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `attribute`
 --
 ALTER TABLE `attribute`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `attribute_value`
 --
 ALTER TABLE `attribute_value`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `brand`
 --
 ALTER TABLE `brand`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `college`
 --
 ALTER TABLE `college`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT for table `company`
 --
 ALTER TABLE `company`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `item_approval_status`
 --
 ALTER TABLE `item_approval_status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `permission`
 --
 ALTER TABLE `permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `product_type`
 --
 ALTER TABLE `product_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `reason`
 --
 ALTER TABLE `reason`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `reset_password_request`
+--
+ALTER TABLE `reset_password_request`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `serials`
 --
 ALTER TABLE `serials`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `store`
 --
 ALTER TABLE `store`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `transfer`
 --
 ALTER TABLE `transfer`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+--
+-- AUTO_INCREMENT for table `transfered_items_group`
+--
+ALTER TABLE `transfered_items_group`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `transfers_approval_log`
+--
+ALTER TABLE `transfers_approval_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `unit_of_measure`
 --
 ALTER TABLE `unit_of_measure`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `user_group`
 --
 ALTER TABLE `user_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `user_type`
 --
 ALTER TABLE `user_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- Constraints for dumped tables
 --
@@ -929,6 +997,12 @@ ALTER TABLE `requests`
   ADD CONSTRAINT `FK_7B85D651ED442CF4` FOREIGN KEY (`requester_id`) REFERENCES `user` (`id`);
 
 --
+-- Constraints for table `reset_password_request`
+--
+ALTER TABLE `reset_password_request`
+  ADD CONSTRAINT `FK_7CE748AA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
 -- Constraints for table `serials`
 --
 ALTER TABLE `serials`
@@ -946,7 +1020,23 @@ ALTER TABLE `stock`
 -- Constraints for table `transfer`
 --
 ALTER TABLE `transfer`
-  ADD CONSTRAINT `FK_4034A3C07478AF67` FOREIGN KEY (`to_id_id`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `FK_4034A3C02D234F6A` FOREIGN KEY (`approved_by_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `FK_4034A3C0AF82D095` FOREIGN KEY (`serial_id`) REFERENCES `serials` (`id`),
+  ADD CONSTRAINT `FK_4034A3C0FE54D947` FOREIGN KEY (`group_id`) REFERENCES `transfered_items_group` (`id`);
+
+--
+-- Constraints for table `transfered_items_group`
+--
+ALTER TABLE `transfered_items_group`
+  ADD CONSTRAINT `FK_F688DC0F30354A65` FOREIGN KEY (`to_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `FK_F688DC0F78CED90B` FOREIGN KEY (`from_id`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `transfers_approval_log`
+--
+ALTER TABLE `transfers_approval_log`
+  ADD CONSTRAINT `FK_5BFCA07F537048AF` FOREIGN KEY (`transfer_id`) REFERENCES `transfered_items_group` (`id`),
+  ADD CONSTRAINT `FK_5BFCA07FBB23766C` FOREIGN KEY (`approver_id`) REFERENCES `user` (`id`);
 
 --
 -- Constraints for table `user`
@@ -975,7 +1065,6 @@ ALTER TABLE `user_group_permission`
 ALTER TABLE `user_user_group`
   ADD CONSTRAINT `FK_286579711ED93D47` FOREIGN KEY (`user_group_id`) REFERENCES `user_group` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_28657971A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
