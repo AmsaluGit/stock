@@ -30,9 +30,9 @@ class UserGroupController extends AbstractController
              $searchForm = $this->createForm(UserGroupFilterType::class, $userGroup);
              $searchForm->handleRequest($request);
 
-     //   $this->denyAccessUnlessGranted('vw_usr_grp');
+        // $this->denyAccessUnlessGranted('vw_usr_grp');
             if($request->request->get('edit')){
-                $this->denyAccessUnlessGranted('edt_usr_grp');
+                // $this->denyAccessUnlessGranted('edt_usr_grp');
 
                 $id=$request->request->get('edit');
                 $userGroup=$userGroupRepository->findOneBy(['id'=>$id]);

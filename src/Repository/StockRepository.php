@@ -52,7 +52,7 @@ class StockRepository extends ServiceEntityRepository
 
             return 
             
-           
+            
             $qb->orderBy('s.date', 'asc')
                //->select('sum(s.quantity) as quantity, sum(o.quantity) as oquantity, p.name as product, uom.name as unit,s.id as id, p.id as pid')
                ->select('sum(s.quantity) as quantity, p.name as product, uom.name as unit,s.id as id, p.id as pid')

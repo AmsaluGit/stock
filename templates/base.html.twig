@@ -26,7 +26,7 @@
 		<link
 		href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet">
 		{#
-								    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> #}
+												    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> #}
 		<link
 		href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet">
 		<!-- jQuery -->
@@ -153,231 +153,218 @@
 											<p>Home</p>
 										</a>
 									</li>
+									{% if is_granted("manage_college") %}
 
-									<li class="nav-item">
-										<a href=" {{ path('college_index') }} " class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>College</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('department_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Department</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('store_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Store</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('categories_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Cateories</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('brand_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Brand</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('product_type_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Usage type</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('product_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Product Type</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('unit_of_measure_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Unit Of Measure</p>
-										</a>
-									</li>
-									{# <li class="nav-item">
-									                <a href="{{ path('product_index2') }}" class="nav-link">
-									                  <i class="far fa-circle nav-icon"></i>
-									                  <p>Product2</p>
-									                </a>
-									              </li> #}
-									{# <li class="nav-item">
-									                <a href="{{ path('order_index') }}" class="nav-link">
-									                  <i class="far fa-circle nav-icon"></i>
-									                  <p>Requests</p>
-									                </a>
-									              </li> #}
-									<li class="nav-item">
-										<a href="{{ path('requests_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Issued Requests</p>
-										</a>
-									</li>
+										<li class="nav-item">
+											<a href=" {{ path('college_index') }} " class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>College</p>
+											</a>
+										</li>
 
-									<li class="nav-item">
-										<a href="{{ path('stock_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>
-												Availabe stocks</p>
-										</a>
-									</li>
-									
-									<li class="nav-item">
-										<a href="{{ path('profile') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>My Items</p>
-										</a>
-									</li>
+									{% endif %}
+									{% if is_granted("manage_department") %}
+										<li class="nav-item">
+											<a href="{{ path('department_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Department</p>
+											</a>
+										</li>
+									{% endif %}
+									{% if is_granted("manage_store") %}
+										<li class="nav-item">
+											<a href="{{ path('store_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Store</p>
+											</a>
+										</li>
+									{% endif %}
+									{% if is_granted("manage_category") %}
+										<li class="nav-item">
+											<a href="{{ path('categories_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Cateories</p>
+											</a>
+										</li>
+									{% endif %}
+									{% if is_granted("manage_brand") %}
+										<li class="nav-item">
+											<a href="{{ path('brand_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Brand</p>
+											</a>
+										</li>
+									{% endif %}
+									{% if is_granted("manage_usage_type") %}
+										<li class="nav-item">
+											<a href="{{ path('product_type_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Usage type</p>
+											</a>
+										</li>
+									{% endif %}
+									{% if is_granted("manage_product_type") %}
+										<li class="nav-item">
+											<a href="{{ path('product_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Product Type</p>
+											</a>
+										</li>
+									{% endif %}
+									{% if is_granted("manage_unit_of_measure") %}
+										<li class="nav-item">
+											<a href="{{ path('unit_of_measure_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Unit Of Measure</p>
+											</a>
+										</li>
+									{% endif %}
+									{% if is_granted("manage_request") %}
+										{# <li class="nav-item">
+																												                <a href="{{ path('product_index2') }}" class="nav-link">
+																												                  <i class="far fa-circle nav-icon"></i>
+																												                  <p>Product2</p>
+																												                </a>
+																												              </li> #}
+										{# <li class="nav-item">
+																												                <a href="{{ path('order_index') }}" class="nav-link">
+																												                  <i class="far fa-circle nav-icon"></i>
+																												                  <p>Requests</p>
+																												                </a>
+																												              </li> #}
+											<li class="nav-item"> <a href="{{ path('requests_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Issued Requests</p>
+											</a>
+										</li>
+									{% endif %}
+									{% if is_granted("manage_stock") %}
 
-									<li class="nav-item">
-										<a href="{{ path('mtransReq') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>My Transfer Requests</p>
-										</a>
-									</li>
+										<li class="nav-item">
+											<a href="{{ path('stock_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>
+													Availabe stocks</p>
+											</a>
+										</li>
+{% endif %}
+	{% if is_granted("manage_transfer") %}
+										<li class="nav-item">
+											<a href="{{ path('profile') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>My Items</p>
+											</a>
+										</li>
 
-									<li class="nav-item">
-										<a href="{{ path('rtransReq') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Incoming Requests</p>
-										</a>
-									</li>
-									
-									<li class="nav-item">
-										<a href="{{ path('transfer_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Transfer Requests</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('company_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Company</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('home') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Reports</p>
-										</a>
-									</li>
+										<li class="nav-item">
+											<a href="{{ path('mtransReq') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>My Transfer Requests</p>
+											</a>
+										</li>
+
+										<li class="nav-item">
+											<a href="{{ path('rtransReq') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Incoming Requests</p>
+											</a>
+										</li>
+
+										<li class="nav-item">
+											<a href="{{ path('transfer_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Transfer Requests</p>
+											</a>
+										</li>
+
+									{% endif %}
+									{% if is_granted("manage_company") %}
+										<li class="nav-item">
+											<a href="{{ path('company_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Company</p>
+											</a>
+										</li>
+									{% endif %}
+
+									 
 
 								</ul>
 							</li>
+							{% if is_granted("manage_request") %}
+								<li class="nav-item has-treeview  ">
 
-							<li class="nav-item has-treeview  ">
-								<a href="#" class="nav-link">
-									<i class="nav-icon fas fa-chart-pie"></i>
-									<p>
-										Reports
-										<i class="right fas fa-angle-left"></i>
-									</p>
-								</a>
-								<ul class="nav nav-treeview">
-									<li class="nav-item">
-										<a href="{{ path('product_report') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Report 1</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="#" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Report 2</p>
-										</a>
-									</li>
-								</ul>
-							</li>
 
-							{# <li class="nav-item has-treeview menu-open">
-								<a href="#" class="nav-link">
-									<i class="nav-icon fas fa-chart-pie"></i>
-									<p>
-										Reports
-										<i class="right fas fa-angle-left"></i>
-									</p>
-								</a>
-								<ul class="nav nav-treeview">
-									<li class="nav-item">
-										<a href="{{ path('product_report') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Report 1</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="#" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Report 2</p>
-										</a>
-									</li>
-								</ul>
-							</li> #}
+									<a href="#" class="nav-link">
+										<i class="nav-icon fas fa-chart-pie"></i>
+										<p>
+											Reports
+											<i class="right fas fa-angle-left"></i>
+										</p>
+									</a>
+									<ul class="nav nav-treeview">
 
-							{# <li class="nav-item has-treeview  ">
-								<a href="#" class="nav-link">
-									<i class="nav-icon fas fa-chart-pie"></i>
-									<p>
-										User management
-										<i class="right fas fa-angle-left"></i>
-									</p>
-								</a>
-								<ul class="nav nav-treeview">
-									<li class="nav-item">
-										<a href="{{ path('user_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Users</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('permission_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Permisssions</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('user_group_index') }} " class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>User Groups</p>
-										</a>
-									</li>
-								</ul>
-							</li> #}
 
+										<li class="nav-item">
+											<a href="{{ path('product_report') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Report 1</p>
+											</a>
+										</li>
+									
+
+									</ul>
+								</li>
+
+							{% endif %}
+
+							
 							<li class="nav-item has-treeview menu-open">
-								<a href="#" class="nav-link">
-									<i class="nav-icon fas fa-chart-pie"></i>
-									<p>
-										User management
-										<i class="right fas fa-angle-left"></i>
-									</p>
-								</a>
+
+								{% if is_granted("manage_user") %}
+									<a href="#" class="nav-link">
+										<i class="nav-icon fas fa-chart-pie"></i>
+										<p>
+											User management
+											<i class="right fas fa-angle-left"></i>
+										</p>
+									</a>
+								{% endif %}
 								<ul class="nav nav-treeview">
-									<li class="nav-item">
-										<a href="{{ path('user_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Users</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('permission_index') }}" class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>Permisssions</p>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{{ path('user_group_index') }} " class="nav-link">
-											<i class="far fa-circle nav-icon"></i>
-											<p>User Groups</p>
-										</a>
-									</li>
+
+
+									{% if is_granted("manage_user") %}
+										<li class="nav-item">
+											<a href="{{ path('user_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Users</p>
+											</a>
+										</li>
+									{% endif %}
+									{% if is_granted("manage_permision_and_usergroup") %}
+										<li class="nav-item">
+											<a href="{{ path('permission_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Permisssions</p>
+											</a>
+										</li>
+										<li class="nav-item">
+											<a href="{{ path('user_group_index') }} " class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>User Groups</p>
+											</a>
+										</li>
+									{% endif %}
 								</ul>
+
+									 <li class="nav-item">
+											<a href="{{ path('app_forgot_password_request') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Reset password</p>
+											</a>
+										</li>
+
+
 							</li>
 
 						</ul>
@@ -394,23 +381,27 @@
 				<section class="content-header">
 					<div class="container-fluid">
 						<div class="row mb-2">
-							<div class="col-sm-6">
-							</div>
+							<div class="col-sm-6"></div>
 							<div class="col-sm-6">
 								<ol
 									class="breadcrumb float-sm-right">
 									{# 	<li class="breadcrumb-item">
-																												<a href="/">Home</a> 
-																												</li>#}
+																																														<a href="/">Home</a> 
+																																														</li>#}
 									<li class="breadcrumb-item">
-										<a href="/logout">Logout
+									{% if app.user is defined %}
+									{{app.user.firstName}} ,
+									<a href="/logout"> Logout
 										</a>
+									{% endif %}
+									
+										
 									</li>
 
 									{# {% block breadcrumb %}
-																		
-																		
-																												{% endblock %} #}
+																																				
+																																				
+																																														{% endblock %} #}
 								</ol>
 							</div>
 						</div>
@@ -474,8 +465,8 @@
 
 			<!-- Control Sidebar -->
 		{# <aside class="control-sidebar control-sidebar-dark">
-								    <!-- Control sidebar content goes here -->
-								  </aside> #}
+												    <!-- Control sidebar content goes here -->
+												  </aside> #}
 			<!-- /.control-sidebar -->
 		</div>
 		<!-- ./wrapper -->
@@ -483,7 +474,7 @@
 		<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 		<!-- jquery-validation -->
 		{# <script src="../../plugins/jquery-validation/jquery.validate.min.js"></script>
-								<script src="{{asset('assets/plugins/jquery-validation/additional-methods.min.js"></script> #}
+												<script src="{{asset('assets/plugins/jquery-validation/additional-methods.min.js"></script> #}
 		<!-- AdminLTE App --><script src="{{asset('assets/dist/js/adminlte.min.js')}}"> </script>
 		<script src="{{asset('assets/plugins/select2/js/select2.full.min.js')}}"></script>
 		<script src="{{asset('assets/js/bootstrap.min.js')}}"></script>

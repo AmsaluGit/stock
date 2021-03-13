@@ -79,7 +79,7 @@ class StockController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $stock->setDate(new \DateTime());
             $entityManager->persist($stock);
-            $entityManager->flush();
+            $entityManager->flush(); 
 
             return $this->redirectToRoute('stock_index');
         }
@@ -90,7 +90,7 @@ class StockController extends AbstractController
             $request->query->getInt('page',1),
             $pageSize
         );
-        
+        //  dd($data);
         return $this->render('stock/index.html.twig', [
             'stocks' => $data,
             'form' => $form->createView(),

@@ -39,15 +39,24 @@ class RequestsRepository extends ServiceEntityRepository
         return $qb ;
     }
     
-    public function findByName($value)
+    public function findByName($value, $mylevel)
     {
-        return $this->createQueryBuilder('r')
+         $q = $this->createQueryBuilder('r')
             ->join('r.requester', 'requester')
-            ->where('requester.firstName like :val')
+            ->where('requester.firstName like :val');
+if($mylevel)
+{
+    $q =$q->andwhere('r.currentApprovalStep >= '.($mylevel - 1));
+}
+          
+            
             // ->where('CONCAT(requester.firstName," ",requester.middleName," ",requester.lastName) LIKE :val')
-            ->setParameter('val', '%'.$value.'%')
+            $q =$q->setParameter('val', '%'.$value.'%')
+            ->orderBy('r.id', 'DESC')
             ->getQuery()
             ->getResult()
         ;
+
+        return $q;
     }
 }

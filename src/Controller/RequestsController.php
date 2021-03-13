@@ -27,7 +27,36 @@ class RequestsController extends AbstractController
     public function index(RequestsRepository $requestsRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $rowsPerPage = 10;
-        $queryBuilder = $requestsRepository->findByName($request->query->get('search'));
+        $user = $this->getUser();
+        $minLevel = 0;
+        $userGroups = $user->getUserGroup();
+        foreach ($userGroups as   $ugrp) {
+           $ugrpperm = $ugrp->getPermission();
+       foreach ($ugrpperm as   $perm) {
+          if(strtoupper($perm->getCode())==strtoupper("Approver1"))
+          {
+            $minLevel = 1;
+          }
+          else if(strtoupper($perm->getCode())==strtoupper("Approver2"))
+          {
+              if($minLevel != 1)
+              {
+                $minLevel = 2;
+              }
+           
+          }
+          else if(strtoupper($perm->getCode())==strtoupper("Approver3"))
+          {
+            if($minLevel != 2 && $minLevel != 1)
+            {
+              $minLevel = 3;
+            }
+          }
+       }
+
+        }
+      
+        $queryBuilder = $requestsRepository->findByName($request->query->get('search'),$minLevel);
         $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -48,6 +77,7 @@ class RequestsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $requests->setCurrentApprovalStep(0);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($requests);
             $entityManager->flush();
@@ -155,20 +185,25 @@ class RequestsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $orders = $em->getRepository(Orders::class)->findBy(['request' => $requests]);
         $modifiedQuantities = $request->all();
-        //  dd($modifiedQuantities);
+        //   dd($modifiedQuantities);
+        //   dd($approver);
         foreach ($approver as $key => $level) {
 
             $alreadyApproved = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => $level]);
             if (!$alreadyApproved) {
                 if ($level == 3) //ask two questions: are 1 and 2 approved
                 {
-                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 1]);
-                    $alreadyApproved2 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 2]);
+                    /*$alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 1]);
+                    $alreadyApproved2 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 2]);*/
+                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests,   'approvalLevel' => 1]);
+                    $alreadyApproved2 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests,  'approvalLevel' => 2]);
                     if (!$alreadyApproved1 || !$alreadyApproved2) continue;
                     $requests->setClosed(1);
+                    $requests->setCurrentApprovalStep(3);
                 } elseif ($level == 2) //ask one question: is 1 approved
                 {
-                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 1]);
+                    //$alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 1]);
+                    $alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approvalLevel' => 1]);
                     if (!$alreadyApproved1) continue;
                 }
 
@@ -180,6 +215,7 @@ class RequestsController extends AbstractController
                 $appLog->setRequest($requests);
                 $appLog->setApprovalDate(new \DateTime());
                 $em->persist($appLog);
+                $requests->setCurrentApprovalStep($level);
 
 
                 if ($approve == "Approve") {
@@ -206,7 +242,9 @@ class RequestsController extends AbstractController
                    /* if ($level == 2) {
                         $order->setApprovedQuantity($modifiedQuantities[$order->getId()]);
                     }*/
+                
                     if ($level == 3) {
+                        //  dd($modifiedQuantities);
                         foreach ($modifiedQuantities as $k => $v) {
                             $post = explode("_", $k);
                             
@@ -214,16 +252,20 @@ class RequestsController extends AbstractController
 
                                
 
-                                // dd($serial);
+                                 
                                 if ($post[0] == "serial") {
                                     foreach ($v as $key2 => $ser) {
                                         $serialObj = $em->getRepository(Serials::class)->findBy(['serial'=>$ser]);
                                         if(!$serialObj)
                                         {
+                                           
                                             $serialObj =  new Serials();
+                                            if(!$ser) $ser="NO_SERIAL_".uniqid();
+                                            $mdl = $modifiedQuantities['model_'.$order->getId()][$key2];
+                                            if(!$mdl) $mdl="NO_MODEL_".uniqid();
                                             $serialObj->setSerial($ser); 
                                             $serialObj->setOrders($order);
-                                            $serialObj->setModel($modifiedQuantities['model_'.$order->getId()][$key2]);
+                                            $serialObj->setModel($mdl);
                                             $em->persist($serialObj);
                                             $em->flush();
                                         }
@@ -246,7 +288,7 @@ class RequestsController extends AbstractController
                         }*/
 
                         $order->setDelivered(1);
-                        // $order->setApprovedQuantity($modifiedQuantities[$order->getId()]);
+                        $order->setApprovedQuantity($modifiedQuantities[$order->getId()]);
 
                     }
                     $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$order->getId()]);

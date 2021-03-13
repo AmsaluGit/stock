@@ -183,6 +183,7 @@ class OrdersController extends AbstractController
             $requests->setRequester($this->getUser());
             $requests->setRequestedDate(new DateTime('now'));
             $requests->setStatus(0);
+            $requests->setCurrentApprovalStep(0);
             $em->persist($requests);
         }
 

@@ -3,6 +3,8 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Entity\Permission;
+use App\Entity\UserGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,12 +26,11 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
-
     private $entityManager;
     private $urlGenerator;
     private $csrfTokenManager;
     private $passwordEncoder;
+    private $user;
 
     public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -41,7 +42,7 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
 
     public function supports(Request $request)
     {
-        return self::LOGIN_ROUTE === $request->attributes->get('_route')
+        return 'app_login' === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
@@ -66,14 +67,14 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
-
+// dd($credentials['username']);
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Username could not be found.');
+            throw new CustomUserMessageAuthenticationException('invalid credentials');
         }
-
+        $this->user=$user;
         return $user;
     }
 
@@ -92,16 +93,60 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+// dd("haahahhahha");
+$user=$this->user;
+
+if(!$user->getLastLogin()){
+   return new RedirectResponse($this->urlGenerator->generate('app_forgot_password_request'));
+
+}
+else if($user->getIsActive()==false){
+    return new RedirectResponse($this->urlGenerator->generate('user_show',['id'=>$user->getId()]));
+
+
+}
+$this->user->setLastLogin(new \DateTime());
+$this->entityManager->flush();
+        $permissions=[];
+        if($user->getId()==1){
+        $permission=$this->entityManager->getRepository(Permission::class)->findAll();
+        foreach ($permission as $key => $value1) {
+            $permissions[]=$value1->getCode();
+           }
+    
+    }
+    else {
+        //role to be added
+        /*$groups=$this->entityManager->getRepository(UserGroup::class)->findBy(['users'=>$this->user,'isActive'=>1]) ;*/$groups=$this->user->getUserGroup();
+        // addUserGroup
+        // dd($groups);
+        foreach ($groups as $key => $value) { 
+            if(!$value->getIsActive()) continue;
+          $permission=$value->getPermission();
+          foreach ($permission as $key => $value1) {
+            $permissions[]=$value1->getCode();
+           }
+
+        }}
+        //  dd($permissions);
+         $request->getSession()->set(
+             "PERMISSION",
+             $permissions
+         );
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
+    
+        return new RedirectResponse($this->urlGenerator->generate('home'));
+    
 
-     return new RedirectResponse($this->urlGenerator->generate('home'));
+
+        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
         throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl()
     {
-        return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+        return $this->urlGenerator->generate('app_login');
     }
 }

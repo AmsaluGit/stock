@@ -135,7 +135,7 @@
 									{% set counter = 0 %}
 
 
-									{% if order.serials is same as(null) %}
+									{% if order.serials is same as(null) or order.serials | length == 0 %}
 										{% for serial in 1..currentQuantity %}
 											{% set counter = counter + 1 %}
 											<tr id="{{order.id ~ counter}}">
@@ -184,12 +184,34 @@
 						</table/>
 						<hr>
 					{% endfor %}
+
+
+						{% set isApprover = 0 %}
+			{% set ugrps = app.user.userGroup %}
+			{% for ugrp in ugrps %}
+				{% set ugrppermission = ugrp.permission %}
+				{% for ugp in ugrppermission %}
+					{% if ugp.name | upper == "approver1" | upper  %}
+						{% set isApprover = 1 %}
+					{% elseif  ugp.name | upper == "approver2" | upper %}
+						{% set isApprover = 2 %}
+					{% elseif  ugp.name | upper == "approver3" | upper %}
+						{% set isApprover = 3 %}
+						{% else %}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+
+
+
 					{% if  requests.closed is same as(null) %}
+						{% if isApprover  %}
 						<th style="margin:0px">
 							<input type="hidden" value="Approve" name="approve"/>
-							<input type="submit" value="Approve" name="approve" class="btn btn-success">
+							<input type="submit" value="Approve" name="approve" class="btn btn-success"/>
 						</th>
-					</input>
+							{% endif %}
+					{# </input> #}
 				</th>
 			{% endif %}
 		</form>
@@ -202,14 +224,18 @@
 			<a href="{{ path('requests_index') }}" class="btn btn-primary">Back</a>
 		</th>
 		{% if not requests.closed %}
-			{# <th  style="margin:0px"> <input type="submit" value="Approve" name="approve" class="btn btn-success"></input></form></th> #}
-			<th style="margin:0px">
-				<form action="{{ path('requests_approve', {'id': requests.id}) }}" method="POST">
-					<input type="submit" value="Reject" name="reject" class="btn btn-warning"></input>
-			</th>
-		</form>
-	</tr>
-</thead></th><th>{{ include('requests/_delete_form.html.twig') }}</th>{% else %}<th style="margin:0px"></th></tr></thead><form action="{{path('model22',{id:requests.id})}}" method="POST"><input type="submit" value="Model 22" name="mod22" class="btn btn-info"/></th></form></th>{% endif %}</tr></thead></table> {% endblock %} {% block javascripts %}<script type="text/javascript">total_unchanged = [];
+		
+
+			{% if isApprover %}
+				<th style="margin:0px">
+
+					<form action="{{ path('requests_approve', {'id': requests.id}) }}" method="POST">
+						<input type="submit" value="Reject" name="reject" class="btn btn-warning"></input>
+				</th>
+			</form>
+		</th>
+	{% endif %}
+</thead></tr></thead></th><th>{{ include('requests/_delete_form.html.twig') }}</th>{% else %}<th style="margin:0px"></th></tr></thead><form action="{{path('model22',{id:requests.id})}}" method="POST"><input type="submit" value="Model 22" name="mod22" class="btn btn-info"/></th></form></th>{% endif %}</tr> </thead></table>{% endblock %}{% block javascripts %}<script type="text/javascript"> total_unchanged = [];
 var list = {
 total: 0,
 id_counter: 100,
@@ -247,6 +273,7 @@ last = 1;
 last = condition;
 
 
+
 for (i = 0; i < last; i ++) {
 addList(order_id, list.id_counter ++);
 list.total[order_id] = list.total[order_id] + 1;
@@ -258,6 +285,7 @@ if (condition == -1)
 last = 1;
  else if (condition < -1) 
 last = -1 * condition;
+
 
 
 for (i = 0; i < last; i ++) {
@@ -314,7 +342,10 @@ if ($error)
 alert("you should fill the model number if you fill serial");
 
 
+
 if (!$error) 
 this.submit();
 
-});</script> {% endblock %}
+
+
+});</script>{% endblock %}

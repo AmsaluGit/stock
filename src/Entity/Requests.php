@@ -67,6 +67,11 @@ class Requests
      */
     private $approvalLogs;
 
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $currentApprovalStep;
+
    
 
     public function __construct()
@@ -223,6 +228,18 @@ class Requests
                 $approvalLog->setRequest(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCurrentApprovalStep(): ?int
+    {
+        return $this->currentApprovalStep;
+    }
+
+    public function setCurrentApprovalStep(?int $currentApprovalStep): self
+    {
+        $this->currentApprovalStep = $currentApprovalStep;
 
         return $this;
     }
