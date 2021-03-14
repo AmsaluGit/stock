@@ -40,6 +40,16 @@ class Serials
      * @ORM\ManyToOne(targetEntity=Orders::class, inversedBy="serials")
      */
     private $orders;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $hasSerial;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantity;
  
     public function getId(): ?int
     {
@@ -102,6 +112,30 @@ class Serials
     public function setTransfer(?Transfer $transfer): self
     {
         $this->transfer = $transfer;
+
+        return $this;
+    }
+
+    public function getHasSerial(): ?bool
+    {
+        return $this->hasSerial;
+    }
+
+    public function setHasSerial(?bool $hasSerial): self
+    {
+        $this->hasSerial = $hasSerial;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(?int $quantity): self
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }

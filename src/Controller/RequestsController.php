@@ -255,14 +255,24 @@ class RequestsController extends AbstractController
                                  
                                 if ($post[0] == "serial") {
                                     foreach ($v as $key2 => $ser) {
-                                        $serialObj = $em->getRepository(Serials::class)->findBy(['serial'=>$ser]);
+                                        $serialObj = $em->getRepository(Serials::class)->findBy(['serial'=>$ser,'orders'=>$order]);
                                         if(!$serialObj)
                                         {
                                            
                                             $serialObj =  new Serials();
-                                            if(!$ser) $ser="NO_SERIAL_".uniqid();
+                                            if(!$ser) //$ser="NO_SERIAL_".uniqid();
+                                            {
+                                                $serialObj->setHasSerial(false);  
+                                                $serialObj->setQuantity($modifiedQuantities[$order->getId()]);
+                                            }
+                                            else
+                                            {
+                                                $serialObj->setHasSerial(true);  
+                                                $serialObj->setQuantity(1);
+                                            }
+
                                             $mdl = $modifiedQuantities['model_'.$order->getId()][$key2];
-                                            if(!$mdl) $mdl="NO_MODEL_".uniqid();
+                                           // if(!$mdl) $mdl="NO_MODEL_".uniqid();
                                             $serialObj->setSerial($ser); 
                                             $serialObj->setOrders($order);
                                             $serialObj->setModel($mdl);

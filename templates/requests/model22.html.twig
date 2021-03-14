@@ -159,11 +159,11 @@
 								<td> </td>
 								<td> </td>
 								{% set quantity = order.itemApprovalStatuses | last.allowedQuantity %}
-								<td>{{ 1 }}</td>
+								<td>{{ ser.quantity }}</td>
 								<td>{{ser.orders.unitprice}}</td>
-								<td>{{ ser.orders.unitprice * 1 }}</td>
+								<td>{{ ser.orders.unitprice * ser.quantity }}</td>
 								<td></td>
-								{% set total = total +  ser.orders.unitprice * 1  %}
+								{% set total = total +  ser.orders.unitprice * ser.quantity  %}
 								
 								 
 							</tr>
