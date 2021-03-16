@@ -90,7 +90,7 @@ class Transfer
         return $this;
     }
 
-    public function getSerial(): ?string
+    public function getSerial(): ?Serials
     {
         return $this->serial;
     }

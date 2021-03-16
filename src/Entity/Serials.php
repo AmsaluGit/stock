@@ -47,6 +47,11 @@ class Serials
     private $hasSerial;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="serials")
+     */
+    private $current_owner;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $quantity;
@@ -65,6 +70,18 @@ class Serials
     {
         $this->transfer_request = $transfer_request;
 
+        return $this;
+    }
+
+    public function getCurrentOwner(): ?User
+    {
+        return $this->current_owner;
+    }
+
+    public function setCurrentOwner(?User $user): self
+    {
+        $this->current_owner = $user;
+        
         return $this;
     }
 

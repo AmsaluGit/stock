@@ -53,7 +53,7 @@
             $('input:checkbox').prop('checked', false);        
         });
 
-        $("#item_table").dataTable();
+        console.log("hello");
         $items = [];
         
         $("input[type='checkbox']").change(function () {
@@ -90,5 +90,6 @@
             $("#secondForm").submit();
         } 
        });
+    $("#item_table").dataTable();
     </script>
 {% endblock %}

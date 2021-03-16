@@ -51,6 +51,7 @@ class SerialsRepository extends ServiceEntityRepository
     //get all items registered with the respected user
     public function getSerial($id)
     {
+        
         return  $this->createQueryBuilder('s')
                 ->select("s.id", "p.name", "s.serial", "s.model as model_number", "o.model", 'r.requestedDate')
                 ->innerJoin('s.orders',"o")
@@ -58,7 +59,7 @@ class SerialsRepository extends ServiceEntityRepository
                 ->innerJoin('o.stock', 'stock')
                 ->innerJoin('stock.product', 'p')
                 ->innerJoin('r.requester','requester')
-                ->where("requester.id = :id")
+                ->where("s.current_owner = :id")
                 ->andwhere("s.transfer_request = :tr")
                 ->andWhere("p.canTransfered = :ct")                
                 ->setParameters(["tr"=> 0,'id'=> $id,'ct'=>1])

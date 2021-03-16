@@ -248,11 +248,7 @@ class RequestsController extends AbstractController
                         foreach ($modifiedQuantities as $k => $v) {
                             $post = explode("_", $k);
                             
-                            if (sizeof($post) == 2 && ($post[0] == "serial" || $post[0] == "model") && $post[1]==$order->getId() ) {
-
-                               
-
-                                 
+                            if (sizeof($post) == 2 && ($post[0] == "serial" || $post[0] == "model") && $post[1]==$order->getId() ) {                                 
                                 if ($post[0] == "serial") {
                                     foreach ($v as $key2 => $ser) {
                                         $serialObj = $em->getRepository(Serials::class)->findBy(['serial'=>$ser,'orders'=>$order]);
@@ -275,6 +271,7 @@ class RequestsController extends AbstractController
                                            // if(!$mdl) $mdl="NO_MODEL_".uniqid();
                                             $serialObj->setSerial($ser); 
                                             $serialObj->setOrders($order);
+                                            $serialObj->setTransferRequest(0);
                                             $serialObj->setModel($mdl);
                                             $em->persist($serialObj);
                                             $em->flush();

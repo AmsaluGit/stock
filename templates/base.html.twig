@@ -248,7 +248,7 @@
 											</a>
 										</li>
 {% endif %}
-	{% if is_granted("manage_transfer") %}
+	{# {% if is_granted("manage_transfer") %} #}
 										<li class="nav-item">
 											<a href="{{ path('profile') }}" class="nav-link">
 												<i class="far fa-circle nav-icon"></i>
@@ -277,7 +277,7 @@
 											</a>
 										</li>
 
-									{% endif %}
+									{# {% endif %} #}
 									{% if is_granted("manage_company") %}
 										<li class="nav-item">
 											<a href="{{ path('company_index') }}" class="nav-link">

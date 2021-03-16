@@ -169,7 +169,7 @@ class TransferController extends AbstractController
         $approval_level = $this->getApprovalLevel();
 
         $itemGroup = $em->getRepository(TransferedItemsGroup::class)->find($id);
-        
+
         if($itemGroup == null || $itemGroup->getStatus() != $approval_level)
         {
             return $this->redirect("/transfer");
@@ -182,6 +182,17 @@ class TransferController extends AbstractController
         $transferLog->setApprovalLevel($approval_level);
         $transferLog->setStatus($approval_level+1);
         $transferLog->setApprovalDate(new \DateTime());
+        if($approval_level == 3)
+        {
+            $items = $em->getRepository(Transfer::class)->findBy(["group"=>$id]);
+            foreach($items as $item)
+            {
+                $serial = $item->getSerial();
+                $serial->setCurrentOwner($itemGroup->getTo());
+                $serial->setTransferRequest(0);
+                $em->persist($serial);
+            }  
+        }
 
         $em->persist($itemGroup);
         $em->persist($transferLog);
