@@ -146,13 +146,14 @@
 								 
 							</tr>
 							{% endfor %}  #}
-
+						{% set counter = 0%}
 
 						{% for order in requests.orders %}
 							
 						{% for ser in order.serials %}
+						{% set counter = counter + 1 %}
 								<tr>
-								<td>{{loop.index}}</td>
+								<td>{{counter}}</td>
 								<td>{{ser.orders.stock.product.name}}</td>
 								<td>{{ser.model}}</td>
 								<td>{{ ser.serial }}</td>
