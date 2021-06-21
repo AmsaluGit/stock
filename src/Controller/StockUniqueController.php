@@ -313,3 +313,4 @@ class StockUniqueController extends AbstractController
         return $this->redirectToRoute('stock_unique_index');
     }
 }
+
