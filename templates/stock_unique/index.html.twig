@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}StockUnique index{% endblock %}
+
+{% block body %}
+    {# <pre>
+        {{ dump(carts) }}
+    </pre> #}
+	{% if  carts is defined and carts is not same as(null) %}
+		{# style="background-color:#17a2b8;" #}
+		<div class=" conatainer-fluid p-2 col-11" style="border: 5px solid #007bff;">
+			<table class="table  center table-bordered table-responsive" style="background:#fff;width:100%">
+				<thead>
+					<th>#</th>
+					<th>Product</th>
+					<th>Quantity</th>
+					<th>Action</th>
+				</thead>
+				<tbody>
+			 
+					{% for items in carts %}
+						 <tr>
+						 
+						    <td>{{loop.index }}</td>
+							<td>{{items.product}}</td>
+							<td>{{items.quantity}}</td>
+						 
+							 {# <td>
+						 <a href="{{ path('stock_show', {'id': items.product.stockUnique.id}) }}" class="btn btn-sm">Edit</a>
+							</td>    
+                            #}
+						</tr> 
+
+					{% endfor %}
+				</tbody>
+			</table>
+
+			<form action="{{path('requestitems')}}" method="POST">
+
+				<textarea class=" p-2" name="reason" placeholder="write your reason here..." required style="width: 100%;"></textarea>
+				<br>
+				<input type="submit" name="req" class="btn btn-warning" value="Request"/>
+				<a href="{{ path('reset_request')}}" class="btn btn-danger">Reset</a>
+			</form>
+		</div>
+		<br>
+	{% endif %}
+
+
+
+
+<div class="card card-info" >
+<div class="card card-header">
+<h2>Balance</h2>
+</div>
+<div class="card card-body">
+<table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Total quantity</th>
+                 {# <th>Total price</th> #}
+                <th>Given</th>
+                <th>Available</th>
+                <th>Requested</th>
+               
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for stock_unique in stock_uniques %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ stock_unique.product }}</td>
+                <td>{{ stock_unique.quantity }}</td>
+                  {# <td>{{ stock_unique.totalPrice }}</td> #}
+                <td>{{ stock_unique.given }}</td>
+                <td>{{ stock_unique.quantity - stock_unique.given  }}</td>
+                <td>{{ stock_unique.requested }}</td>
+              
+                 <td>
+                    {# <a href="{{ path('stock_unique_show', {'id': stock_unique.id}) }}" class="btn btn-sm btn-primary">Request</a> #}
+                    	<a href="{{ path('unique_stock_show', {'id': stock_unique.id}) }}" class="btn btn-info btn-sm" title="Show">
+															Request
+														</a>
+                    {# <a href="{{ path('stock_unique_edit', {'id': stock_unique.id}) }}">edit</a> #}
+                </td> 
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+</div>
+    
+    {# <a href="{{ path('stock_unique_new') }}">Create new</a> #}
+{% endblock %}

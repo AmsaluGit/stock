@@ -244,11 +244,17 @@
 											<a href="{{ path('stock_index') }}" class="nav-link">
 												<i class="far fa-circle nav-icon"></i>
 												<p>
-													Availabe stocks</p>
+													Stocks In Out</p>
 											</a>
 										</li>
 {% endif %}
 	{# {% if is_granted("manage_transfer") %} #}
+										<li class="nav-item">
+											<a href="{{ path('stock_unique_index') }}" class="nav-link">
+												<i class="far fa-circle nav-icon"></i>
+												<p>Balance</p>
+											</a>
+										</li>
 										<li class="nav-item">
 											<a href="{{ path('profile') }}" class="nav-link">
 												<i class="far fa-circle nav-icon"></i>

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Orders;
 use App\Entity\Product;
+use App\Entity\StockUnique;
 use App\Entity\Requests;
 use App\Entity\Stock;
 use App\Form\OrdersType;
@@ -31,7 +32,7 @@ class OrdersController extends AbstractController
         $mycart = array();
         $em = $this->getDoctrine()->getManager();
          
-        $stockid = $request->request->get('stockid');
+        $stock_unique_id = $request->request->get('stockid');
         // $avail = $request->request->get('avail');
         $quantity = $request->request->get('quantity');
         // $request->getSession()->set($this->getUser()->getId(),null);
@@ -47,30 +48,31 @@ class OrdersController extends AbstractController
                 $items_in_cart[$key] = $items;    
             }
             
-            $items_in_cart[$stockid] = $quantity;
+            $items_in_cart[$stock_unique_id] = $quantity;
             $request->getSession()->set($this->getUser()->getId(),$items_in_cart);
         }
         else 
         {
-            $request->getSession()->set($this->getUser()->getId(), array($stockid => $quantity));
+            $request->getSession()->set($this->getUser()->getId(), array($stock_unique_id => $quantity));
         }
         //  dd($request->getSession()->get($this->getUser()->getId()));
         //  dd( $stockid );
+        
 
-        return $this->redirectToRoute("stock_index");
+        return $this->redirectToRoute("stock_unique_index");
     }
 
     
     /**
      * @Route("/addtocartssssss/{id}", name="addtocartssss", methods={"GET","POST"})
      */
-    public function addToCart(Request $request, Product $product): Response
+    /*public function addToCart(Request $request, Product $product): Response
     {
         $mycart = array();
         $em = $this->getDoctrine()->getManager();
         
         $productid = $request->request->get('productid');
-        $stockid = $request->request->get('stockid');
+        $stock_unique_id = $request->request->get('stock_unique_id');
         $avail = $request->request->get('avail');
         $quantity = $request->request->get('quantity');
         // $request->getSession()->set($this->getUser()->getId(),null);
@@ -95,8 +97,9 @@ class OrdersController extends AbstractController
         }
         // dd($request->getSession()->get($this->getUser()->getId()));
 
-        return $this->redirectToRoute("stock_index");
-    }
+        return $this->redirectToRoute("stock_unique_index");
+        // return $this->redirectToRoute("stock_index");
+    }*/
 
     /**
      * @Route("/reset", name="reset_request", methods={"GET"})
@@ -115,7 +118,7 @@ class OrdersController extends AbstractController
         //     $request->getSession()->set($this->getUser()->getId(), array($product->getId()=>$quantity));
         // }
         // // dd($request->getSession());
-        return $this->redirectToRoute("stock_index");
+        return $this->redirectToRoute("stock_unique_index");
     }
 
     public function getRequestedQuantity($product)
@@ -139,25 +142,29 @@ class OrdersController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $reason = $request->request->get('reason'); 
         $stocks = $request->getSession()->get($this->getUser()->getId());
-
+       
    
         $valid_request_exist=false;
-        
-        foreach ($stocks as $stockid => $quantity) {
-            $stockObj = $em->getRepository(Stock::class)->find($stockid);
-
+       
+        foreach ($stocks as $stock_unique_id => $quantity) {
+           
+            $stockObj = $em->getRepository(StockUnique::class)->find($stock_unique_id);
+           
         $prod = $stockObj->getProduct();
-        $avail = $this->getRequestedQuantity($prod->getId());
+        // $avail = $this->getRequestedQuantity($prod->getId());
+        $avail = $stockObj->getAvailable();
 
-        $stock = $avail["stock"];
-        $requested = $avail["requested"];//this is the total number of requested stock
+        // $stock = $avail["stock"];
+        $stock = $stockObj->getQuantity();
+        // $requested = $avail["requested"];//this is the total number of requested stock
+        $requested = $stockObj->getRequested();//this is the total number of requested stock
         $allowed_to_request= $stock - $requested;
         $quantity_requested_by_this_user = $quantity;
         if($allowed_to_request < $quantity_requested_by_this_user) //you can't request this item.
         {
-            $this->addFlash("warning","There is no enough ".$prod->getName()." to satisfy your request.");
+            $this->addFlash("warning","There is no enough '".$prod->getName()."' to satisfy your request. availabe = ".$allowed_to_request);
             // return $this->redirectToRoute('user_group_index');
-            continue;
+            // continue;
         }
         else
         {
@@ -166,11 +173,11 @@ class OrdersController extends AbstractController
          
         }
 
-
+      
         if(!$valid_request_exist) 
         {
             $request->getSession()->set($this->getUser()->getId(),array());
-            return $this->redirectToRoute("stock_index");
+            return $this->redirectToRoute("stock_unique_index");
         }
         //manage parent(Requests table)
         $requests = $em->getRepository(Requests::class)->getIfNewRequestsExist($this->getUser());
@@ -190,24 +197,30 @@ class OrdersController extends AbstractController
     
 
         //manage children(Orders table)
-        // dd($products);
+        // dd($stocks);
+       
         
         foreach ($stocks as $stockid => $quantity) {
 
-            $stockObj = $em->getRepository(Stock::class)->find($stockid);
+            $stockObj = $em->getRepository(StockUnique::class)->find($stockid);
             $prod = $stockObj->getProduct();
+            $prev_quantity = $stockObj->getRequested();
+            // $prev_price = $stockObj->getTotalPrice();
+            $stockObj->setRequested($prev_quantity + $quantity);
             $order = new Orders();
-            $order->setStock($stockObj);
+            //  $order->setStock($stockObj);
+            $order->setStockUnique($stockObj);
             $order->setQuantity($quantity);
             $order->setModel($prod->getBrand()->getName());
-            $order->setUnitprice($stockObj->getprice());
+            $order->setUnitprice($stockObj->getTotalprice());
             $order->setRequest($requests);
             $em->persist($order);
         }
       
         $em->flush();
         $request->getSession()->set($this->getUser()->getId(),array());
-        return $this->redirectToRoute("stock_index");
+       
+        return $this->redirectToRoute("stock_unique_index");
         
     } 
 }

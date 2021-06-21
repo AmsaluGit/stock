@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Stock;
+use App\Entity\StockUnique;
+use App\Entity\Product;
 use App\Form\StockType;
 use App\Form\Filter\StockFilterType;
 use App\Repository\ProductRepository;
@@ -20,6 +22,7 @@ class StockController extends AbstractController
      */ 
     public function index(Request $request, StockRepository $stockRepository, PaginatorInterface $paginator): Response
     {
+        //dd(111);
         $pageSize=5;
         $stock = new Stock();
         $searchForm = $this->createForm(StockFilterType::class,$stock);
@@ -33,25 +36,50 @@ class StockController extends AbstractController
         if($produ_on_cart)
         {
          
-            foreach ($produ_on_cart as $stockid => $quantity) 
+            foreach ($produ_on_cart as $prod_id => $quantity) 
             {
-                $stk = $em->getRepository(Stock::class)->find($stockid);
+                $stk = $em->getRepository(Product::class)->find($prod_id);
     
                /* $temp[]= array('id'=>$stk->getProduct()->getId(),'product_name' => $stk->getProduct()->getName(),'quantity'=> $quantity);*/
 
 
-                $temp[]=  array('stock' => $stk,'quantity'=> $quantity);
+                $temp[]=  array('product' => $stk,'quantity'=> $quantity);
+                // $temp[]=  array('stockUnique' => $stk,'quantity'=> $quantity);
             }
 
         }
         
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
-            $stock=$stockRepository->findOneBy(['id'=>$id]);
+            $stock=$stockRepository->find($id);
+            $prev_stock_quantity = $stock->getQuantity();
+            $prev_stock_price = $stock->getPrice();
             $form = $this->createForm(StockType::class, $stock);
+            
             $form->handleRequest($request);
-    
+            
             if ($form->isSubmitted() && $form->isValid()) {
+
+           $prev_quantity = 0;
+            $prev_price = 0;
+            $stockUnique = $em->getRepository(StockUnique::class)->findOneBy(["product"=>$form->getData()->getProduct()]);
+            $prev_quantity =  $stockUnique->getQuantity() ;
+            $prev_price =  $stockUnique->getTotalPrice(); 
+            $new_stock_quantity = $stock->getQuantity();
+            $new_stock_price = $stock->getPrice();
+            $calculated_stock_uniq_price =  $prev_price - $prev_stock_price;
+            $calculated_stock_uniq_quantity =  $prev_quantity - $prev_stock_quantity;
+
+            $calculated_stock_uniq_price +=  $new_stock_quantity;
+            $calculated_stock_uniq_quantity +=  $new_stock_price;
+
+            $stockUnique->setProduct($form->getData()->getProduct());
+            $stockUnique->setQuantity($calculated_stock_uniq_quantity);
+            $stockUnique->setTotalPrice($calculated_stock_uniq_price);
+            $em->persist($stockUnique);
+
+
+
                 $stock->setDate(new \DateTime());
             
                 $this->getDoctrine()->getManager()->flush();
@@ -74,12 +102,33 @@ class StockController extends AbstractController
         }
         $form = $this->createForm(StockType::class, $stock);
         $form->handleRequest($request);
+       // $entityManager = $this->getDoctrine()->getManager();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+
+            $prev_quantity = 0;
+            $prev_price = 0;
+            $stockUnique = $em->getRepository(StockUnique::class)->findOneBy(["product"=>$form->getData()->getProduct()]);
+            // dd($stockUnique);
+            if(!$stockUnique)
+            {
+                $stockUnique = new StockUnique();
+            }
+            else
+            {
+                $prev_quantity =  $stockUnique->getQuantity() ;
+                $prev_price =  $stockUnique->getTotalPrice(); 
+            }
+            
+            $stockUnique->setProduct($form->getData()->getProduct());
+            $stockUnique->setQuantity($form->getData()->getQuantity() + $prev_quantity);
+            $stockUnique->setTotalPrice($form->getData()->getPrice() + $prev_price);
+            $em->persist($stockUnique);
+         
             $stock->setDate(new \DateTime());
-            $entityManager->persist($stock);
-            $entityManager->flush(); 
+            $em->persist($stock);
+
+            $em->flush(); 
 
             return $this->redirectToRoute('stock_index');
         }
@@ -90,7 +139,8 @@ class StockController extends AbstractController
             $request->query->getInt('page',1),
             $pageSize
         );
-        //  dd($data);
+        // dd(111);
+            //  dd($temp);
         return $this->render('stock/index.html.twig', [
             'stocks' => $data,
             'form' => $form->createView(),
@@ -108,11 +158,13 @@ class StockController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        // dd("4444");
         $stock = new Stock();
         $form = $this->createForm(StockType::class, $stock);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($stock);
             $entityManager->flush();
@@ -131,7 +183,6 @@ class StockController extends AbstractController
      */
     public function show(Stock $stock, ProductRepository $productRepository): Response
     {
-
         $product = $productRepository->find($stock->getProduct());
 
         $avail = $this->getRequestedQuantity($product->getId());
@@ -147,6 +198,8 @@ class StockController extends AbstractController
             'product' => $product,
         ]);*/
     }
+
+
 
 
     /**
@@ -168,6 +221,25 @@ class StockController extends AbstractController
       
         
     }
+
+
+     /**
+     * @Route("unique_stock/{id}", name="unique_stock_show", methods={"GET"})
+     */
+    public function UniqueStockshow(StockUnique $stockUnique): Response
+    {
+
+        return $this->render('product/show.html.twig', [
+            'stockUnique' => $stockUnique,
+        ]);
+
+       /* return $this->render('stock/show.html.twig', [
+            'stock' => $stock,
+            'product' => $product,
+        ]);*/
+    }
+
+
 
 
     public function getRequestedQuantity($product)

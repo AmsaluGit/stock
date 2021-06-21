@@ -62,6 +62,7 @@ class RequestsController extends AbstractController
             $request->query->getInt('page', 1),
             $rowsPerPage
         );
+       
         return $this->render('requests/index.html.twig', [
             'requests' => $data,
         ]);
@@ -96,7 +97,8 @@ class RequestsController extends AbstractController
      */
     public function show(Requests $request): Response
     {
-
+       
+         
         //   $this->denyAccessUnlessGranted('approver3');
         $em = $this->getDoctrine()->getManager();
         $approvalLevel = 0;//this should be dynamic
@@ -116,7 +118,7 @@ class RequestsController extends AbstractController
 
         if (in_array(strtoupper("Approver3"), $permissionList)) {
             $approvalLevel = 3;
-        }
+        } 
 
         // if ($approvalLevel == 3) {
         //     $orders = $em->getRepository(orders::class)->findBy(['request' => $request, 'serial' => null]);
@@ -135,7 +137,8 @@ class RequestsController extends AbstractController
         // }
 
         // dd($permissionList);
-
+     
+// dd($request->getOrders());
         return $this->render('requests/show.html.twig', [
             'requests' => $request,
             'approvalLevel' => $approvalLevel,
@@ -200,6 +203,7 @@ class RequestsController extends AbstractController
                     if (!$alreadyApproved1 || !$alreadyApproved2) continue;
                     $requests->setClosed(1);
                     $requests->setCurrentApprovalStep(3);
+
                 } elseif ($level == 2) //ask one question: is 1 approved
                 {
                     //$alreadyApproved1 = $em->getRepository(ApprovalLog::class)->findOneBy(['request' => $requests, 'approver' => $this->getUser(), 'approvalLevel' => 1]);
@@ -296,6 +300,11 @@ class RequestsController extends AbstractController
 
                         $order->setDelivered(1);
                         $order->setApprovedQuantity($modifiedQuantities[$order->getId()]);
+                        $order->getStockUnique()->setGiven($modifiedQuantities[$order->getId()] +  $order->getStockUnique()->getGiven());
+                        $order->getStockUnique()->setRequested($order->getStockUnique()->getRequested() - $modifiedQuantities[$order->getId()] );
+
+                        // $order->getStockUnique()->setAvailable($order->getStockUnique()->getQuantity() - $modifiedQuantities[$order->getId()] -  $order->getStockUnique()->getGiven() );
+
 
                     }
                     $itemApprovalStatus->setAllowedQuantity($modifiedQuantities[$order->getId()]);

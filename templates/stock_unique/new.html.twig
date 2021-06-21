@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New StockUnique{% endblock %}
+
+{% block body %}
+    <h1>Create new StockUnique</h1>
+
+    {{ include('stock_unique/_form.html.twig') }}
+
+    <a href="{{ path('stock_unique_index') }}">back to list</a>
+{% endblock %}

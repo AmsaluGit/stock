@@ -77,10 +77,22 @@ class Orders
      */
     private $serials;
 
+    /**
+     * @ORM\OneToMany(targetEntity=StockUnique::class, mappedBy="orders")
+     */
+    private $stockUniques;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=StockUnique::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $stockUnique;
+
     public function __construct()
     {
         $this->itemApprovalStatuses = new ArrayCollection();
         $this->serials = new ArrayCollection();
+        $this->stockUniques = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -255,6 +267,48 @@ class Orders
                 $serial->setOrders(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StockUnique[]
+     */
+    public function getStockUniques(): Collection
+    {
+        return $this->stockUniques;
+    }
+
+    public function addStockUnique(StockUnique $stockUnique): self
+    {
+        if (!$this->stockUniques->contains($stockUnique)) {
+            $this->stockUniques[] = $stockUnique;
+            $stockUnique->setOrders($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStockUnique(StockUnique $stockUnique): self
+    {
+        if ($this->stockUniques->removeElement($stockUnique)) {
+            // set the owning side to null (unless already changed)
+            if ($stockUnique->getOrders() === $this) {
+                $stockUnique->setOrders(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getStockUnique(): ?StockUnique
+    {
+        return $this->stockUnique;
+    }
+
+    public function setStockUnique(?StockUnique $stockUnique): self
+    {
+        $this->stockUnique = $stockUnique;
 
         return $this;
     }

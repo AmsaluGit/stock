@@ -15,8 +15,7 @@
 {% block body %}
 
 
-	{% if  carts is defined and carts is not same as(null) %}
-		{# style="background-color:#17a2b8;" #}
+	{# {% if  carts is defined and carts is not same as(null) %}
 		<div class=" conatainer-fluid p-2 col-11" style="border: 5px solid #007bff;">
 			<table class="table  center table-bordered table-responsive" style="background:#fff;width:100%">
 				<thead>
@@ -26,15 +25,16 @@
 					<th>Action</th>
 				</thead>
 				<tbody>
+			 
 					{% for items in carts %}
-						<tr>
-							<td>{{loop.index }}</td>
-							<td>{{items.stock.product.name}}</td>
+						 <tr>
+						 
+						    <td>{{loop.index }}</td>
+							<td>{{items.product}}</td>
 							<td>{{items.quantity}}</td>
-							<td>
-								<a href="{{ path('stock_show', {'id': items.stock.id}) }}" class="btn btn-sm">Edit</a>
-							</td>
-						</tr>
+						 
+							  
+						</tr> 
 
 					{% endfor %}
 				</tbody>
@@ -49,7 +49,7 @@
 			</form>
 		</div>
 		<br>
-	{% endif %}
+	{% endif %} #}
 
 
 	<div class="row">
@@ -144,7 +144,7 @@
 										{{ form_end(form) }}
 									</div>
 
-									<table class="table table-hover table-responsive" >
+									<table class="table table-hover  " style="width:100%">
 										<thead   >
 											<tr>
 												<th></th>
@@ -152,16 +152,18 @@
 												<th>Product</th>
 												<th>price per unit</th>
 												<th>Total quantity</th>
+												<th>Date</th>
 												{# <th>store</th> #}
-
 												{# <th>company</th> #}
 												{# <th>date</th> #}
-												<th>Given
-												</th>
-												<th>Avaiable
+												{# <th>Given
+												</th> #}
+												{# <th>Avaiable
 												</th>
 												<th>Requested
-												</th><th>actions
+												</th> #}
+												
+												<th>actions
 											</th>
 										</tr>
 										</thead>
@@ -182,6 +184,8 @@
 													<td>{{ stock.product }}</td>
 													<td>{{ stock.price }}</td>
 													<td>{{ stock.quantity }}</td>
+													<td>{{ stock.date | date('d-m-Y') }}</td>
+												
 													{# <td>{{ stock.store }}</td> #}
 
 													{# <td>{{ stock.company}}</td> #}
@@ -200,9 +204,9 @@
 													{% endfor %}
 
 
-													<td>{{ countDelivered  }}</td>
-													<td>{{ stock.quantity  - countDelivered  }}</td>
-													<td>{{ countRequested }}</td>
+													{# <td>{{ countDelivered  }}</td> #}
+													{# <td>{{ stock.quantity  - countDelivered  }}</td>
+													<td>{{ countRequested }}</td> #}
 													<td>
 
 														<form class="d-inline" method="post" action="">
@@ -212,9 +216,9 @@
 																Edit
 															</button>
 														</form>
-														<a href="{{ path('stock_show', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
+														{# <a href="{{ path('stock_show', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
 															Request
-														</a>
+														</a> #}
 														<a href="{{ path('more', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
 															More
 														</a>

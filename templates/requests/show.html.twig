@@ -74,19 +74,17 @@
 				<hr>
 				<form action="{{ path('requests_approve', {'id': requests.id}) }}" method="POST" id="approve_form">
 					{% for order  in requests.orders %}
-
-						<table class="table">
+ 
+						 <table class="table" style="with:100%">
 							<tbody id="{{order.id}}">
 								{% set coloring = "badge-info" %}
 								<tr style="background-color:#e9ecef">
-									{# <th> #}
-									{# <span class="badge {{coloring}}">Product</span> #}
-									{# </th> #}
+									 
 										<td>
-											<strong style="float:left"> {{ order.stock.product | upper }}</strong>
+											<strong style="float:left"> {{ order.stockUnique.product | upper }}</strong>
 									</td>
 									<th>
-										{# <span class="badge {{coloring}}">Product</span> #}
+										 
 									</th>
 
 								</tr>
@@ -94,20 +92,20 @@
 									<th>
 										<span class="badge {{coloring}}">Product Type</span>
 									</th>
-									<td>{{ order.stock.product.productType }}</td>
+									<td>{{ order.stockUnique.product.productType }}</td>
 								</tr>
 								<tr>
 									<th>
 										<span class="badge {{coloring}}">Category</span>
 									</th>
-									<td>{{ order.stock.product.category }}</td>
+									<td>{{ order.stockUnique.product.category }}</td>
 								</tr>
 
 								<tr>
 									<th>
 										<span class="badge {{coloring}}">Model</span>
 									</th>
-									<td>{{ order.stock.product.brand }}</td>
+									<td>{{ order.stockUnique.product.brand }}</td>
 								</tr>
 								<tr>
 									<th>
@@ -181,7 +179,7 @@
 									<p style="display:none" class="order_total" data="{{order.id}}">{{counter}}</p>
 								{% endif %}
 							</tbody>
-						</table/>
+						</table/>  
 						<hr>
 					{% endfor %}
 

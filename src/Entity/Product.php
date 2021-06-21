@@ -60,6 +60,11 @@ class Product
      */
     private $unitOfMeasure;
 
+    /**
+     * @ORM\OneToOne(targetEntity=StockUnique::class, mappedBy="product", cascade={"persist", "remove"})
+     */
+    private $stockUnique;
+
    
 
     public function __construct()
@@ -189,6 +194,23 @@ class Product
     public function setUnitOfMeasure(?UnitOfMeasure $unitOfMeasure): self
     {
         $this->unitOfMeasure = $unitOfMeasure;
+
+        return $this;
+    }
+
+    public function getStockUnique(): ?StockUnique
+    {
+        return $this->stockUnique;
+    }
+
+    public function setStockUnique(StockUnique $stockUnique): self
+    {
+        // set the owning side of the relation if necessary
+        if ($stockUnique->getProduct() !== $this) {
+            $stockUnique->setProduct($this);
+        }
+
+        $this->stockUnique = $stockUnique;
 
         return $this;
     }
