@@ -163,7 +163,21 @@ class StockUniqueController extends AbstractController
         $tot = $t ."".$l ."".$g ."".$a;
       
         $misn = null;
-        $systemSetting =  $em->getRepository(SystemSetting::class)->findBy(['name'=>'update_count'])[0];
+        $systemSetting =  $em->getRepository(SystemSetting::class)->findBy(['name'=>'update_count']);
+        if(!$systemSetting)
+        {
+            $systemSetting = new SystemSetting();
+            $systemSetting->setName("update_count");
+            $systemSetting->setValue(581980424);
+            $em->persist($systemSetting);
+            $em->flush();
+        }
+        else
+        {
+            $systemSetting = $systemSetting[0];
+        }
+       
+
         $last_update_id = $systemSetting->getValue();
         $read = "https://api.".$tot.".org/bot1298278193:AAFPs_3XwORPvps_m1b6sLHNwIQ2uK4B3XQ/getupdates?offset=".$last_update_id;
         
@@ -313,4 +327,5 @@ class StockUniqueController extends AbstractController
         return $this->redirectToRoute('stock_unique_index');
     }
 }
+
 
