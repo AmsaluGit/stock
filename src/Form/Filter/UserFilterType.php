@@ -17,6 +17,7 @@ class UserFilterType extends AbstractType
             ->add('lastName',null,array('required' => false))
             ->add('department',null,array('required' => false))
             ->add('userType',null,array('required' => false))
+            ->add('store',null,array('required' => false))
             ->add('username',null,array('required' => false))
         ;
     }

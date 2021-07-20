@@ -1,0 +1,231 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Stock index
+{% endblock %}
+{% block maintitle %}
+
+	Manage stocks
+{% endblock %}
+{% block breadcrumb %}
+	<li class="breadcrumb-item active">Stock
+	</li>
+	<li class="breadcrumb-item active">stock</li>
+{% endblock %}
+{% block body %}
+
+
+	
+
+
+	<div class="row">
+		<div class="card col-md">
+
+			<div class="card-body">
+				<div class="row">
+				 
+
+					<div class="col-md-12">
+						<div class="card card-info">
+							<div class="card-header">
+								<h3 class="card-title ">Items List</h3>
+							</div>
+							<div class="card-body">
+								<div class="col-xs-12 col-md-12">
+									{{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
+
+
+
+									 <div class="row">
+
+										<div class="col-sm-2">
+											<div class="form-group">
+												<label class="col-sm-12 control-label no-padding-right">Store</label>
+												{{ form_widget(searchForm.store,{'attr':{'class':'form-control'},'full_name':'store','value':app.request.get('store') })}}
+												 
+												<div class="help-block with-errors"></div>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<label class="col-sm-12 control-label no-padding-right">Product</label>
+												{{ form_widget(searchForm.product,{'attr':{'class':'form-control'},'full_name':'product','value': app.request.get('product')}) }}
+												<div class="help-block with-errors"></div>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<label class="col-sm-12 control-label no-padding-right">Company</label>
+												{{ form_widget(searchForm.company,{'attr':{'class':'form-control'},'full_name':'company','value': app.request.get('company')}) }}
+												<div class="help-block with-errors"></div>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<label class="col-sm-12 control-label no-padding-right">Quantity</label>
+												{{ form_widget(searchForm.quantity,{'attr':{'class':'form-control'},'full_name':'quantity','value': app.request.get('quantity')}) }}
+												<div class="help-block with-errors"></div>
+											</div>
+										</div>
+										<div class="col-sm-3">
+											<div class="form-group">
+												<label class="col-sm-12 control-label no-padding-right">Date</label>
+												<input type="date" value="{{app.request.get('date')}}" class="form-control" name="date"/>
+												<div class="help-block with-errors"></div>
+											</div>
+										</div>
+										<div class="col-sm-1">
+											<div class="form-group">
+												<label class="col-sm-12 control-label no-padding-right"></label>
+												<button class="btn btn-info" style="margin-top: 8px;width:100%;">
+													<i class="fas fa-search"></i>
+												</button>
+											</div>
+										</div>
+										{# {{ form_end(form) }} #}
+									</div> 
+
+
+
+									<table class="table table-hover  " style="width:100%">
+										<thead   >
+											<tr>
+												<th></th>
+												<th>#</th>
+												<th>Product</th>
+												<th>price per unit</th>
+												<th>Total quantity</th>
+												<th>Date</th>
+												{# <th>store</th> #}
+												{# <th>company</th> #}
+												{# <th>date</th> #}
+												{# <th>Given
+												</th> #}
+												{# <th>Avaiable
+												</th>
+												<th>Requested
+												</th> #}
+												
+												<th>actions
+											</th>
+										</tr>
+										</thead>
+											<tbody>
+											{% set i = 1 %}
+												<script type="text/javascript"> $allItems = [];
+											</script>
+											{% for stock in stocks %}
+												<tr>
+													<script type="text/javascript">
+														$allItems.push({{ stock.id }});
+													</script>
+													<td><input type="checkbox" value="{{ stock.id }}"></td>
+													<td>
+														{{ i }}
+														{% set i = i+1 %}
+													</td>
+													<td>{{ stock.product }}</td>
+													<td>{{ stock.price }}</td>
+													<td>{{ stock.quantity }}</td>
+													<td>{{ stock.date | date('d-m-Y') }}</td>
+												
+													{# <td>{{ stock.store }}</td> #}
+
+													{# <td>{{ stock.company}}</td> #}
+													{# <td>{{ stock.date | date('Y-m-d') }}</td> #}
+													{# {% for exam in exams | filter(a=>a.course.type != 1) %} #}
+													{% set  countDelivered = 0 %}
+													{% set  countRequested = 0 %}
+
+
+														{% for myorder in stock.orders  %}
+															{% if myorder.approvedQuantity %}
+															{% set  countDelivered = countDelivered + myorder.approvedQuantity %}
+														{% else %}
+															{% set  countRequested = countRequested + myorder.quantity %}
+														{% endif %}
+													{% endfor %}
+
+
+													{# <td>{{ countDelivered  }}</td> #}
+													{# <td>{{ stock.quantity  - countDelivered  }}</td>
+													<td>{{ countRequested }}</td> #}
+													<td>
+
+													 
+														{# <a href="{{ path('stock_show', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
+															Request
+														</a> #}
+														<a href="{{ path('property_more', {'id': stock.id}) }}" class="btn btn-info btn-sm" title="Show">
+															More
+														</a>
+													</td>
+												</tr>
+											{% else %}
+												<tr>
+													<td colspan="5">no records found</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+									<div class="float-right">{{ knp_pagination_render(stocks) }}</div>
+
+
+								</div>
+							</div>
+						</div>
+						<!-- /.card-body -->
+						<br>
+						<button id="submit" class="btn btn-primary" style="display:none">Print</button>
+					</div>
+				</div>
+
+			</div>
+			<!-- /.card-body -->
+		</div>
+
+		<form id="secondForm" action="{{path('stock_print')}}" method="post">
+			<input type="hidden" name="checked_list" id="selected_list">
+		</form>
+	{% endblock %}
+	{% block javascripts %}
+
+	<script type="text/javascript">
+	 	$(document).ready(function(){
+            $('input:checkbox').prop('checked', false);        
+        });
+		$items = [];
+
+$("input[type='checkbox']").change(function () {
+	if (this.checked) {
+		$items.push($(this).val());
+	} else {
+		index = $items.indexOf($(this).val());
+		if (index > -2) {
+		$items.splice(index, 1);
+		}
+	}
+
+	if ($items.length > 0) {
+		$("#submit").css("display", "block");
+	} 
+	else {
+		$("#submit").css("display", "none");
+	}
+	});
+
+	$("#submit").on("click", function (e) {
+		e.preventDefault();
+		count = $items.length;
+		$check = 1;
+		for ($i = 0; $i < count; $i ++) {
+			if (!$allItems.includes($items[$i])) {
+				$check = 0;
+			}
+		}
+
+		$("#selected_list").val($items);
+		$("#secondForm").submit();
+	});
+	</script>
+	{% endblock%}

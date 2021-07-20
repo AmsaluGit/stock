@@ -55,6 +55,22 @@ class UserController extends AbstractController
                 'edit'=>$id
             ]);    
         }
+       
+        if($request->request->get("userid"))
+        {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $user = $entityManager->getRepository(User::class)->find($request->request->get("userid")) ;
+            $form = $this->createForm(userType::class, $user);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->persist($user);
+                $entityManager->flush();
+                return $this->redirectToRoute('user_index');
+            }
+
+        }
+        
         $form = $this->createForm(userType::class, $user);
         $form->handleRequest($request);
 
@@ -85,6 +101,10 @@ class UserController extends AbstractController
             'searchForm' => $searchForm->createView(),
             'edit'=>false
         ]);
+
+      
+
+
     }
 
     /**

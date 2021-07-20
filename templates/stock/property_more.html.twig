@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Stock
+{% endblock %}
+
+{% block body %}
+ 
+
+
+<div class=" container container-fluid">
+<div class=" card card-info ">
+
+<div class="card card-header">
+<h3> Stock details</h3>
+</div>
+<div class="card card-body">
+
+<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ stock.id }}</td>
+			</tr>
+			<tr>
+				<th>Product</th>
+				<td>{{ stock.product.name }}</td>
+			</tr>
+			<tr>
+				<th>Store</th>
+				<td>{{ stock.store.name }}</td>
+			</tr>
+			<tr>
+				<th>Quantity</th>
+				<td>{{ stock.quantity }}</td>
+			</tr>
+			<tr>
+				<th>Price per unit</th>
+				<td>{{ stock.price }}</td>
+			</tr>
+			<tr>
+				<th>Company</th>
+				<td>{{ stock.company }}</td>
+			</tr>
+			<tr>
+				<th>Date received </th>
+			<td>{{ stock.date | date('Y-m-d') }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+
+
+<div>
+<div>
+<div>
+
+
+
+	
+
+	<a href="{{ path('property') }}" class="btn btn-primary">back to list</a>
+
+
+
+
+
+{% endblock %}

@@ -25,14 +25,16 @@ class CollegeController extends AbstractController
     {
 
         if($request->request->get('edit')){
+           
             $id=$request->request->get('edit');
             $college=$collegeRepository->findOneBy(['id'=>$id]);
             $form = $this->createForm(CollegeType::class, $college);
             $form->handleRequest($request);
-    
+  
             if ($form->isSubmitted() && $form->isValid()) {
               //  $college->setUpdatedAt(new \DateTime());
-            
+             
+             
                 $this->getDoctrine()->getManager()->flush();
     
                 return $this->redirectToRoute('college_index');
@@ -43,6 +45,7 @@ class CollegeController extends AbstractController
                 $request->query->getInt('page',1),
                 18
             );
+            
             return $this->render('college/index.html.twig', [
                 'colleges' => $data,
                 'form' => $form->createView(),
@@ -53,7 +56,10 @@ class CollegeController extends AbstractController
         $form = $this->createForm(CollegeType::class, $college);
         $form->handleRequest($request);
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
+             
             $entityManager = $this->getDoctrine()->getManager();
             /*$college->setIsActive(true);
             $college->setCreatedAt(new \DateTime());

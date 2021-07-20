@@ -114,6 +114,7 @@
 						</thead>
 						<tbody>
 						{% set sum1 = 0 %}{% set sum2 = 0 %}{% set sum3 = 0 %}						
+						{% set totalPrice = 0 %}					
 						{% for stock in stocks %}
 										
 							<tr>
@@ -125,16 +126,17 @@
 								<td>{{10}}</td>
 								<td>{{stock.quantity}}{% set sum1 = sum1+stock.quantity%} </td>
 								<td>{{stock.price}}{% set sum2 = sum2+stock.price %}</td>
-								<td>{% set total = stock.price * stock.quantity%} {{total}}{% set sum3 = sum1+total %}</td>
+								<td>{% set total = stock.price * stock.quantity %} {{total}}{% set sum3 = sum1+total %}</td>
+								{% set totalPrice =  totalPrice + stock.price * stock.quantity %}	
 							</tr>	
 							{% endfor %}						
 							<tr>
 								<td colspan="4" style="text-align: right">ድምር</td>
 								<td></td>
 								<td></td>
-								<td>{{sum1}}</td>
-								<td>{{sum2}}</td>
-								<td>{{sum3}}</td>
+								<td></td>
+								<td></td>
+								<td>{{totalPrice}}</td>
 							</tr>
 						</tbody>
 					</table>

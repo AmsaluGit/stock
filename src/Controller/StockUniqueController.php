@@ -111,7 +111,7 @@ class StockUniqueController extends AbstractController
              
                 
             ]);    
-        }
+        } 
         $form = $this->createForm(StockType::class, $stock);
         $form->handleRequest($request);
        // $entityManager = $this->getDoctrine()->getManager();

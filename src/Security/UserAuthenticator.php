@@ -128,7 +128,7 @@ $this->entityManager->flush();
            }
 
         }}
-        //  dd($permissions);
+        //  dd($permissions); 
          $request->getSession()->set(
              "PERMISSION",
              $permissions

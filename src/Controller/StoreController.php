@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Store;
+use App\Entity\User;
+use App\Entity\UserStore;
 use App\Form\StoreType;
 use App\Repository\StoreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -100,7 +102,7 @@ class StoreController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="store_show", methods={"GET"})
+     * @Route("/show/{id}", name="store_show", methods={"GET"})
      */
     public function show(Store $store): Response
     {
@@ -142,4 +144,8 @@ class StoreController extends AbstractController
 
         return $this->redirectToRoute('store_index');
     }
+
+
+     
+
 }

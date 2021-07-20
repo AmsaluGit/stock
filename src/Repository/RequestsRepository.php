@@ -36,7 +36,7 @@ class RequestsRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
          
         ;
-        return $qb ;
+        return $qb ; 
     }
     
     public function findByName($value, $mylevel)

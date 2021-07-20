@@ -123,6 +123,14 @@ class User implements UserInterface
      */
     private $approvalLogs;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Store::class, inversedBy="users")
+     */
+    private $store;
+ 
+
+ 
+ 
 
 
     public function __construct()
@@ -131,6 +139,7 @@ class User implements UserInterface
         $this->orders = new ArrayCollection();
         $this->requests = new ArrayCollection();
         $this->approvalLogs = new ArrayCollection();
+   
     }
 
     public function getId(): ?int
@@ -505,6 +514,25 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getStore(): ?Store
+    {
+        return $this->store;
+    }
+
+    public function setStore(?Store $store): self
+    {
+        $this->store = $store;
+
+        return $this;
+    }
+
+ 
+
+  
+
+
+
 
 
 }

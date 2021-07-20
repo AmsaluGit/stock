@@ -44,10 +44,23 @@ class Store
      */
     private $stocks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="store")
+     */
+    private $users;
+
+ 
+   
+    
+
+ 
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
         $this->stocks = new ArrayCollection();
+        $this->users = new ArrayCollection();
+      
     }
 
     public function getId(): ?int
@@ -156,5 +169,41 @@ class Store
 
         return $this;
     }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getStore() === $this) {
+                $user->setStore(null);
+            }
+        }
+
+        return $this;
+    }
+
+  
+
+    
+
+    
     
 }

@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Store;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,6 +18,7 @@ class UserType extends AbstractType
             ->add('lastName')
             ->add('department')
             ->add('userType')
+            ->add('store')
             ->add('username')
             // ->add('password')
         ;

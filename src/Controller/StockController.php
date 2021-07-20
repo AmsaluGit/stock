@@ -18,7 +18,7 @@ use Knp\Component\Pager\PaginatorInterface;
 class StockController extends AbstractController
 {
     /**
-     * @Route("/", name="stock_index", methods={"GET","POST"})
+     * @Route("/stock", name="stock_index", methods={"GET","POST"})
      */ 
     public function index(Request $request, StockRepository $stockRepository, PaginatorInterface $paginator): Response
     {
@@ -152,6 +152,140 @@ class StockController extends AbstractController
 
 
 
+    /**
+     * @Route("/property", name="property", methods={"GET"})
+     */ 
+    public function property(Request $request, StockRepository $stockRepository, PaginatorInterface $paginator): Response
+    {
+        //dd(111);
+        $pageSize=5;
+        $stock = new Stock();
+        $searchForm = $this->createForm(StockFilterType::class,$stock);
+        $searchForm->handleRequest($request);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $produ_on_cart = $request->getSession()->get($this->getUser()->getId());
+        // dd($produ_on_cart);
+        $temp = null;
+        if($produ_on_cart)
+        {
+         
+            foreach ($produ_on_cart as $prod_id => $quantity) 
+            {
+                $stk = $em->getRepository(Product::class)->find($prod_id);
+    
+               /* $temp[]= array('id'=>$stk->getProduct()->getId(),'product_name' => $stk->getProduct()->getName(),'quantity'=> $quantity);*/
+
+
+                $temp[]=  array('product' => $stk,'quantity'=> $quantity);
+                // $temp[]=  array('stockUnique' => $stk,'quantity'=> $quantity);
+            }
+
+        }
+        
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $stock=$stockRepository->find($id);
+            $prev_stock_quantity = $stock->getQuantity();
+            $prev_stock_price = $stock->getPrice();
+            $form = $this->createForm(StockType::class, $stock);
+            
+            $form->handleRequest($request);
+            
+            if ($form->isSubmitted() && $form->isValid()) {
+
+           $prev_quantity = 0;
+            $prev_price = 0;
+            $stockUnique = $em->getRepository(StockUnique::class)->findOneBy(["product"=>$form->getData()->getProduct()]);
+            $prev_quantity =  $stockUnique->getQuantity() ;
+            $prev_price =  $stockUnique->getTotalPrice(); 
+            $new_stock_quantity = $stock->getQuantity();
+            $new_stock_price = $stock->getPrice();
+            $calculated_stock_uniq_price =  $prev_price - $prev_stock_price;
+            $calculated_stock_uniq_quantity =  $prev_quantity - $prev_stock_quantity;
+
+            $calculated_stock_uniq_price +=  $new_stock_quantity;
+            $calculated_stock_uniq_quantity +=  $new_stock_price;
+
+            $stockUnique->setProduct($form->getData()->getProduct());
+            $stockUnique->setQuantity($calculated_stock_uniq_quantity);
+            $stockUnique->setTotalPrice($calculated_stock_uniq_price);
+            $em->persist($stockUnique);
+
+
+
+                $stock->setDate(new \DateTime());
+            
+                $this->getDoctrine()->getManager()->flush();
+                return $this->redirectToRoute('stock_index');
+            }
+            $queryBuilder=$stockRepository->findStock($request->query->get('search'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                $pageSize
+            );
+            return $this->render('stock/index.html.twig', [
+                'stocks' => $data,
+                'form' => $form->createView(),
+                'searchForm' => $searchForm->createView(),
+                'edit'=>$id,
+             
+                
+            ]);    
+        }
+        $form = $this->createForm(StockType::class, $stock);
+        $form->handleRequest($request);
+       // $entityManager = $this->getDoctrine()->getManager();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $prev_quantity = 0;
+            $prev_price = 0;
+            $stockUnique = $em->getRepository(StockUnique::class)->findOneBy(["product"=>$form->getData()->getProduct()]);
+            // dd($stockUnique);
+            if(!$stockUnique)
+            {
+                $stockUnique = new StockUnique();
+            }
+            else
+            {
+                $prev_quantity =  $stockUnique->getQuantity() ;
+                $prev_price =  $stockUnique->getTotalPrice(); 
+            }
+            
+            $stockUnique->setProduct($form->getData()->getProduct());
+            $stockUnique->setQuantity($form->getData()->getQuantity() + $prev_quantity);
+            $stockUnique->setTotalPrice($form->getData()->getPrice() + $prev_price);
+            $em->persist($stockUnique);
+         
+            $stock->setDate(new \DateTime());
+            $em->persist($stock);
+
+            $em->flush(); 
+
+            return $this->redirectToRoute('stock_index');
+        }
+
+        $queryBuilder=$stockRepository->filterData($request->query->get('quantity'),$request->query->get('date'),$request->query->get('product'),$request->query->get('company'),$request->query->get('store'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            $pageSize
+        );
+        // dd(111);
+            //  dd($temp);
+        return $this->render('stock/property.html.twig', [
+            'stocks' => $data,
+            'form' => $form->createView(),
+            'searchForm' => $searchForm->createView(),
+            'edit'=>false,
+            'carts' => $temp,
+        ]);
+    }  
+
+
 
     /**
      * @Route("stock/new", name="stock_new", methods={"GET","POST"})
@@ -217,8 +351,21 @@ class StockController extends AbstractController
             'avail' => $available,*/
             'stock' => $stock,
         ]);
+        
+    }
+    /**
+     * @Route("property/more/{id}", name="property_more", methods={"GET","POST"})
+     */
+    public function propertyMore(Stock $stock, ProductRepository $productRepository): Response
+    {
 
-      
+        $product = $productRepository->find($stock->getProduct());
+
+        $avail = $this->getRequestedQuantity($product->getId());
+        $available = $avail['stock'] - $avail['requested'];
+        return $this->render('stock/property_more.html.twig', [
+            'stock' => $stock,
+        ]);
         
     }
 
