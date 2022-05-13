@@ -1,1 +1,1 @@
-# inventory
+# Stock management system.
